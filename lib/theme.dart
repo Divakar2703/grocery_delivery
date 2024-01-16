@@ -5,7 +5,7 @@ import 'constants.dart';
 class AppTheme {
   static ThemeData lightTheme(BuildContext context) {
     return ThemeData(
-      scaffoldBackgroundColor: Colors.orange.shade50,
+      scaffoldBackgroundColor: Colors.blue.shade50,
       fontFamily: "Muli",
       appBarTheme: const AppBarTheme(
           color: Colors.white,

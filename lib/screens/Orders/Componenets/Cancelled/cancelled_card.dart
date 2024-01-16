@@ -14,17 +14,14 @@ class _CancelledCardState extends State<CancelledCard> {
   final List<Map<String, dynamic>> eventItems = [
     {
       'sr': '1',
-      'date':'#38',
-      'tid': '12-12-466',
-      'ano': 'Mens',
-      'bname':'T-shirt',
-      'ifsc':'Sector 54,Gurgao',
-      'amount':'121212121',
-      's' : 'Cancelled'
-
+      'orderId':'#38438',
+      'userName': 'Deva 123',
+      'Date': '01/01/2024',
+      'phoneNo':'+91-5498534358',
+      'orderPrice':'Rs.1999/-',
+      'paymentMode':'Online',
+      'status' : 'Cancelled'
     },
-
-
   ];
 
   @override
@@ -40,275 +37,223 @@ class _CancelledCardState extends State<CancelledCard> {
                   color: Colors.grey
               )
           ),
-          child: Column(
+          child:  Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    flex: 3, // Adjust the flex values as needed
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Sr. No. :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade800,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Listed Date :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade800,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Product Id :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade800,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Product Name :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade800,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Current stock :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade800,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Estimatedorder/day :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade800,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Day to stock out :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade800,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Status :",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade800,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                      ],
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Sr No. :",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
                     ),
                   ),
-                  Expanded(
-                    flex: 3, // Adjust the flex values as needed
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            height: 5
-                        ),
-                        Text(
-                          item['sr'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          item['date'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          item['tid'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          item['ano'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          item['bname'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          item['ifsc'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mabry',
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          item['amount'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mabry',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          item['s'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Mabry',
-                          ),
-                        ),
-                      ],
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Order Id : ",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "User Name :",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                    maxLines: 1, // Set maximum number of lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Date :",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Phone No. :",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Order Price :",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Payment mode :",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Status :",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10,),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              SizedBox(width: 20,),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        isDismissible: false,
-                        enableDrag: false,
-                        builder: (_) => CancelledView(),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.green, // Change 'Colors.blue' to the color you want
-                    ),
-                    child: Text(
-                      'View',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontFamily: 'Mabry',
-
-                      ),
-                    ),
+                  SizedBox(
+                      height: 5
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // showModalBottomSheet(
-                      //   context: context,
-                      //   isScrollControlled: true,
-                      //   isDismissible: false,
-                      //   enableDrag: false,
-                      //   builder: (_) => WlProfile(),
-                      // );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red, // Change 'Colors.blue' to the color you want
+                  Text(
+                    item['sr'],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                    maxLines: 1, // Set maximum number of lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    item['orderId'],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                    maxLines: 1, // Set maximum number of lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    item['userName'],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                    maxLines: 1, // Set maximum number of lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    item['Date'],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                    maxLines: 1, // Set maximum number of lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                      height: 5
+                  ),
+                  Text(
+                    item['phoneNo'],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                    maxLines: 1, // Set maximum number of lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    item['orderPrice'],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                    maxLines: 1, // Set maximum number of lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    item['paymentMode'],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                    maxLines: 1, // Set maximum number of lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6,vertical: 2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.red
                     ),
                     child: Text(
-                      'Delete',
+                      item['status'],
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white,
-                        fontFamily: 'Mabry',
-
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
                       ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
 
                 ],
-              )
+              ),
             ],
           ),
         );

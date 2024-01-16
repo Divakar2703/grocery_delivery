@@ -21,22 +21,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
       length: 4,
       child: Scaffold(
         appBar:  AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             'Ordered List',
             style: TextStyle(color: Colors.white,
               fontFamily: 'Muli',
-              fontSize: 18
+              fontSize: 20
             ),
           ),
           backgroundColor: kPrimaryColor,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: Colors.white, // Set the color of the back button here
-            onPressed: () {
-              // Implement the action upon pressing the back button if needed
-              Navigator.of(context).pop();
-            },
-          ),
+
         ),
         body: Column(
           children: [
@@ -47,7 +41,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 Tab(text: 'Delivered'),
                 Tab(text: 'Cancelled'),
 
-                // Add more tabs as needed
               ],
               isScrollable: true,
               labelColor: kPrimaryColor,

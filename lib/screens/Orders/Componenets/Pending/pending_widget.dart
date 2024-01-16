@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_delivery_side/screens/Orders/Componenets/Pending/pending_card.dart';
+
+import '../../../../constants.dart';
+import 'p_card.dart';
 
 class PendingWidget extends StatefulWidget {
   const PendingWidget({super.key});
@@ -31,62 +33,53 @@ class _PendingWidgetState extends State<PendingWidget> {
                 children: [
                   SizedBox(height: 10,),
                   Padding(
-                    padding: const EdgeInsets.only(left: 24,right: 24),
+                    padding: const EdgeInsets.only(left: 16,right: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text('Show',
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey.shade700,
-                                fontFamily: 'Mabry'
-                            ),
+                        Text('Show',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade700,
+                            fontFamily: "Muli",
                           ),
                         ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black38),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            height: 40,
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: selectItem,
-                                items: items.map((item) =>
-                                    DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(
-                                        item,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black54,
-                                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black38),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          height: 40,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: selectItem,
+                              items: items.map((item) =>
+                                  DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Text(
+                                      item,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black54,
                                       ),
                                     ),
-                                ).toList(),
-                                onChanged: (item) {
-                                  setState(() {
-                                    selectItem = item;
-                                  });
-                                },
-                              ),
+                                  ),
+                              ).toList(),
+                              onChanged: (item) {
+                                setState(() {
+                                  selectItem = item;
+                                });
+                              },
                             ),
                           ),
                         ),
-                        Expanded(
-                          flex: 2,
-                          child: Text('entries',
-                            style: TextStyle(
-                              fontFamily: 'Mabry',
-                              fontSize: 18,
-                              color: Colors.grey.shade700,
-                            ),
+                        Text('entries',
+                          style: TextStyle(
+                            fontFamily: 'Muli',
+                            fontSize: 16,
+                            color: Colors.grey.shade700,
                           ),
                         ),
                       ],
@@ -94,35 +87,29 @@ class _PendingWidgetState extends State<PendingWidget> {
                   ),
 
                   SizedBox(height: 10,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24,right: 24),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child:Text('Search:',
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey.shade700,
-                                fontFamily: 'Mabry'
-                            ),
+                  Container(
+                    height: 45,
+                    margin:EdgeInsets.all(8) ,
+                    child: Center(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: Colors.black54,
+                          ),
+                          hintText: "Search here...",
+                          hintStyle: TextStyle(color: Colors.black54),
+                          contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius: BorderRadius.circular(22.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius: BorderRadius.circular(22.0),
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Expanded(
-                            flex:6,
-                            child:Container(
-                              height: 40,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText: "",
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                                ),
-                              ),
-                            )
-                        ),
-                      ],
+                      ),
                     ),
                   ),
 
@@ -133,7 +120,7 @@ class _PendingWidgetState extends State<PendingWidget> {
 
 
                   SizedBox(height: 10,),
-                  PendingCard(),
+                  PCard(),
 
                   SizedBox(height: 10,),
                   Text(
@@ -141,7 +128,7 @@ class _PendingWidgetState extends State<PendingWidget> {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w300,
-                      fontFamily: 'Mabry',
+                      fontFamily: 'Muli',
                       color: Colors.grey.shade700,
                     ),
                   ),
@@ -169,7 +156,7 @@ class _PendingWidgetState extends State<PendingWidget> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black,
-                                fontFamily: 'Mabry'
+                                fontFamily: 'Muli'
                             ),
                           ),
                         ),
@@ -177,7 +164,7 @@ class _PendingWidgetState extends State<PendingWidget> {
                       Container(
                         height: 38,
                         decoration: BoxDecoration(
-                          color: Color(0xff8c7dff),
+                          color: kPrimaryColor,
                           border: Border.all(
                             color: Colors.grey, // You can change this color to the desired border color
                             width: 1.0, // You can adjust the border width as needed

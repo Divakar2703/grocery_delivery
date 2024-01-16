@@ -25,10 +25,10 @@ class IconBtnWithCounter extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            height: 46,
-            width: 46,
+            height: 42,
+            width: 42,
             decoration: BoxDecoration(
-              color: kSecondaryColor.withOpacity(0.1),
+              color: kSecondaryColor.withOpacity(0.4),
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(svgSrc),
