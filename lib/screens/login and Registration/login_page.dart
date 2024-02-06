@@ -37,7 +37,7 @@ class _LoginUserState extends State<LoginUser> {
   }
   void getUserId() {
     final phoneLoginRequestmodel = PhoneLoginRequestModel(
-      phone: "9854652345",
+      phone: mobileController.text.toString(),
     );
 
     phoneLoginViewModel.fetchPhoneLoginData(phoneLoginRequestmodel,context,);
@@ -59,244 +59,141 @@ class _LoginUserState extends State<LoginUser> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: AspectRatio(
-                  aspectRatio: 9 /11, // Adjust aspect ratio as needed
-                  child: Image.asset(
-                    'assets/images/boy3.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 32,horizontal: 16),
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        kPrimaryColor,
-                        Color(0xffa1cbfc),
-                      ], // Add your desired gradient colors
-                    ), borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(24),
-                        topRight: Radius.circular(24))),
-                child: Column(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+              Image(image: AssetImage("assets/images/d2.png")),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Log In',
-                          style: TextStyle(
-                              fontFamily: 'Muli',
-                              color: Colors.white,
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    Text(
+                      'Enter your mobile number\nto get OTP',
+                      style: TextStyle(
+                          fontFamily: 'Muli',
+                          color: Colors.black87,
+                          fontSize: 27,
+                          fontWeight: FontWeight.w900),
                     ),
-
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue.withOpacity(0.2),
-                            spreadRadius: 3,
-                            blurRadius: 7,
-                            offset:
-                            Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        controller: mobileController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          prefixIcon: Icon(
-                            Icons.person,
-                            color: Color(0xff0C134F),
-                          ),
-                          fillColor: Colors.white,
-                          filled: true,
-                          hintText: 'Enter Your Mobile No.',
-                          contentPadding: EdgeInsets.all(4),
-                          hintStyle: TextStyle(
-                            fontFamily: 'Muli',
-
-                            color: Color(0xff0C134F),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
-                    // Container(
-                    //   height: 45,
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.white,
-                    //     borderRadius: BorderRadius.circular(12),
-                    //     boxShadow: [
-                    //       BoxShadow(
-                    //         color: Colors.blue.withOpacity(0.2),
-                    //         spreadRadius: 3,
-                    //         blurRadius: 7,
-                    //         offset:
-                    //         Offset(0, 3), // changes position of shadow
-                    //       ),
-                    //     ],
-                    //   ),
-                    //   child: TextField(
-                    //     keyboardType: TextInputType.visiblePassword,
-                    //     decoration: InputDecoration(
-                    //       focusedBorder: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(12),
-                    //       ),
-                    //       enabledBorder: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(12),
-                    //       ),
-                    //       prefixIcon: Icon(
-                    //         Icons.key,
-                    //         color: Color(0xff0C134F),
-                    //       ),
-                    //       fillColor: Colors.white,
-                    //       filled: true,
-                    //       hintText: 'Password',
-                    //       contentPadding: EdgeInsets.all(4),
-                    //       hintStyle: TextStyle(
-                    //         fontFamily: 'Muli',
-                    //         color: Color(0xff0C134F),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-
-
-                    SizedBox(
-                      height: 30,
-                    ),
-                    InkWell(
-                      onTap: (){
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => OtpScreen()),
-                        // );
-                        checkValidation();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Color(0xffebf4f5),
-                              Color(0xffb5c6e0)
-                            ], // Add your desired gradient colors
-                          ),
-                          border: Border.all(color: Colors.white38),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            bottomRight: Radius.circular(10),
-                          ),
-                        ),
-                        height: 40,
-                        width: 270,
-                        child: Center(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              fontFamily: 'Muli',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text('or',
-                        style: TextStyle(color: Colors.white, fontSize: 13)),
-
-                    SizedBox(
-                      height: 5,
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Don't have an account?",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Muli',
-                                color: Colors.black87, fontSize: 12),
-                          ),
-                          TextSpan(
-                              text: 'Sign Up',
-                              style: TextStyle(
-                                  fontFamily: 'Muli',
-                                  decoration: TextDecoration.underline,
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
-                              recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => SignUp()),
-                              );
-                            },
-                          ),
-
-
-                          // Add any additional properties here
-
-                          // Add more TextSpan widgets as needed
-                        ],
-                      ),
-                    ),
-                    // InkWell(
-                    //   onTap: (){
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => ForgetPassword()),
-                    //     );
-                    //   },
-                    //   child: Text(
-                    //     'Forgot your password',
-                    //     style: TextStyle(
-                    //       fontFamily: 'Muli',
-                    //       fontSize: 12,
-                    //       fontWeight: FontWeight.bold,
-                    //       color: Colors.red,
-                    //     ),
-                    //   ),
-                    // ),
-
                   ],
                 ),
-              ),
 
-            ],
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: kPrimaryLightColor,
+                    borderRadius: BorderRadius.circular(12),
+
+                  ),
+                  child:TextField(
+                    controller: mobileController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+
+                     prefixText:"+91 | ",
+                     prefixIcon: Icon(Icons.person),
+
+                     // suffixIcon: SizedBox(width: 8),
+                      fillColor: kPrimaryLightColor,
+                      filled: true,
+                      hintText: 'Enter Your Mobile No.',
+                    contentPadding: EdgeInsets.all(8),
+                      hintStyle: TextStyle(
+                        fontFamily: 'Muli',
+                        color: Color(0xff0C134F),
+                      ),
+                    ),
+                  )
+
+
+
+                ),
+
+
+
+                SizedBox(
+                  height: 30,
+                ),
+                InkWell(
+                  onTap: (){
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => OtpScreen()),
+                    // );
+                    checkValidation();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      border: Border.all(color: Colors.white38),
+                      borderRadius: BorderRadius.circular(12)
+                    ),
+                    height: 50,
+                    child: Center(
+                      child: Text(
+                        'Get OTP',
+                        style: TextStyle(
+                          fontFamily: 'Muli',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Don't have an account?",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Muli',
+                            color: Colors.black54,
+                            fontSize: 12),
+                      ),
+                      TextSpan(
+                          text: 'Sign Up',
+                          style: TextStyle(
+                              fontFamily: 'Muli',
+                              decoration: TextDecoration.underline,
+                              color: Colors.black87,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                          recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SignUp()),
+                          );
+                        },
+                      ),
+
+
+                      // Add any additional properties here
+
+                      // Add more TextSpan widgets as needed
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
           ),
         ),
     );

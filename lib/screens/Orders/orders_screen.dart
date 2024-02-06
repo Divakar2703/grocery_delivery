@@ -26,7 +26,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
             'Ordered List',
             style: TextStyle(color: Colors.white,
               fontFamily: 'Muli',
-              fontSize: 20
+              fontSize: 20,
+              fontWeight: FontWeight.w600
             ),
           ),
           backgroundColor: kPrimaryColor,

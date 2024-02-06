@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../constants.dart';
+import '../../profile/profile.dart';
 import '../../profile/profile_screen.dart';
 import 'icon_btn_with_counter.dart';
 
@@ -19,7 +20,7 @@ class HomeHeader extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfileScreen()),
+              MaterialPageRoute(builder: (context) => Profile()),
             );
           },
           child: CircleAvatar(

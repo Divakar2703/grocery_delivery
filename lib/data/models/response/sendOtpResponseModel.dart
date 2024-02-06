@@ -1,5 +1,5 @@
 class SendOtpResponseModel {
-  String? otp;
+  dynamic otp;
   String? userId;
   String? status;
   int? statusCode;

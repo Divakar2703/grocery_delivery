@@ -121,185 +121,177 @@ class _OtpScreenState extends State<OtpScreen> {
     );
 
     return Scaffold(
-      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        ChangeNotifierProvider<SendOtpViewModel>(
-          create: (BuildContext context) => sendOtpViewModel,
-          child: Consumer<SendOtpViewModel>(builder: (context, value, _) {
-            switch (value.sendOtpData.status ?? "") {
-              case Status.LOADING:
-                return const Expanded(
-                    child: Center(child: CircularProgressIndicator()));
-              case Status.ERROR:
-                return const Text("Hello i am waiting error on Home page");
-              case Status.COMPLETED:
-                return Expanded(
-                    child: Container(
-                  decoration: BoxDecoration(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 80,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 300, // Adjust the width as needed
-                            height: 200, // Adjust the height as needed
-                            child: Image.asset(
-                              'assets/images/g.png',
-                              fit: BoxFit
-                                  .contain, // Use a different BoxFit as needed
-                            ),
+      body: SafeArea(
+        child:
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          ChangeNotifierProvider<SendOtpViewModel>(
+            create: (BuildContext context) => sendOtpViewModel,
+            child: Consumer<SendOtpViewModel>(builder: (context, value, _) {
+              switch (value.sendOtpData.status ?? "") {
+                case Status.LOADING:
+                  return const Expanded(
+                      child: Center(child: CircularProgressIndicator()));
+                case Status.ERROR:
+                  return const Text("Hello i am waiting error on Home page");
+                case Status.COMPLETED:
+                  return Expanded(
+                      child: Container(
+                    decoration: BoxDecoration(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        
+                        Image(image: AssetImage("assets/images/v1.png")),
+        
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Verify OTP',
+                                style: TextStyle(
+                                  color: Color(0xFF262626),
+                                  fontSize: 26,
+                                  fontFamily: 'Muli',
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Verify OTP',
-                            style: TextStyle(
-                              color: Color(0xFF262626),
-                              fontSize: 26,
-                              fontFamily: 'Muli',
-                              fontWeight: FontWeight.w900,
-                            ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'We have send Otp to your Mobile No.',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontFamily: 'Muli',
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: Row(
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              'We have send Otp to your Mobile No.',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontFamily: 'Muli',
-                                  fontWeight: FontWeight.w400),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(22, 0, 0, 0),
+                              child: Text(
+                                'Enter OTP',
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontFamily: 'Muli',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(22, 0, 0, 0),
-                            child: Text(
-                              'Enter OTP',
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  fontFamily: 'Muli',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16),
-                            ),
-                          )
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Pinput(
-                          controller: pinputController,
-                          length: 4,
-                          validator: (s) {
-                            return s == '2222' ? null : '';
-                          },
-                          pinputAutovalidateMode:
-                              PinputAutovalidateMode.onSubmit,
-                          showCursor: true,
-                          onCompleted: (pin) => print(pin),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Pinput(
+                            controller: pinputController,
+                            length: 6,
+                            validator: (s) {
+                              return s == '2222' ? null : '';
+                            },
+                            pinputAutovalidateMode:
+                                PinputAutovalidateMode.onSubmit,
+                            showCursor: true,
+                            onCompleted: (pin) => print(pin),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                        child: InkWell(
-                          onTap: () {
-                            validateOtp();
-                          },
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius: BorderRadius.circular(32),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "VERIFY",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontFamily: 'Muli',
-                                  fontWeight: FontWeight.w600,
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                          child: InkWell(
+                            onTap: () {
+                              validateOtp();
+                            },
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.circular(32),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "VERIFY",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'Muli',
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Did'nt receve the verification OTP?",
-                                  style: TextStyle(
-                                    color: Colors.grey.shade700,
-                                    fontFamily: 'Muli',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    // Navigator.of(context).push(
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => HomeScreen(),
-                                    //   ),
-                                    //    );
-                                  },
-                                  child: Text(
-                                    "Resnd OTP",
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Did'nt receve the verification OTP?",
                                     style: TextStyle(
-                                      color: kPrimaryColor,
-                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey.shade700,
                                       fontFamily: 'Muli',
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ));
-            }
-
-            return Container();
-          }),
-        ),
-      ]),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      // Navigator.of(context).push(
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => HomeScreen(),
+                                      //   ),
+                                      //    );
+                                    },
+                                    child: Text(
+                                      "Resnd OTP",
+                                      style: TextStyle(
+                                        color: kPrimaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Muli',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ));
+              }
+        
+              return Container();
+            }),
+          ),
+        ]),
+      ),
     );
   }
 }

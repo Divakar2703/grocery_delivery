@@ -43,6 +43,7 @@ dependencies:
   http: ^1.1.2
   provider: ^6.0.5
   fluttertoast: ^8.2.4
+  lottie: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/animations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

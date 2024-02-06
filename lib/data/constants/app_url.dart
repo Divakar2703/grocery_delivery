@@ -5,6 +5,7 @@ class AppUrl{
   static var sendOtpUrl="${baseUrl}sendotp";
   static var verifyOtpUrl="${baseUrl}Verifyotp";
   static var registerUrl="${baseUrl}register";
+  static var indextPageCountUrl="https://grossry.56testing.club/indextpage-count";
 
 
 }
