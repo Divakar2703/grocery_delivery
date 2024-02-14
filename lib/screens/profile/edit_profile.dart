@@ -1,597 +1,295 @@
 import 'package:flutter/material.dart';
-
+import 'package:geocoding/geocoding.dart';
+import 'package:grocery_delivery_side/data/models/request/ProfileUpdateRequestModel.dart';
+import 'package:grocery_delivery_side/viewmodels/view_model_profile.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
+import 'package:location/location.dart' as loc;
+
+import '../../data/constants/app_constants_value.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  const EditProfile({Key? key}) : super(key: key);
 
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController pinCodeController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+
+  ProfileViewModel profileViewModel = ProfileViewModel();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  loc.LocationData? locationData;
+  List<Placemark>? placemark;
+  String address = '';
+  String locality = '';
+  String state = '';
+  String country = '';
+  String pinCode = '';
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+   getUserDataFromSharedPref();
+    getPermission();
+  }
+
+  void getUserDataFromSharedPref() async{
+    final SharedPreferences sp =  await SharedPreferences.getInstance();
+    nameController.text = sp.getString(Constants.userId) ?? '';
+    mobileController.text = sp.getString(Constants.mobile) ?? '';
+  }
+
+  void getPermission() async {
+    if (await Permission.location.isGranted) {
+      getLocation();
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      await Permission.location.request();
+    }
+  }
+
+  void getLocation() async {
+    setState(() {
+      _isLoading = true;
+    });
+    locationData = await loc.Location.instance.getLocation();
+    if (locationData != null) {
+      getAddress();
+    }
+  }
+
+  void getAddress() async {
+    placemark = await placemarkFromCoordinates(
+      locationData!.latitude!,
+      locationData!.longitude!,
+    );
+
+    if (placemark != null && placemark!.isNotEmpty) {
+      final firstPlacemark = placemark![0];
+      locality = firstPlacemark.locality ?? '';
+      state = firstPlacemark.administrativeArea ?? '';
+      country = firstPlacemark.country ?? '';
+      pinCode = firstPlacemark.postalCode ?? '';
+
+      setState(() {
+        _isLoading = false;
+        // Set the text in the state, country, and city text fields
+        stateController.text = state;
+        countryController.text = country;
+        cityController.text = locality;
+        pinCodeController.text = pinCode;
+      });
+    }
+  }
+
+
+  void getRegisterData() {
+    if (_formKey.currentState!.validate()) {
+      final data = ProfileUpdateRequestModel(
+        userId: '5',
+        name: nameController.text.toString(),
+        phone: mobileController.text.toString(),
+        email: emailController.text.toString(),
+        address: addressController.text.toString(),
+        pinCode: pinCodeController.text.toString(),
+        city: cityController.text.toString(),
+        state: stateController.text.toString(),
+        country: 'India',
+      );
+
+      profileViewModel.fetchUpdateProfileData(data, context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 40,left: 16,right: 16,bottom: 16),
-              decoration: BoxDecoration(
-                color: kPrimaryColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3), // Shadow color
-                    spreadRadius: 2, // Spread radius
-                    blurRadius: 7, // Blur radius
-                    offset: Offset(0, 3), // Changes position of shadow
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    "Update your Profile",
-                    style: TextStyle(
+      body: _isLoading
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 16),
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      "Update your Profile",
+                      style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,
                         fontFamily: "Muli",
-                        fontWeight: FontWeight.w600
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24)
+                  ],
                 ),
               ),
-              child: Column(
-                children:  [
-                  SizedBox(height: 10,),
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                            bottom: Radius.circular(24)
-                        )
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              '   User Name *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your Name',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text(
-                              '   User ID *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your Id',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text(
-                              '   Phone Number *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your Number',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text(
-                              '   Email ID *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your Email Id',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-
-
-
-                      ],
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Address Details",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black87,
-                              fontFamily: "Muli",
-                              fontWeight: FontWeight.w600
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24)
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              '   Address *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your Address',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text(
-                              '   Pin Code *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your Pin Code',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text(
-                              '   City *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your City',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text(
-                              '   State *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your state',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text(
-                              '   Country *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: 'Enter your Country',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-
-
-
-
-                      ],
-                    ),
-                  ),
-
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Leave Details",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black87,
-                              fontFamily: "Muli",
-                              fontWeight: FontWeight.w600
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24)
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              '   Form Date *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: '01/02/2024',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text(
-                              '   To Date *',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                              hintText: '01/02/2024',
-                              hintStyle: TextStyle(
-                                // Center align the hint text
-                                fontSize: 15.0,
-                                color: Colors.grey,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: Colors.black, // Set border color here
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 20,),
-
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color:kPrimaryColor, // Set the red background color for the button
-                          ),
-                          child: TextButton(
-                            onPressed: () {
-                              // Add functionality for the button
-                              // For example
+                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+                      ),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: nameController,
+                            decoration: InputDecoration(labelText: 'User Name *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              return null;
                             },
-                            child: Text(
-                              'Update',
-                              style: TextStyle(
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: mobileController,
+                            decoration: InputDecoration(labelText: 'Phone Number *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your phone number';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: emailController,
+                            decoration: InputDecoration(labelText: 'Email ID *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: addressController,
+                            decoration: InputDecoration(labelText: 'Address *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your address';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: pinCodeController,
+                            decoration: InputDecoration(labelText: 'Pin Code *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your pin code';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: cityController,
+                            decoration: InputDecoration(labelText: 'City *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your city';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: stateController,
+                            decoration: InputDecoration(labelText: 'State *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your state';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: countryController,
+                            decoration: InputDecoration(labelText: 'Country *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your country';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 20),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: kPrimaryColor,
+                            ),
+                            child: TextButton(
+                              onPressed: getRegisterData,
+                              child: Text(
+                                'Update',
+                                style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,
                                   fontFamily: "Muli",
-                                  fontWeight: FontWeight.w600
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-
-
-
-
-
-
-
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-
-
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-
-
     );
   }
 }

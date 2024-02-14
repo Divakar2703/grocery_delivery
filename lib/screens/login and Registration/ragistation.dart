@@ -16,7 +16,6 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-
   TextEditingController mobileController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -32,6 +31,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   void getRegisterData() {
+    registerViewModel.mobile=mobileController.text.toString();
     final registerRequestModel = RegisterRequestModel(
       name: nameController.text.toString(),
       mobileNo: mobileController.text.toString(),

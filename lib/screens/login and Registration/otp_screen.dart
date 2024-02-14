@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/data/models/request/sendOtpRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/verifyOtpRequestModel.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_send_otp.dart';
+import 'package:grocery_delivery_side/viewmodels/view_model_verify_otp.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
@@ -12,8 +13,9 @@ import '../../init_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   String? userId;
+  String? mobile;
 
-  OtpScreen({super.key, required this.userId});
+  OtpScreen({super.key, required this.userId,required this.mobile});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -22,6 +24,7 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   SendOtpViewModel sendOtpViewModel = SendOtpViewModel();
   TextEditingController pinputController = TextEditingController();
+  VerifyOtpViewModel verifyOtpViewModel = VerifyOtpViewModel();
   String? otp = '';
 
   @override
@@ -32,6 +35,8 @@ class _OtpScreenState extends State<OtpScreen> {
       context,
     );
 
+    verifyOtpViewModel.userId = widget.userId.toString();
+    verifyOtpViewModel.mobile = widget.mobile.toString();
     // getOtp();
     super.initState();
   }
@@ -49,37 +54,19 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  void validateOtp() {
-    otp = sendOtpViewModel.sendOtpData.data?.otp.toString();
-
-    if (pinputController.text.toString() == otp) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => InitScreen()),
-      );
-    } else {
-      showToast('Pin is incurrect');
-    }
-  }
-
   void verifyOtp() {
     String enteredOtp = pinputController.text.toString();
-    final verifyOtpReqModel =
-        VerifyOtpRequestModel(userId: widget.userId, otp: enteredOtp);
-    sendOtpViewModel.fetchVerifyOtpData(
-      verifyOtpReqModel,
-      context,
-    );
 
-    if(sendOtpViewModel.verifyOtpData.data?.status.toString() == 'Success'){
-      Navigator.push(
+    if(enteredOtp.length == 6){
+      final verifyOtpReqModel =
+      VerifyOtpRequestModel(userId: widget.userId, otp: enteredOtp);
+      verifyOtpViewModel.fetchVerifyOtpData(
+        verifyOtpReqModel,
         context,
-        MaterialPageRoute(builder: (context) => InitScreen()),
       );
     }
-    else{
-      showToast(sendOtpViewModel.verifyOtpData.data!.message.toString());
-    }
+
+
   }
 
   void showToast(String message) {
@@ -219,7 +206,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
                           child: InkWell(
                             onTap: () {
-                              validateOtp();
+                              verifyOtp();
                             },
                             child: Container(
                               height: 50,

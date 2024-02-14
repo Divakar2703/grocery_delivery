@@ -18,8 +18,6 @@ import '../data/processResponse/api_process_response.dart';
 class SendOtpViewModel with ChangeNotifier {
   final _sendOtpRepo = SendOtpRepository();
 
-
-
   ApiProcessResponse<SendOtpResponseModel> sendOtpData = ApiProcessResponse.loading();
   ApiProcessResponse<VerifyOtpResponseModel> verifyOtpData = ApiProcessResponse.loading();
 

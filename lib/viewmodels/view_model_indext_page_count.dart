@@ -22,20 +22,19 @@ class IndextPageCountViewModel with ChangeNotifier {
   Future<void> fetchIndextPageCountData(IndextPageCountRequestModel data, BuildContext context) async {
     setIndextPageCountData(ApiProcessResponse.loading());
     try {
-      // final Map<String, dynamic> responseData = (await _homeRepo.fetchHomeData(data)) as Map<String, dynamic>;
       final IndextPageCountResponseModel indextPageCountResponseModel = await _indextPageCountRepo.fetchIndextPageCountData(data);
-
-      // final HomePageResponseModel homePageResponseModel = HomePageResponseModel.fromJson(responseData as String);
       setIndextPageCountData(ApiProcessResponse.completed(indextPageCountResponseModel));
 
       if (kDebugMode) {
         print("Data aa ha hai${indextPageCountResponseModel.status}");
 
       }
-
       if(indextPageCountResponseModel.record?.deliUserId!=null){
         var userId = indextPageCountResponseModel.record?.deliUserId.toString();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,),),);
+        print("==================================$userId");
+
+        //       userId: Constants.userIdForUse
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,),),);
       }
 
 
@@ -51,9 +50,6 @@ class IndextPageCountViewModel with ChangeNotifier {
       }
       final IndextPageCountResponseModel indextPageCountResponseModel = await _indextPageCountRepo.fetchIndextPageCountData(data);
       setIndextPageCountData(ApiProcessResponse.completed(indextPageCountResponseModel));
-
-      // final Map<String, dynamic> responseData = (await _homeRepo.fetchHomeData(data)) as Map<String, dynamic>;
-      // final HomePageResponseModel homePageResponseModel = HomePageResponseModel.fromJson(responseData as String);
 
       if (kDebugMode) {
         print("Kuchh to gadabad h Dya");

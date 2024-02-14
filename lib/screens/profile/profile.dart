@@ -1,10 +1,11 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:grocery_delivery_side/screens/profile/profile_edit.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'edit_profile.dart';
-
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -14,6 +15,130 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String selectedImagePath = ''; // To store the selected image path
+
+  Future selectImage(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 180,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Select Profile Image',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              selectedImagePath =
+                                  await selectImageFromGallery();
+                              final SharedPreferences sp =
+                                  await SharedPreferences.getInstance();
+                              sp.setString("profileImg", selectedImagePath);
+                              print('Image_Path:-');
+                              print(selectedImagePath);
+                              if (selectedImagePath != '') {
+                                Navigator.pop(context);
+                                setState(() {});
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("No Image Selected !"),
+                                ));
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/gallery.png',
+                                    height: 60,
+                                    width: 60,
+                                  ),
+                                  const Text('Gallery'),
+                                ],
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              selectedImagePath = await selectImageFromCamera();
+                              print('Image_Path:-');
+                              print(selectedImagePath);
+                              final SharedPreferences sp =
+                                  await SharedPreferences.getInstance();
+                              sp.setString("profileImg", selectedImagePath);
+                              if (selectedImagePath != '') {
+                                Navigator.pop(context);
+                                setState(() {});
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("No Image Captured !"),
+                                ));
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/camera.png',
+                                    height: 60,
+                                    width: 60,
+                                  ),
+                                  const Text('Camera'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  selectImageFromGallery() async {
+    XFile? file = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, imageQuality: 10);
+    if (file != null) {
+      return file.path;
+    } else {
+      return '';
+    }
+  }
+
+  //
+  selectImageFromCamera() async {
+    XFile? file = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 10);
+    if (file != null) {
+      return file.path;
+    } else {
+      return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,17 +158,24 @@ class _ProfileState extends State<Profile> {
               children: [
                 Transform.translate(
                   offset: Offset(0, -35), // Adjust the values as needed
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white, // Set the border color
-                        width: 5.0, // Set the border width
+                  child: GestureDetector(
+                    onTap: (){
+                      selectImage(context);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white, // Set the border color
+                          width: 5.0, // Set the border width
+                        ),
                       ),
-                    ),
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/Profile Image.png",),
-                      radius: 50,
+                      child: CircleAvatar(
+                        backgroundImage: selectedImagePath.isNotEmpty
+                            ? AssetImage(selectedImagePath)
+                            : AssetImage("assets/images/Profile Image.png"),
+                        radius: 50,
+                      ),
                     ),
                   ),
                 ),
@@ -69,18 +201,21 @@ class _ProfileState extends State<Profile> {
                   height: 12,
                 ),
                 ProfileContainer(),
-
                 Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8,horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Color(0xff81bab4),
-                      spreadRadius: 2,
-                      blurRadius: 03,
-                      offset: Offset(1, 1), // changes position of shadow
-                    ),
-                  ], borderRadius: BorderRadius.circular(10), color: Colors.white),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xff81bab4),
+                          spreadRadius: 2,
+                          blurRadius: 03,
+                          offset: Offset(1, 1), // changes position of shadow
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white),
                   width: double.infinity,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,23 +246,22 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                 ),
-
                 CardWidget_R(
                   title: 'Update Your Profile',
                 ),
-
                 Container(
                   margin: EdgeInsets.all(8),
                   width: 120,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Color(0xff81bab4),
+                    borderRadius: BorderRadius.circular(8),
+                    color: Color(0xff81bab4),
                   ),
                   child: Row(
                     children: [
                       IconButton(
                         icon: SvgPicture.asset(
-                          "assets/icons/logout-svgrepo-com-2.svg", // Replace with your SVG path
+                          "assets/icons/logout-svgrepo-com-2.svg",
+                          // Replace with your SVG path
                           height: 18,
                           width: 16,
                           color: Colors.red,
@@ -142,8 +276,7 @@ class _ProfileState extends State<Profile> {
                             fontSize: 15,
                             color: Colors.black,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w600
-                        ),
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -182,7 +315,8 @@ class ProfileContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white38,
@@ -202,7 +336,9 @@ class ProfileContainer extends StatelessWidget {
                         size: 18,
                         color: Colors.green,
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Column(
                         children: [
                           Text(
@@ -229,7 +365,8 @@ class ProfileContainer extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white38,
@@ -249,7 +386,9 @@ class ProfileContainer extends StatelessWidget {
                         size: 18,
                         color: Colors.red,
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Column(
                         children: [
                           Text(
@@ -301,8 +440,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.black,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w600
-                        ),
+                            fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 5,
@@ -313,8 +451,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.black,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w600
-                        ),
+                            fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 5,
@@ -325,8 +462,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.black,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w600
-                        ),
+                            fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 5,
@@ -337,8 +473,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.black,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w600
-                        ),
+                            fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 5,
@@ -349,8 +484,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.black,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w600
-                        ),
+                            fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 5,
@@ -361,8 +495,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.black,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w600
-                        ),
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -370,17 +503,14 @@ class ProfileContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                          height: 5
-                      ),
+                      SizedBox(height: 5),
                       Text(
                         'Bhupendra thakur',
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w500
-                        ),
+                            fontWeight: FontWeight.w500),
                       ),
                       SizedBox(
                         height: 5,
@@ -391,8 +521,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w500
-                        ),
+                            fontWeight: FontWeight.w500),
                       ),
                       SizedBox(
                         height: 5,
@@ -403,8 +532,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w500
-                        ),
+                            fontWeight: FontWeight.w500),
                       ),
                       SizedBox(
                         height: 5,
@@ -415,8 +543,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w500
-                        ),
+                            fontWeight: FontWeight.w500),
                       ),
                       SizedBox(
                         height: 5,
@@ -427,8 +554,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w500
-                        ),
+                            fontWeight: FontWeight.w500),
                       ),
                       SizedBox(
                         height: 5,
@@ -439,8 +565,7 @@ class ProfileContainer extends StatelessWidget {
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
-                            fontWeight: FontWeight.w500
-                        ),
+                            fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -457,13 +582,15 @@ class ProfileContainer extends StatelessWidget {
 class CardWidget_R extends StatelessWidget {
   final String title;
 
-  const CardWidget_R({Key? key, required this.title, })
-      : super(key: key);
+  const CardWidget_R({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -475,7 +602,9 @@ class CardWidget_R extends StatelessWidget {
           shadowColor: Color(0xff81bab4),
           elevation: 2,
           child: Padding(
-            padding: const EdgeInsets.only(left: 16,),
+            padding: const EdgeInsets.only(
+              left: 16,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

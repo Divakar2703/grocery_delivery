@@ -16,7 +16,7 @@ import '../repositories/repo_register.dart';
 
 class RegisterViewModel with ChangeNotifier {
   final _registerRepo = RegisterRepository();
-
+  String mobile = '';
   ApiProcessResponse<RegisterResponseModel> registerData = ApiProcessResponse.loading();
 
   setRegisterData(ApiProcessResponse<RegisterResponseModel> response) {
@@ -27,10 +27,8 @@ class RegisterViewModel with ChangeNotifier {
   Future<void> fetchRegisterData(RegisterRequestModel data, BuildContext context) async {
     setRegisterData(ApiProcessResponse.loading());
     try {
-      // final Map<String, dynamic> responseData = (await _homeRepo.fetchHomeData(data)) as Map<String, dynamic>;
       final RegisterResponseModel registerResponseModel = await _registerRepo.fetchRegisterData(data);
 
-      // final HomePageResponseModel homePageResponseModel = HomePageResponseModel.fromJson(responseData as String);
       setRegisterData(ApiProcessResponse.completed(registerResponseModel));
 
       if (kDebugMode) {
@@ -41,7 +39,7 @@ class RegisterViewModel with ChangeNotifier {
       if(registerResponseModel.status! =="success" && registerResponseModel.message! != "User Already Register"){
 
         var userId = registerResponseModel.userId.toString();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,),),);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
       }else{
         showToast(registerResponseModel.message.toString());
       }
@@ -60,8 +58,6 @@ class RegisterViewModel with ChangeNotifier {
       final RegisterResponseModel registerResponseModel = await _registerRepo.fetchRegisterData(data);
       setRegisterData(ApiProcessResponse.completed(registerResponseModel));
 
-      // final Map<String, dynamic> responseData = (await _homeRepo.fetchHomeData(data)) as Map<String, dynamic>;
-      // final HomePageResponseModel homePageResponseModel = HomePageResponseModel.fromJson(responseData as String);
 
       if (kDebugMode) {
         print("Kuchh to gadabad h Dya");

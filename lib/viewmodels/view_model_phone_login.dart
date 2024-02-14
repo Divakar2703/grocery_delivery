@@ -36,7 +36,8 @@ class PhoneLoginViewModel with ChangeNotifier {
 
       if(phoneLoginResponseModel.record?.deliUserId!=null){
         var userId = phoneLoginResponseModel.record?.deliUserId.toString();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,),),);
+        var mobile = phoneLoginResponseModel.record?.mobileNo.toString();
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
       }
 
 
