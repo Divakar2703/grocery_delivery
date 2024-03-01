@@ -128,7 +128,7 @@ class _EditProfileState extends State<EditProfile> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 16),
+                padding: EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 16),
                 decoration: BoxDecoration(
                   color: kPrimaryColor,
                   boxShadow: [
@@ -184,7 +184,7 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           TextFormField(
                             controller: mobileController,
                             decoration: InputDecoration(labelText: 'Phone Number *'),
@@ -195,7 +195,7 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           TextFormField(
                             controller: emailController,
                             decoration: InputDecoration(labelText: 'Email ID *'),
@@ -206,7 +206,7 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           TextFormField(
                             controller: addressController,
                             decoration: InputDecoration(labelText: 'Address *'),
@@ -217,7 +217,7 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           TextFormField(
                             controller: pinCodeController,
                             decoration: InputDecoration(labelText: 'Pin Code *'),
@@ -228,7 +228,7 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           TextFormField(
                             controller: cityController,
                             decoration: InputDecoration(labelText: 'City *'),
@@ -239,7 +239,7 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           TextFormField(
                             controller: stateController,
                             decoration: InputDecoration(labelText: 'State *'),
@@ -250,7 +250,7 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           TextFormField(
                             controller: countryController,
                             decoration: InputDecoration(labelText: 'Country *'),
@@ -261,10 +261,11 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 30),
                           Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(12),
                               color: kPrimaryColor,
                             ),
                             child: TextButton(

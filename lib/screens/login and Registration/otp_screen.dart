@@ -15,7 +15,7 @@ class OtpScreen extends StatefulWidget {
   String? userId;
   String? mobile;
 
-  OtpScreen({super.key, required this.userId,required this.mobile});
+  OtpScreen({super.key, required this.userId, required this.mobile});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -57,16 +57,14 @@ class _OtpScreenState extends State<OtpScreen> {
   void verifyOtp() {
     String enteredOtp = pinputController.text.toString();
 
-    if(enteredOtp.length == 6){
+    if (enteredOtp.length == 6) {
       final verifyOtpReqModel =
-      VerifyOtpRequestModel(userId: widget.userId, otp: enteredOtp);
+          VerifyOtpRequestModel(userId: widget.userId, otp: enteredOtp);
       verifyOtpViewModel.fetchVerifyOtpData(
         verifyOtpReqModel,
         context,
       );
     }
-
-
   }
 
   void showToast(String message) {
@@ -109,8 +107,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child:
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ChangeNotifierProvider<SendOtpViewModel>(
             create: (BuildContext context) => sendOtpViewModel,
             child: Consumer<SendOtpViewModel>(builder: (context, value, _) {
@@ -127,9 +124,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        
                         Image(image: AssetImage("assets/images/v1.png")),
-        
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                           child: Row(
@@ -273,7 +268,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                   ));
               }
-        
+
               return Container();
             }),
           ),

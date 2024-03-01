@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:grocery_delivery_side/init_screen.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
+import 'package:grocery_delivery_side/screens/maps/selectLocationPage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/constants/app_constants_value.dart';
@@ -37,7 +38,8 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return InitScreen();
+            return SelectLocationScreen();
+              // InitScreen();
           },
         ),
       );
@@ -45,7 +47,8 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return LoginUser();
+            return SelectLocationScreen();
+              // LoginUser();
           },
         ),
       );

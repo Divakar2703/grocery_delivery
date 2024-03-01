@@ -23,7 +23,7 @@ class _OrderDateState extends State<OrderDate> {
         children: dates.map((dateInfo) {
           return Container(
             margin: EdgeInsets.all(8),
-            padding: EdgeInsets.only(top: 16,bottom: 16,right: 16,left: 16),
+            padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
             //height: 120,
            // width: 150,
             decoration: BoxDecoration(
@@ -39,7 +39,7 @@ class _OrderDateState extends State<OrderDate> {
                 Text(
                   dateInfo['date'],
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 24,
                     color: Colors.black87,
                     fontFamily: "Muli",
                     fontWeight: FontWeight.w800,
@@ -48,7 +48,7 @@ class _OrderDateState extends State<OrderDate> {
                 Text(
                   dateInfo['day'],
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 18,
                     color: Colors.black87,
                     fontFamily: "Muli",
                     fontWeight: FontWeight.w700,
