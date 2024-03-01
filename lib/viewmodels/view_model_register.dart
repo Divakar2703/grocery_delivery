@@ -8,15 +8,19 @@ import 'package:grocery_delivery_side/data/models/request/PhoneLoginRequestModel
 import 'package:grocery_delivery_side/repositories/repo_phone_login.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/otp_screen.dart';
 import '../data/models/request/registerRequestModel.dart';
+import '../data/models/request/sendOtpRequestModel.dart';
 import '../data/models/response/phoneLoginResponseModel.dart';
 import '../data/models/response/registerResponseModel.dart';
+import '../data/models/response/sendOtpResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
+import '../helper/toast.dart';
 import '../repositories/repo_register.dart';
 
 
 class RegisterViewModel with ChangeNotifier {
   final _registerRepo = RegisterRepository();
   String mobile = '';
+  var userId = '';
   ApiProcessResponse<RegisterResponseModel> registerData = ApiProcessResponse.loading();
 
   setRegisterData(ApiProcessResponse<RegisterResponseModel> response) {
@@ -38,10 +42,17 @@ class RegisterViewModel with ChangeNotifier {
 
       if(registerResponseModel.status! =="success" && registerResponseModel.message! != "User Already Register"){
 
-        var userId = registerResponseModel.userId.toString();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
+        userId = registerResponseModel.userId.toString();
+        final sendOtpReqModel = SendOtpRequestModel(userId: userId);
+
+        fetchSendOtpData(
+          sendOtpReqModel,
+          context,
+        );
+
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
       }else{
-        showToast(registerResponseModel.message.toString());
+        AppToast.showToast(registerResponseModel.message.toString());
       }
 
 
@@ -64,15 +75,53 @@ class RegisterViewModel with ChangeNotifier {
       }
     }
   }
-  void showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.grey,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
+
+
+  ApiProcessResponse<SendOtpResponseModel> sendOtpData = ApiProcessResponse.loading();
+  setSendOtpData(ApiProcessResponse<SendOtpResponseModel> response) {
+    sendOtpData = response;
+    notifyListeners();
   }
+
+  Future<void> fetchSendOtpData(SendOtpRequestModel data, BuildContext context) async {
+    setSendOtpData(ApiProcessResponse.loading());
+    try {
+      final SendOtpResponseModel sendOtpResponseModel = await _registerRepo.fetchSendOtpDataReg(data);
+
+      setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));
+
+      if(sendOtpResponseModel.status!='error'){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
+
+      }else{
+        AppToast.showToast(sendOtpResponseModel.message.toString());
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${sendOtpResponseModel.status}");
+      }
+
+
+      AppToast.showToast(sendOtpResponseModel.message.toString());
+
+    } catch (error) {
+      if (error is SocketException) {
+        setSendOtpData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setSendOtpData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setSendOtpData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setSendOtpData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+      final SendOtpResponseModel sendOtpResponseModel = await _registerRepo.fetchSendOtpDataReg(data);
+      setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
 }

@@ -18,29 +18,32 @@ class LoginUser extends StatefulWidget {
 }
 
 class _LoginUserState extends State<LoginUser> {
-
   TextEditingController mobileController = TextEditingController();
   PhoneLoginViewModel phoneLoginViewModel = PhoneLoginViewModel();
+  bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
+  void checkValidation() {
+    if (mobileController.text.toString().length >= 10) {
+      getUserId();
+    } else {
+      showToast('Please enter valid mobile no.!');
+    }
   }
 
-  void checkValidation(){
-  if(mobileController.text.toString().length>=10){
-    getUserId();
-  }
-  else{
-    showToast('Please enter valid mobile no.!');
-  }
-  }
-  void getUserId() {
+  Future<void> getUserId() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     final phoneLoginRequestmodel = PhoneLoginRequestModel(
       phone: mobileController.text.toString(),
     );
 
-    phoneLoginViewModel.fetchPhoneLoginData(phoneLoginRequestmodel,context,);
+    await phoneLoginViewModel.fetchPhoneLoginData(phoneLoginRequestmodel, context);
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void showToast(String message) {
@@ -58,13 +61,14 @@ class _LoginUserState extends State<LoginUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
+      body: SingleChildScrollView(
+        child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-              Image(image: AssetImage("assets/images/d2.png")),
+                Image(image: AssetImage("assets/images/d2.png")),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -78,7 +82,6 @@ class _LoginUserState extends State<LoginUser> {
                     ),
                   ],
                 ),
-
                 SizedBox(
                   height: 30,
                 ),
@@ -87,9 +90,8 @@ class _LoginUserState extends State<LoginUser> {
                   decoration: BoxDecoration(
                     color: kPrimaryLightColor,
                     borderRadius: BorderRadius.circular(12),
-
                   ),
-                  child:TextField(
+                  child: TextField(
                     controller: mobileController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -99,45 +101,33 @@ class _LoginUserState extends State<LoginUser> {
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-
-                     prefixText:"+91 | ",
-                     prefixIcon: Icon(Icons.person),
-
-                     // suffixIcon: SizedBox(width: 8),
+                      prefixText: "+91 | ",
+                      prefixIcon: Icon(Icons.person),
                       fillColor: kPrimaryLightColor,
                       filled: true,
                       hintText: 'Enter Your Mobile No.',
-                    contentPadding: EdgeInsets.all(8),
+                      contentPadding: EdgeInsets.all(8),
                       hintStyle: TextStyle(
                         fontFamily: 'Muli',
                         color: Color(0xff0C134F),
                       ),
                     ),
-                  )
-
-
-
+                  ),
                 ),
-
-
-
                 SizedBox(
                   height: 30,
                 ),
-                InkWell(
-                  onTap: (){
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => OtpScreen()),
-                    // );
+                _isLoading
+                    ? CircularProgressIndicator() // Show progress indicator when loading
+                    : InkWell(
+                  onTap: () {
                     checkValidation();
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: kPrimaryColor,
-                      border: Border.all(color: Colors.white38),
-                      borderRadius: BorderRadius.circular(12)
-                    ),
+                        color: kPrimaryColor,
+                        border: Border.all(color: Colors.white38),
+                        borderRadius: BorderRadius.circular(12)),
                     height: 50,
                     child: Center(
                       child: Text(
@@ -152,7 +142,6 @@ class _LoginUserState extends State<LoginUser> {
                     ),
                   ),
                 ),
-
                 SizedBox(
                   height: 20,
                 ),
@@ -168,34 +157,29 @@ class _LoginUserState extends State<LoginUser> {
                             fontSize: 12),
                       ),
                       TextSpan(
-                          text: 'Sign Up',
-                          style: TextStyle(
-                              fontFamily: 'Muli',
-                              decoration: TextDecoration.underline,
-                              color: Colors.black87,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold),
-                          recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SignUp()),
-                          );
-                        },
+                        text: 'Sign Up',
+                        style: TextStyle(
+                            fontFamily: 'Muli',
+                            decoration: TextDecoration.underline,
+                            color: Colors.black87,
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SignUp()),
+                            );
+                          },
                       ),
-
-
-                      // Add any additional properties here
-
-                      // Add more TextSpan widgets as needed
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
         ),
+      ),
     );
   }
 }
