@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         builder: FToastBuilder(),
         title: 'Flutter Demo',
         theme: AppTheme.lightTheme(context),
-        home: SplashScreen(),
+        home: InitScreen(),
       ),
     );
 

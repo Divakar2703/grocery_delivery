@@ -1,28 +1,39 @@
-import 'package:flutter/material.dart';
 
-import 'cancelled_view.dart';
+//CancelledCard
+
+import 'package:flutter/material.dart';
 
 class CancelledCard extends StatefulWidget {
   const CancelledCard({super.key});
 
   @override
-  State<CancelledCard> createState() => _CancelledCardState();
+  State<CancelledCard> createState() => _PCardState();
 }
 
-class _CancelledCardState extends State<CancelledCard> {
+class _PCardState extends State<CancelledCard> {
 
   final List<Map<String, dynamic>> eventItems = [
     {
-      'sr': '1',
-      'orderId':'#38438',
-      'userName': 'Deva 123',
-      'Date': '01/01/2024',
-      'phoneNo':'+91-5498534358',
-      'orderPrice':'Rs.1999/-',
-      'paymentMode':'Online',
-      'status' : 'Cancelled'
+      'Sr.No': '1',
+      'Order Date':'28-02-2024 01:30:33 pm',
+      'Delivered Date':'2024-02-28 15:53:45',
+      'Shipping Date': '28-02-2024 03:36:02 pm',
+      'Return Date':'2024-02-28 15:53:45',
+      'Reject Date':'2024-02-28 15:53:45',
+      'Order ID':'ORD-1~1709107233',
+      'Customer Name': 'pallavi Auchat',
+      'Customer Address':'wardha dsgfdfg Wardha Wardha442001',
+      'Customer Contact no':'9856356985	',
+      'Seller Name': 'Pallavi Mengharem',
+      'Seller Contactno':'8545454515',
+      'Pick Up Address':'Wardha Wardha 442001',
+      'Seller Storename':'vidharbha chamical',
+      'Payment Mode': 'COD',
+      'Order Amount':'94',
+      'status' : 'Cancel order'
     },
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,224 +48,467 @@ class _CancelledCardState extends State<CancelledCard> {
                   color: Colors.grey
               )
           ),
-          child:  Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Sr No. :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Order Id : ",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "User Name :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                    maxLines: 1, // Set maximum number of lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Date :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Phone No. :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Order Price :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Payment mode :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "Status :",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 20,),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                      height: 5
-                  ),
-                  Text(
-                    item['sr'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                    maxLines: 1, // Set maximum number of lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    item['orderId'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                    maxLines: 1, // Set maximum number of lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    item['userName'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                    maxLines: 1, // Set maximum number of lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    item['Date'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                    maxLines: 1, // Set maximum number of lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                      height: 5
-                  ),
-                  Text(
-                    item['phoneNo'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                    maxLines: 1, // Set maximum number of lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    item['orderPrice'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                    maxLines: 1, // Set maximum number of lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    item['paymentMode'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Muli",
-                    ),
-                    maxLines: 1, // Set maximum number of lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6,vertical: 2),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.red
-                    ),
-                    child: Text(
-                      item['status'],
+          child:  SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Sr No. :",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Order Date :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Delivered Date :",
+                      style: TextStyle(
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         fontFamily: "Muli",
                       ),
                       maxLines: 1, // Set maximum number of lines
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Shipping Date :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Return Date :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Reject Date :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Order ID :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
 
-                ],
-              ),
-            ],
+
+
+
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Customer Name :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Customer Address :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Customer Contact no :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Seller Name :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Seller Contactno :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Pick Up Address :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Seller Storename :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Payment Mode :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Order Amount :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+
+
+                    SizedBox(
+                      height: 5,
+                    ),
+
+
+
+
+
+                    Text(
+                      "Status :",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+
+                  ],
+                ),
+                SizedBox(width: 20,),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item['Sr.No'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Order Date'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Delivered Date'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Shipping Date'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                        height: 3
+                    ),
+                    Text(
+                      item['Return Date'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Reject Date'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Order ID'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+
+
+
+
+
+                    SizedBox(
+                        height: 3
+                    ),
+                    Text(
+                      item['Customer Name'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Customer Address'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Customer Contact no'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Seller Name'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                        height: 3
+                    ),
+                    Text(
+                      item['Seller Contactno'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Pick Up Address'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Seller Storename'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Payment Mode'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item['Order Amount'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Muli",
+                      ),
+                      maxLines: 1, // Set maximum number of lines
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+
+
+
+
+
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8,vertical: 2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.blue
+                      ),
+                      child: Text(
+                        item['status'],
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Muli",
+                            color: Colors.white
+                        ),
+                        maxLines: 1, // Set maximum number of lines
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       }).toList(),

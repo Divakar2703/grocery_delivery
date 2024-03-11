@@ -1,25 +1,22 @@
 
-//CancelledWidget
-
-
 import 'package:flutter/material.dart';
+import 'package:grocery_delivery_side/screens/Orders/Componenets/Reject/rejectCard.dart';
 import 'package:grocery_delivery_side/screens/Orders/Componenets/Return/returnCard.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../constants.dart';
 import '../Shipping/shippingCard.dart';
 import '../select_date_and_search_date_widget.dart';
-import 'cancelled_card.dart';
 
 
-class CancelledWidget extends StatefulWidget {
-  const CancelledWidget({super.key});
+class RejectWidget extends StatefulWidget {
+  const RejectWidget({super.key});
 
   @override
-  State<CancelledWidget> createState() => _AllWidgetState();
+  State<RejectWidget> createState() => _AllWidgetState();
 }
 
-class _AllWidgetState extends State<CancelledWidget> {
+class _AllWidgetState extends State<RejectWidget> {
 
 
 
@@ -113,7 +110,7 @@ class _AllWidgetState extends State<CancelledWidget> {
 
 
                   SizedBox(height: 10,),
-                  CancelledCard(),
+                  RejectCard(),
 
                   SizedBox(height: 10,),
                   Text(
@@ -213,4 +210,3 @@ class _AllWidgetState extends State<CancelledWidget> {
     );
   }
 }
-

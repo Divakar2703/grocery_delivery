@@ -1,16 +1,24 @@
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../constants.dart';
+import '../Cancelled/cancelled_card.dart';
+import '../Shipping/shippingCard.dart';
+import '../select_date_and_search_date_widget.dart';
 import 'delivered_card.dart';
+
 
 class DeliveredWidget extends StatefulWidget {
   const DeliveredWidget({super.key});
 
   @override
-  State<DeliveredWidget> createState() => _DeliveredWidgetState();
+  State<DeliveredWidget> createState() => _AllWidgetState();
 }
 
-class _DeliveredWidgetState extends State<DeliveredWidget> {
+class _AllWidgetState extends State<DeliveredWidget> {
+
+
 
   List<String> items = ['1', '2', '3','4','5'];
   String? selectItem = '1';
@@ -31,13 +39,19 @@ class _DeliveredWidgetState extends State<DeliveredWidget> {
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 10,),
+
+                  SelectDateAndSearchDate(),
+
+                  Divider(
+                    thickness: 1,
+                  ),
+                  SizedBox(height: 5,),
                   Padding(
                     padding: const EdgeInsets.only(left: 16,right: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Show',
+                        Text('Show  ',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade700,
@@ -47,10 +61,10 @@ class _DeliveredWidgetState extends State<DeliveredWidget> {
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black38),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          height: 40,
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          height: 35,
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
                               value: selectItem,
@@ -75,7 +89,7 @@ class _DeliveredWidgetState extends State<DeliveredWidget> {
                             ),
                           ),
                         ),
-                        Text('entries',
+                        Text('  entries',
                           style: TextStyle(
                             fontFamily: 'Muli',
                             fontSize: 16,
@@ -86,41 +100,14 @@ class _DeliveredWidgetState extends State<DeliveredWidget> {
                     ),
                   ),
 
-                  SizedBox(height: 10,),
-                  Container(
-                    height: 45,
-                    margin:EdgeInsets.all(8) ,
-                    child: Center(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: Colors.black54,
-                          ),
-                          hintText: "Search here...",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black54),
-                            borderRadius: BorderRadius.circular(22.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black54),
-                            borderRadius: BorderRadius.circular(22.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 10,),
+                  SizedBox(height: 5,),
                   Divider(
                     thickness: 1,
                   ),
 
 
                   SizedBox(height: 10,),
-                 DeliveredCard(),
+                  DeliveredCard(),
 
                   SizedBox(height: 10,),
                   Text(

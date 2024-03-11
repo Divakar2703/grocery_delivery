@@ -53,94 +53,114 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ChangeNotifierProvider<IndextPageCountViewModel>(
-            create: (BuildContext context) => indextPageCountViewModel,
-            child: Consumer<IndextPageCountViewModel>(
-              builder: (context, value, _) {
-                switch (value.indextPageCountData.status ?? "") {
-                  case Status.LOADING:
-                    return const Expanded(
-                        child: Center(child: CircularProgressIndicator()));
-                  case Status.ERROR:
-                    return const Text(
-                        "Hello i am waiting error on Home page");
-                  case Status.COMPLETED:
-                    return Column(
-                      children: [
-                        Material(
-                          elevation: 4,
-                          borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(24),
-                            bottomLeft: Radius.circular(24),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 32),
-                            decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(24),
-                                bottomLeft: Radius.circular(24),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ChangeNotifierProvider<IndextPageCountViewModel>(
+              create: (BuildContext context) => indextPageCountViewModel,
+              child: Consumer<IndextPageCountViewModel>(
+                builder: (context, value, _) {
+                  switch (value.indextPageCountData.status ?? "") {
+                    case Status.LOADING:
+                      return const Expanded(
+                          child: Center(child: CircularProgressIndicator()));
+                    case Status.ERROR:
+                      return const Text(
+                          "Hello i am waiting error on Home page");
+                    case Status.COMPLETED:
+                      return Column(
+                        children: [
+                          Material(
+                            elevation: 4,
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(24),
+                              bottomLeft: Radius.circular(24),
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 32),
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(24),
+                                  bottomLeft: Radius.circular(24),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 7,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                HomeHeader(),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                SearchField(),
-                              ],
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  HomeHeader(),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  SearchField(),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        PaymentsCard(
-                          onlinePayment:
-                          value.indextPageCountData.data?.onlinePayment
-                              .toString() ??
-                              "",
-                          cod: value.indextPageCountData.data?.codPayment
-                              .toString() ??
-                              "",
-                          completed: value.indextPageCountData.data
-                              ?.deliverOrder.toString() ??
-                              "",
-                          pending: value.indextPageCountData.data
-                              ?.pendingOrder.toString() ??
-                              "",
-                          total: value.indextPageCountData.data
-                              ?.deliverOrder.toString() ??
-                              "",
-                          cancel: value.indextPageCountData.data
-                              ?.cancelDeliyerorder.toString() ??
-                              "",
-                        ),
-                      ],
-                    );
-                }
-
-                return Container();
-              },
+                          SizedBox(
+                            height: 10,
+                          ),
+                          PaymentsCard(
+                            TotalOrders:
+                            value.indextPageCountData.data?.onlinePayment
+                                .toString() ??
+                                "",
+                            CompleteOrders: value.indextPageCountData.data?.codPayment
+                                .toString() ??
+                                "",
+                            PackedOrders: value.indextPageCountData.data
+                                ?.deliverOrder.toString() ??
+                                "",
+                            TotalCODOrders: value.indextPageCountData.data
+                                ?.pendingOrder.toString() ??
+                                "",
+                            TotalshippingOrders: value.indextPageCountData.data
+                                ?.deliverOrder.toString() ??
+                                "",
+                            TotalReturnOrders: value.indextPageCountData.data
+                                ?.cancelDeliyerorder.toString() ??
+                                "",
+                            TotalRejectOrders: value.indextPageCountData.data
+                                ?.cancelDeliyerorder.toString() ??
+                                "",
+                            Deliverycancelorder: value.indextPageCountData.data
+                                ?.cancelDeliyerorder.toString() ??
+                                "",
+                            TotalOnlineOrders: value.indextPageCountData.data
+                                ?.cancelDeliyerorder.toString() ??
+                                "",
+                            TotalOnlinePaymentcollection: value.indextPageCountData.data
+                                ?.cancelDeliyerorder.toString() ??
+                                "",
+                            TotalCODPaymentcollection: value.indextPageCountData.data
+                                ?.cancelDeliyerorder.toString() ??
+                                "",
+                            TotalPendingCODPayments: value.indextPageCountData.data
+                                ?.cancelDeliyerorder.toString() ??
+                                "",
+                          ),
+                        ],
+                      );
+                  }
+        
+                  return Container();
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

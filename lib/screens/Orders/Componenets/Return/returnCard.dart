@@ -1,15 +1,13 @@
-
-//DeliveredCard
 import 'package:flutter/material.dart';
 
-class DeliveredCard extends StatefulWidget {
-  const DeliveredCard({super.key});
+class ReturnCard extends StatefulWidget {
+  const ReturnCard({super.key});
 
   @override
-  State<DeliveredCard> createState() => _PCardState();
+  State<ReturnCard> createState() => _PCardState();
 }
 
-class _PCardState extends State<DeliveredCard> {
+class _PCardState extends State<ReturnCard> {
 
   final List<Map<String, dynamic>> eventItems = [
     {
@@ -29,7 +27,7 @@ class _PCardState extends State<DeliveredCard> {
       'Seller Storename':'vidharbha chamical',
       'Payment Mode': 'COD',
       'Order Amount':'94',
-      'status' : 'Delivered order'
+      'status' : 'Return order'
     },
   ];
 

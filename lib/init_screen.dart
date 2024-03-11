@@ -1,12 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:grocery_delivery_side/screens/Orders/orders_screen.dart';
-import 'package:grocery_delivery_side/screens/chats/chat_list.dart';
+import 'package:grocery_delivery_side/screens/Orders/order_Screen_Naw.dart';
 import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
 import 'package:grocery_delivery_side/screens/order_now/order_now_screen.dart';
-
 import 'constants.dart';
+import 'screens/Wallet & Cod Summary/walletSummaryHomescreen.dart';
 
 class InitScreen extends StatefulWidget {
   const InitScreen({Key? key}) : super(key: key);
@@ -16,14 +15,14 @@ class InitScreen extends StatefulWidget {
 }
 
 class _InitScreenState extends State<InitScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   final List<Widget> _screens = [
+
+    WalletSummaryHomeScreen(),
     HomeScreen(),
-    // Add your other screens here
-    ChatList(),
-    OrdersScreen(), // Placeholder for other screens
-    OrderNowScreen(),
+    OrderScreenNew(), // Placeholder for other screens
+  //  OrderNowScreen(),
     // Placeholder for other screens
   ];
 
@@ -32,10 +31,11 @@ class _InitScreenState extends State<InitScreen> {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         items: [
-          _buildNavItem("assets/icons/Shop Icon.svg"),
-          _buildNavItem("assets/icons/Chat bubble Icon.svg"),
-          _buildNavItem("assets/icons/shoping_card.svg"),
           _buildNavItem("assets/icons/Settings.svg"),
+          //_buildNavItem("assets/icons/Chat bubble Icon.svg"),
+          _buildNavItem("assets/icons/Shop Icon.svg"),
+          _buildNavItem("assets/icons/shoping_card.svg"),
+
        //  _buildNavItem("assets/icons/User Icon.svg"),
         ],
         onTap: (index) {

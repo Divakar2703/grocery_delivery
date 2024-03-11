@@ -3,7 +3,7 @@ import 'package:grocery_delivery_side/screens/Orders/Componenets/All/all_widget.
 import '../../constants.dart';
 import 'Componenets/Cancelled/Cancelled_widget.dart';
 import 'Componenets/Delivered/delivered_widget.dart';
-import 'Componenets/Pending/pending_widget.dart';
+import 'Componenets/Shipping/shippingWidget.dart';
 
 
 
@@ -54,7 +54,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
 
                   AllWidget(),
-                  PendingWidget(),
+                  ShippingWidget(),
                   DeliveredWidget(),
                   CancelledWidget(),
 

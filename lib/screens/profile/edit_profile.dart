@@ -18,8 +18,13 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   TextEditingController mobileController = TextEditingController();
+  TextEditingController userIdController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+
+  TextEditingController fromDateController = TextEditingController();
+  TextEditingController toDateController = TextEditingController();
+
   TextEditingController pinCodeController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
@@ -165,21 +170,47 @@ class _EditProfileState extends State<EditProfile> {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(height: 10),
                     Container(
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
                       ),
                       child: Column(
                         children: [
+
+
+                          Row(
+                            children: [
+                              Text(
+                                "Detail Update*",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.black,
+                                  fontFamily: "Muli",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
                           TextFormField(
                             controller: nameController,
                             decoration: InputDecoration(labelText: 'User Name *'),
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: userIdController,
+                            decoration: InputDecoration(labelText: 'User ID *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your user id';
                               }
                               return null;
                             },
@@ -206,6 +237,62 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
+
+
+                          SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Text(
+                                "Leave Details*",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.black,
+                                  fontFamily: "Muli",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 15),
+                          TextFormField(
+                            controller: fromDateController,
+                            decoration: InputDecoration(labelText: '01/02/2024 *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your phone number';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextFormField(
+                            controller: toDateController,
+                            decoration: InputDecoration(labelText: '23/12/2023 *'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              return null;
+                            },
+                          ),
+
+
+                          SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Text(
+                                "Address Details*",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.black,
+                                  fontFamily: "Muli",
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 15),
+
                           SizedBox(height: 10),
                           TextFormField(
                             controller: addressController,
@@ -261,10 +348,17 @@ class _EditProfileState extends State<EditProfile> {
                               return null;
                             },
                           ),
+
+
+
+
+
                           SizedBox(height: 20),
                           Container(
+                            alignment: Alignment.center,
+                            height: 50,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                               color: kPrimaryColor,
                             ),
                             child: TextButton(

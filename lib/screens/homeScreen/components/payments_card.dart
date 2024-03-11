@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 
 class PaymentsCard extends StatefulWidget {
-  String onlinePayment;
-  String cod;
-  String completed;
-  String pending;
-  String total;
-  String cancel;
+  String TotalOrders;
+  String CompleteOrders;
+  String PackedOrders;
+  String TotalCODOrders;
+  String TotalshippingOrders;
+  String TotalReturnOrders;
+  String TotalRejectOrders;
+  String Deliverycancelorder;
+  String TotalOnlineOrders;
+  String TotalOnlinePaymentcollection;
+  String TotalCODPaymentcollection;
+  String TotalPendingCODPayments;
 
   PaymentsCard({
-    required this.onlinePayment,
-    required this.cod,
-    required this.completed,
-    required this.pending,
-    required this.total,
-    required this.cancel,
+    required this.TotalOrders,
+    required this.CompleteOrders,
+    required this.PackedOrders,
+    required this.TotalCODOrders,
+    required this.TotalshippingOrders,
+    required this.TotalReturnOrders,
+    required this.TotalRejectOrders,
+    required this.Deliverycancelorder,
+    required this.TotalOnlineOrders,
+    required this.TotalOnlinePaymentcollection,
+    required this.TotalCODPaymentcollection,
+    required this.TotalPendingCODPayments,
+
+
+
     Key? key,
   }) : super(key: key);
 
@@ -56,7 +71,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                           children: [
                             Text(
                               textAlign: TextAlign.center,
-                              'Online\nPayments',
+                              'Total\nOrders',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -65,7 +80,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                               ),
                             ),
                             Text(
-                              widget.onlinePayment,
+                              widget.TotalOrders,
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -109,7 +124,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                           children: [
                             Text(
                               textAlign: TextAlign.center,
-                              'COD\nPayments',
+                              'Complete\nOrders',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -118,7 +133,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                               ),
                             ),
                             Text(
-                              widget.cod,
+                              widget.CompleteOrders,
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -167,7 +182,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                           children: [
                             Text(
                               textAlign: TextAlign.center,
-                              'Complete\n Orders',
+                              'Packed\nOrders',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -176,7 +191,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                               ),
                             ),
                             Text(
-                              widget.completed,
+                              widget.PackedOrders,
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -220,7 +235,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                           children: [
                             Text(
                               textAlign: TextAlign.center,
-                              'Pending\nOrder',
+                              'Total COD\nOrders',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -229,7 +244,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                               ),
                             ),
                             Text(
-                              widget.pending,
+                              widget.TotalCODOrders,
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -264,7 +279,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Container(
-                    height: 90,
+                    height: 100,
                     //   margin: EdgeInsets.only(right: 16), // Add margin between items
                     decoration: BoxDecoration(
                       // color: Color(0xFFF87A6C),
@@ -278,7 +293,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                           children: [
                             Text(
                               textAlign: TextAlign.center,
-                              'Total\n Orders',
+                              'Total\nshipping\nOrders',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -287,7 +302,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                               ),
                             ),
                             Text(
-                              widget.total,
+                              widget.TotalshippingOrders,
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -317,7 +332,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Container(
-                    height: 90,
+                    height: 100,
                     //  margin: EdgeInsets.only(right: 16), // Add margin between items
                     decoration: BoxDecoration(
                       //   color: Color(0xFFF87A6C),
@@ -331,7 +346,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                           children: [
                             Text(
                               textAlign: TextAlign.center,
-                              'Cancel\nOrders',
+                              'Total\nReturn\nOrders',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -340,7 +355,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                               ),
                             ),
                             Text(
-                              widget.cancel,
+                              widget.TotalReturnOrders,
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
@@ -364,6 +379,348 @@ class _PaymentsCardState extends State<PaymentsCard> {
               ),
             ],
           ),
+
+
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: Material(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    height: 100,
+                    //   margin: EdgeInsets.only(right: 16), // Add margin between items
+                    decoration: BoxDecoration(
+                      // color: Color(0xFFF87A6C),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.center,
+                              'Total\nReject\nOrders',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                            Text(
+                              widget.TotalRejectOrders,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 80,
+                          width: 70,
+                          child: Image.asset(
+                            'assets/images/k.png',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 15,),
+              Expanded(
+                child: Material(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    height: 100,
+                    //  margin: EdgeInsets.only(right: 16), // Add margin between items
+                    decoration: BoxDecoration(
+                      //   color: Color(0xFFF87A6C),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.center,
+                              'Delivery\ncancel\norder',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                            Text(
+                              widget.Deliverycancelorder,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 80,
+                          width: 70,
+                          child: Image.asset(
+                            'assets/images/c.png',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: Material(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    height: 115,
+                    //  margin: EdgeInsets.only(right: 16), // Add margin between items
+                    decoration: BoxDecoration(
+                      //   color: Color(0xFFF87A6C),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.center,
+                              'Total\nOnline\nOrders',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                            Text(
+                              widget.TotalOnlineOrders,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 80,
+                          width: 70,
+                          child: Image.asset(
+                            'assets/images/c.png',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 15,),
+              Expanded(
+                child: Material(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    height: 115,
+                    //   margin: EdgeInsets.only(right: 16), // Add margin between items
+                    decoration: BoxDecoration(
+                      // color: Color(0xFFF87A6C),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.center,
+                              'Total\nOnline\nPayment\ncollection',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                            Text(
+                              widget.TotalOnlinePaymentcollection,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 80,
+                          width: 70,
+                          child: Image.asset(
+                            'assets/images/k.png',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+
+            ],
+          ),
+
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: Material(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    height: 115,
+                    //  margin: EdgeInsets.only(right: 16), // Add margin between items
+                    decoration: BoxDecoration(
+                      //   color: Color(0xFFF87A6C),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.center,
+                              'Total\nCOD\nPayment\ncollection',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                            Text(
+                              widget.TotalCODPaymentcollection,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 80,
+                          width: 70,
+                          child: Image.asset(
+                            'assets/images/c.png',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 15,),
+              Expanded(
+                child: Material(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    height: 115,
+                    //   margin: EdgeInsets.only(right: 16), // Add margin between items
+                    decoration: BoxDecoration(
+                      // color: Color(0xFFF87A6C),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.center,
+                              'Total\nPending\nCOD\nPayments',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                            Text(
+                              widget.TotalPendingCODPayments,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 80,
+                          width: 70,
+                          child: Image.asset(
+                            'assets/images/k.png',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+
+            ],
+          ),
+
         ],
       ),
     );
