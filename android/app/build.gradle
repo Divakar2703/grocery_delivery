@@ -23,8 +23,8 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.bitspan.app_grocery_delivery"
-    compileSdkVersion flutter.compileSdkVersion
+    namespace "com.example.grocery_delivery_side"
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
