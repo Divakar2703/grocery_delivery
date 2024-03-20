@@ -72,16 +72,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Material(
                           elevation: 4,
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             bottomRight: Radius.circular(24),
                             bottomLeft: Radius.circular(24),
                           ),
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 32),
                             decoration: BoxDecoration(
                               color: kPrimaryColor,
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 bottomRight: Radius.circular(24),
                                 bottomLeft: Radius.circular(24),
                               ),
@@ -90,11 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.grey.withOpacity(0.2),
                                   spreadRadius: 2,
                                   blurRadius: 7,
-                                  offset: Offset(0, 3),
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
-                            child: Column(
+                            child: const Column(
                               children: [
                                 SizedBox(
                                   height: 15,
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         PaymentsCard(

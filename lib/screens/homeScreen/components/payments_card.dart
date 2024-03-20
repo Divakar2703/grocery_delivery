@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../map/delivery_loc_tracking.dart';
+
 class PaymentsCard extends StatefulWidget {
   String onlinePayment;
   String cod;
@@ -26,9 +28,9 @@ class _PaymentsCardState extends State<PaymentsCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       width: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
       ),
       child: Column(
         children: [
@@ -54,7 +56,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Online\nPayments',
                               style: TextStyle(
@@ -66,7 +68,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                             ),
                             Text(
                               widget.onlinePayment,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -87,62 +89,70 @@ class _PaymentsCardState extends State<PaymentsCard> {
                   ),
                 ),
               ),
-              SizedBox(width: 15,),
+              const SizedBox(width: 15,),
               Expanded(
                 child: Material(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Container(
-                    height: 90,
-                  //  margin: EdgeInsets.only(right: 16), // Add margin between items
-                    decoration: BoxDecoration(
-                   //   color: Color(0xFFF87A6C),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              textAlign: TextAlign.center,
-                              'COD\nPayments',
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Muli",
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const DeliveryLocTracking()),
+                      );
+                    },
+                    child: Container(
+                      height: 90,
+                    //  margin: EdgeInsets.only(right: 16), // Add margin between items
+                      decoration: BoxDecoration(
+                     //   color: Color(0xFFF87A6C),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                textAlign: TextAlign.center,
+                                'COD\nPayments',
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: "Muli",
+                                ),
                               ),
-                            ),
-                            Text(
-                              widget.cod,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Muli",
+                              Text(
+                                widget.cod,
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: "Muli",
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 80,
-                          width: 70,
-                          child: Image.asset(
-                            'assets/images/m1.png',
+                            ],
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            height: 80,
+                            width: 70,
+                            child: Image.asset(
+                              'assets/images/m1.png',
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -165,7 +175,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Complete\n Orders',
                               style: TextStyle(
@@ -177,7 +187,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                             ),
                             Text(
                               widget.completed,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -198,7 +208,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                   ),
                 ),
               ),
-              SizedBox(width: 15,),
+              const SizedBox(width: 15,),
               Expanded(
                 child: Material(
                   elevation: 4,
@@ -218,7 +228,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Pending\nOrder',
                               style: TextStyle(
@@ -230,7 +240,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                             ),
                             Text(
                               widget.pending,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -253,7 +263,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
               ),
             ],
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -276,7 +286,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Total\n Orders',
                               style: TextStyle(
@@ -288,7 +298,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                             ),
                             Text(
                               widget.total,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -309,7 +319,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                   ),
                 ),
               ),
-              SizedBox(width: 15,),
+              const SizedBox(width: 15,),
               Expanded(
                 child: Material(
                   elevation: 4,
@@ -329,7 +339,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Cancel\nOrders',
                               style: TextStyle(
@@ -341,7 +351,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                             ),
                             Text(
                               widget.cancel,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black87,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,

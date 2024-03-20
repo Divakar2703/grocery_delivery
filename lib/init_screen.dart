@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:grocery_delivery_side/screens/Orders/orders_screen.dart';
 import 'package:grocery_delivery_side/screens/chats/chat_list.dart';
 import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
+import 'package:grocery_delivery_side/screens/map/delivery_loc_tracking.dart';
 import 'package:grocery_delivery_side/screens/order_now/order_now_screen.dart';
 
 import 'constants.dart';
@@ -19,11 +20,12 @@ class _InitScreenState extends State<InitScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    HomeScreen(),
+    const HomeScreen(),
     // Add your other screens here
-    ChatList(),
-    OrdersScreen(), // Placeholder for other screens
-    OrderNowScreen(),
+    const ChatList(),
+    const OrdersScreen(), // Placeholder for other screens
+    // OrderNowScreen(),
+    const DeliveryLocTracking()
     // Placeholder for other screens
   ];
 
@@ -46,7 +48,7 @@ class _InitScreenState extends State<InitScreen> {
         index: _currentIndex,
         height: 58,
         backgroundColor: Colors.transparent,
-        animationDuration: Duration(milliseconds: 300),
+        animationDuration: const Duration(milliseconds: 300),
         color: Colors.white, // Change colors as needed
       ),
       body: _screens[_currentIndex],
@@ -55,7 +57,7 @@ class _InitScreenState extends State<InitScreen> {
 
   Widget _buildNavItem(String iconPath) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 6,horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 6),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

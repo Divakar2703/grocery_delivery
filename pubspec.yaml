@@ -50,6 +50,15 @@ dependencies:
   location: ^5.0.3
   geocoding: ^2.1.1
   firebase_core:
+  google_maps_flutter: ^2.5.3
+  geolocator: ^11.0.0
+  uuid: ^4.3.3
+  cloud_firestore: ^4.15.6
+  firebase_messaging: ^14.7.17
+  flutter_polyline_points: ^2.0.0
+  latlong2:
+  sensors_plus:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +89,7 @@ flutter:
     - assets/animations/
     - assets/images/camera.png
     - assets/images/gallery.png
+    - assets/dman.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

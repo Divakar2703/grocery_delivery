@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import SystemChrome
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,9 +13,26 @@ import 'package:grocery_delivery_side/viewmodels/view_model_send_otp.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
+import 'firebase_options.dart';
 import 'init_screen.dart';
 
-void main() {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // This function is called when the app is in the background.
+  // Handle the notification data here, if applicable.
+}
+
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // Handle background messages
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Get the token for this device
+  final token = await FirebaseMessaging.instance.getToken();
+  print("Push Notification Token: $token");
   runApp(const MyApp());
 }
 
