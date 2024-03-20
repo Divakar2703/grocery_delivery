@@ -5,6 +5,7 @@ import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
 import 'package:grocery_delivery_side/splash_screen.dart';
 import 'package:grocery_delivery_side/theme.dart';
+import 'package:grocery_delivery_side/viewmodels/view_model_order_list.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_phone_login.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_register.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_send_otp.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PhoneLoginViewModel()),
         ChangeNotifierProvider(create: (_) => SendOtpViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
+        ChangeNotifierProvider(create: (_) => OrderListViewModel()),
         // ChangeNotifierProvider(create: (_) => SubsPlanViewModel()),
         // ChangeNotifierProvider(create: (_) => ReserverClubViewModel()),
         // ChangeNotifierProvider(create: (_) => ProfileViewModel()),

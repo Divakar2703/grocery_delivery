@@ -4,6 +4,7 @@ import '../../../constants.dart';
 import '../../profile/profile.dart';
 import '../../profile/profile_screen.dart';
 import 'icon_btn_with_counter.dart';
+import 'notification_Screen.dart';
 
 
 class HomeHeader extends StatelessWidget {
@@ -61,10 +62,15 @@ class HomeHeader extends StatelessWidget {
       //  const SizedBox(width: 8),
 
        const Spacer(),
-        IconBtnWithCounter(
-          svgSrc: "assets/icons/Bell.svg",
-          numOfitem: 2,
-          press: () {},
+        GestureDetector(
+          onTap: (){
+            openNotificationBottomSheet(context);
+          },
+          child: IconBtnWithCounter(
+            svgSrc: "assets/icons/Bell.svg",
+            numOfitem: 2,
+            press: () {},
+          ),
         ),
       ],
     );

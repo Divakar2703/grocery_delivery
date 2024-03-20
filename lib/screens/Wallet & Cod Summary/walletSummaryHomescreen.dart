@@ -35,8 +35,10 @@ class WalletSummaryHomeScreen extends StatefulWidget {
 }
 
 class _MyAppState extends State<WalletSummaryHomeScreen> {
+  final _selectedSegment = ValueNotifier('cod'); // 'cod' is selected initially
 
-  final _selectedSegment = ValueNotifier('all');
+
+  //final _selectedSegment = ValueNotifier('all');
 
   @override
   Widget build(BuildContext context) {

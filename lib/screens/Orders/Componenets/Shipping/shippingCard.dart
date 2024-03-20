@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../action_button.dart';
+
 class ShippingCard extends StatefulWidget {
   const ShippingCard({super.key});
 
@@ -242,13 +244,20 @@ class _PCardState extends State<ShippingCard> {
                   SizedBox(
                     height: 5,
                   ),
-
-
-
-
-
                   Text(
                     "Status :",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Muli",
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Action :",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -499,6 +508,25 @@ class _PCardState extends State<ShippingCard> {
                       ),
                       maxLines: 1, // Set maximum number of lines
                       overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+
+
+                  SizedBox(
+                    height: 5,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      openActionBottomSheet(context);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8,vertical: 2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.green.shade300
+                      ),
+                      child: Icon(Icons.remove_red_eye,color: Colors.white,size: 18,)
+
                     ),
                   ),
 

@@ -52,17 +52,17 @@ class _PCardState extends State<CODtCard> {
                         fontFamily: "Muli",
                       ),
                     ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      "Order Date/Time :",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Muli",
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: 3,
+                    // ),
+                    // Text(
+                    //   "Order Date/Time :",
+                    //   style: TextStyle(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontFamily: "Muli",
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 3,
                     ),
@@ -98,28 +98,28 @@ class _PCardState extends State<CODtCard> {
                         fontFamily: "Muli",
                       ),
                     ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      "Customer Addresss :",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Muli",
-                      ),
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      "Seller Id :",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Muli",
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: 3,
+                    // ),
+                    // Text(
+                    //   "Customer Addresss :",
+                    //   style: TextStyle(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontFamily: "Muli",
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 3,
+                    // ),
+                    // Text(
+                    //   "Seller Id :",
+                    //   style: TextStyle(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontFamily: "Muli",
+                    //   ),
+                    // ),
 
 
                     SizedBox(
@@ -156,19 +156,19 @@ class _PCardState extends State<CODtCard> {
                       maxLines: 1, // Set maximum number of lines
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      item['Order Date/Time'],
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Muli",
-                      ),
-                      maxLines: 1, // Set maximum number of lines
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    // SizedBox(
+                    //   height: 3,
+                    // ),
+                    // Text(
+                    //   item['Order Date/Time'],
+                    //   style: TextStyle(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontFamily: "Muli",
+                    //   ),
+                    //   maxLines: 1, // Set maximum number of lines
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
                     SizedBox(
                       height: 3,
                     ),
@@ -208,32 +208,32 @@ class _PCardState extends State<CODtCard> {
                       maxLines: 1, // Set maximum number of lines
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      item['Customer Addresss'],
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Muli",
-                      ),
-                      maxLines: 1, // Set maximum number of lines
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      item['Seller Id'],
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Muli",
-                      ),
-                      maxLines: 1, // Set maximum number of lines
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    // SizedBox(
+                    //   height: 3,
+                    // ),
+                    // Text(
+                    //   item['Customer Addresss'],
+                    //   style: TextStyle(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontFamily: "Muli",
+                    //   ),
+                    //   maxLines: 1, // Set maximum number of lines
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
+                    // SizedBox(
+                    //   height: 3,
+                    // ),
+                    // Text(
+                    //   item['Seller Id'],
+                    //   style: TextStyle(
+                    //     fontSize: 14,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontFamily: "Muli",
+                    //   ),
+                    //   maxLines: 1, // Set maximum number of lines
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
 
 
 

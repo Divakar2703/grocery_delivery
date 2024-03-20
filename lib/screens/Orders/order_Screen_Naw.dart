@@ -51,11 +51,11 @@ class _OrderScreenNewState extends State<OrderScreenNew> {
                 tabs: [
                   Tab(
                    // icon: Icon(Icons.directions_car),
-                    text: "All",
+                    text: "Requested Orders",
                   ),
                   Tab(
                   //  icon: Icon(Icons.directions_transit),
-                    text: "Shipping",
+                    text: "Assign Orders",
                   ),
                   Tab(
                   //  icon: Icon(Icons.directions_car),

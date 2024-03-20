@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../constants.dart';
+import 'notification_Screen.dart';
 
 class IconBtnWithCounter extends StatelessWidget {
   const IconBtnWithCounter({
@@ -18,8 +19,11 @@ class IconBtnWithCounter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: (){
+        openNotificationBottomSheet(context);
+      },
       borderRadius: BorderRadius.circular(100),
-      onTap: press,
+     // onTap: press,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
