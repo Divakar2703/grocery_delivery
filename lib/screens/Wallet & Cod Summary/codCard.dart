@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_delivery_side/style/colors.dart';
 
 class CODtCard extends StatefulWidget {
   const CODtCard({super.key});
@@ -31,6 +32,7 @@ class _PCardState extends State<CODtCard> {
           margin: EdgeInsets.only(bottom: 16),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
+            color: AppColors.lightGreyGreen,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                   color: Colors.grey

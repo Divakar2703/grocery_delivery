@@ -60,8 +60,7 @@ class _SelectDateAndSearchDateState extends State<SelectDateAndSearchDateWalletS
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10), // Adjust the border radius as needed
                   side: BorderSide(color: Colors.black54), // Set the border color
-                ),
-                primary: Colors.white, // Set the background color
+                ), backgroundColor: Colors.white, // Set the background color
               ),
               child: Text(
                 _startDate == null || _endDate == null

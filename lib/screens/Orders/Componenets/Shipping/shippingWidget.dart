@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../constants.dart';
-import '../Shipping/shippingCard.dart';
+import '../All/orders_item.dart';
 import '../select_date_and_search_date_widget.dart';
 
 
@@ -108,7 +108,7 @@ class _AllWidgetState extends State<ShippingWidget> {
 
 
                   SizedBox(height: 10,),
-                  ShippingCard(),
+                  // ShippingCard(),
 
                   SizedBox(height: 10,),
                   Text(

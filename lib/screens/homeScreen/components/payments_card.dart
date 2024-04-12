@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../map/delivery_loc_tracking.dart';
+
 class PaymentsCard extends StatefulWidget {
   String TotalOrders;
   String CompleteOrders;
@@ -41,9 +43,9 @@ class _PaymentsCardState extends State<PaymentsCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       width: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
       ),
       child: Column(
         children: [
@@ -69,7 +71,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Total\nOrders',
                               style: TextStyle(
@@ -102,7 +104,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                   ),
                 ),
               ),
-              SizedBox(width: 15,),
+              const SizedBox(width: 15,),
               Expanded(
                 child: Material(
                   elevation: 4,
@@ -157,7 +159,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
               ),
             ],
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -180,7 +182,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Packed\nOrders',
                               style: TextStyle(
@@ -233,7 +235,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Total COD\nOrders',
                               style: TextStyle(
@@ -268,7 +270,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
               ),
             ],
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -404,7 +406,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Total\nReject\nOrders',
                               style: TextStyle(
@@ -437,7 +439,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                   ),
                 ),
               ),
-              SizedBox(width: 15,),
+              const SizedBox(width: 15,),
               Expanded(
                 child: Material(
                   elevation: 4,
@@ -630,7 +632,7 @@ class _PaymentsCardState extends State<PaymentsCard> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               'Total\nCOD\nPayment\ncollection',
                               style: TextStyle(

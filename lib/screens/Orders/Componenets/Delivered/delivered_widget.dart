@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../constants.dart';
 import '../Cancelled/cancelled_card.dart';
-import '../Shipping/shippingCard.dart';
+import '../All/orders_item.dart';
 import '../select_date_and_search_date_widget.dart';
 import 'delivered_card.dart';
 

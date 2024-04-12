@@ -1,7 +1,7 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:grocery_delivery_side/screens/Orders/order_Screen_Naw.dart';
+import 'package:grocery_delivery_side/screens/Orders/orders_list_tab_screen.dart';
 import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/walletSummaryHomescreen.dart';
 import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
 
@@ -82,11 +82,11 @@ class _MyHomePageState extends State<NewInitScrren> {
           ///svg example
           BottomBarItem(
             inActiveItem: SvgPicture.asset(
-              "assets/icons/home-icon-silhouette-svgrepo-com.svg",
+              "assets/icons/icon_home.svg",
               color: Colors.blueGrey,
             ),
             activeItem: SvgPicture.asset(
-              "assets/icons/home-icon-silhouette-svgrepo-com.svg",
+              "assets/icons/icon_home.svg",
               color: Colors.white,
             ),
             itemLabel: 'Page 3',

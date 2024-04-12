@@ -3,7 +3,7 @@ import 'package:flutter_advanced_segment/flutter_advanced_segment.dart';
 import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/walletWidget.dart';
 
 import '../../constants.dart';
-import '../Orders/Componenets/All/all_widget.dart';
+import '../Orders/Componenets/All/orders_list_screen.dart';
 import 'codWidget.dart';
 
 enum Segment {

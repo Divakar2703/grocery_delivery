@@ -46,12 +46,8 @@ class VerifyOtpViewModel with ChangeNotifier {
   Future<void> fetchVerifyOtpData(VerifyOtpRequestModel data, BuildContext context) async {
     setVerifyOtpData(ApiProcessResponse.loading());
     try {
-      // final Map<String, dynamic> responseData = (await _homeRepo.fetchHomeData(data)) as Map<String, dynamic>;
       final VerifyOtpResponseModel verifyOtpResponseModel = await _verifyOtpRepo.fetchVerifyOtpData(data);
-
-      // final HomePageResponseModel homePageResponseModel = HomePageResponseModel.fromJson(responseData as String);
       setVerifyOtpData(ApiProcessResponse.completed(verifyOtpResponseModel));
-
       if(verifyOtpResponseModel.status != 'error'){
 
         navigateToHome(context);

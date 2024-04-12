@@ -4,9 +4,17 @@ class RegisterRequestModel {
   String? emailId;
   String? pinCode;
   String? address;
+  String? latitude;
+  String? longitude;
 
   RegisterRequestModel(
-      {this.name, this.mobileNo, this.emailId, this.pinCode, this.address});
+      {this.name,
+        this.mobileNo,
+        this.emailId,
+        this.pinCode,
+        this.address,
+        this.latitude,
+        this.longitude});
 
   RegisterRequestModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -14,6 +22,8 @@ class RegisterRequestModel {
     emailId = json['email_id'];
     pinCode = json['pin_code'];
     address = json['address'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
   }
 
   Map<String, dynamic> toJson() {
@@ -23,6 +33,8 @@ class RegisterRequestModel {
     data['email_id'] = this.emailId;
     data['pin_code'] = this.pinCode;
     data['address'] = this.address;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     return data;
   }
 }

@@ -29,13 +29,13 @@ class IndextPageCountViewModel with ChangeNotifier {
         print("Data aa ha hai${indextPageCountResponseModel.status}");
 
       }
-      if(indextPageCountResponseModel.record?.deliUserId!=null){
-        var userId = indextPageCountResponseModel.record?.deliUserId.toString();
-        print("==================================$userId");
-
-        //       userId: Constants.userIdForUse
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,),),);
-      }
+      // if(indextPageCountResponseModel.record?.deliUserId!=null){
+      //   var userId = indextPageCountResponseModel.record?.deliUserId.toString();
+      //   print("==================================$userId");
+      //
+      //   //       userId: Constants.userIdForUse
+      //   // Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,),),);
+      // }
 
 
     } catch (error) {

@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "857244758227",
+    "project_id": "grocery-a4d87",
+    "storage_bucket": "grocery-a4d87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857244758227:android:c7bdfceadb141a8fd66426",
+        "android_client_info": {
+          "package_name": "com.bitspan.app_grocery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857244758227:android:cc84525ffa683d93d66426",
+        "android_client_info": {
+          "package_name": "com.bitspan.app_grocery_delivery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857244758227:android:723896d77e393691d66426",
+        "android_client_info": {
+          "package_name": "com.bitspanindia.groceryapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857244758227:android:f2250a1ef803d636d66426",
+        "android_client_info": {
+          "package_name": "com.bitspanindia.grocerydeliveryboy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

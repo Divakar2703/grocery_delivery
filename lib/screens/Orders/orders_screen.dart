@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_delivery_side/screens/Orders/Componenets/All/all_widget.dart';
+import 'package:grocery_delivery_side/screens/Orders/Componenets/All/orders_list_screen.dart';
 import '../../constants.dart';
 import 'Componenets/Cancelled/Cancelled_widget.dart';
 import 'Componenets/Delivered/delivered_widget.dart';
@@ -22,7 +22,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       child: Scaffold(
         appBar:  AppBar(
           automaticallyImplyLeading: false,
-          title: Text(
+          title: const Text(
             'Ordered List',
             style: TextStyle(color: Colors.white,
               fontFamily: 'Muli',
@@ -33,7 +33,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           backgroundColor: kPrimaryColor,
 
         ),
-        body: Column(
+        body: const Column(
           children: [
             TabBar(
               tabs: [
@@ -51,15 +51,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
             Expanded(
               child: TabBarView(
                 children: <Widget>[
-
-
-                  AllWidget(),
+                  AllWidget(type: "",),
                   ShippingWidget(),
                   DeliveredWidget(),
                   CancelledWidget(),
-
-
-
                 ],
               ),
             ),

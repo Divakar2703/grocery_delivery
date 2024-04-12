@@ -1,10 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import SystemChrome
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
 import 'package:grocery_delivery_side/splash_screen.dart';
-import 'package:grocery_delivery_side/theme.dart';
+import 'package:grocery_delivery_side/style/theme.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_order_list.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_phone_login.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_register.dart';
@@ -12,9 +14,26 @@ import 'package:grocery_delivery_side/viewmodels/view_model_send_otp.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
+import 'firebase_options.dart';
 import 'init_screen.dart';
 
-void main() {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // This function is called when the app is in the background.
+  // Handle the notification data here, if applicable.
+}
+
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // Handle background messages
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Get the token for this device
+  final token = await FirebaseMessaging.instance.getToken();
+  print("Push Notification Token: $token");
   runApp(const MyApp());
 }
 
@@ -54,7 +73,7 @@ class MyApp extends StatelessWidget {
         builder: FToastBuilder(),
         title: 'Flutter Demo',
         theme: AppTheme.lightTheme(context),
-        home: InitScreen(),
+        home: SplashScreen(),
       ),
     );
 

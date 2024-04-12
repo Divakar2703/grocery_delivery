@@ -36,29 +36,24 @@ class _SplashScreenState extends State<SplashScreen> {
     if(_isLogin){
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (BuildContext context) {
-            return InitScreen();
-          },
+          builder: (context) => const InitScreen(),
         ),
       );
     }else{
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (BuildContext context) {
-            return LoginUser();
-          },
+          builder: (context) => const LoginUser(),
         ),
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:Colors.greenAccent.shade100,
       body: Center(
-        child: _isLoading ? lottieLoadingAnimation() : SizedBox(),
+        child: _isLoading ? lottieLoadingAnimation() : const SizedBox(),
       ),
     );
   }

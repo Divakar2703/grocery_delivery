@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_delivery_side/style/colors.dart';
 import 'package:intl/intl.dart';
 
 class SelectDateAndSearchDate extends StatefulWidget {
@@ -46,116 +47,90 @@ class _SelectDateAndSearchDateState extends State<SelectDateAndSearchDate> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(0.0),
       child: Column(
         children: [
 
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: Container(
+          //         padding: EdgeInsets.symmetric(horizontal: 16),
+          //         height: 38,
+          //         decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(10),
+          //             color: Colors.red
+          //         ),
+          //         child:  const Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             Icon(Icons.picture_as_pdf_outlined,color: Colors.white,size: 18,),
+          //             SizedBox(width: 10,),
+          //             Text('Save as PDF',
+          //               style: TextStyle(
+          //                 fontSize: 16,
+          //                 color: Colors.white,
+          //                 fontFamily: "Muli",
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //     const SizedBox(width: 10,),
+          //     GestureDetector(
+          //       child: Container(
+          //         padding: EdgeInsets.symmetric(horizontal: 24),
+          //         alignment: Alignment.center,
+          //         height: 38,
+          //         decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(10),
+          //             color: Colors.green
+          //         ),
+          //         child:  const Text('Reset all',
+          //           style: TextStyle(
+          //             fontSize: 16,
+          //             color: Colors.white,
+          //             fontFamily: "Muli",
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //
+          //   ],
+          // ),
+          // const SizedBox(height: 10,),
           Row(
             children: [
               Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  height: 38,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.red
-                  ),
-                  child:  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.picture_as_pdf_outlined,color: Colors.white,size: 18,),
-                      SizedBox(width: 10,),
-                      Text('Save as PDF',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontFamily: "Muli",
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 10,),
-              GestureDetector(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  alignment: Alignment.center,
-                  height: 38,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green
-                  ),
-                  child:  Text('Reset all',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontFamily: "Muli",
+                child: SizedBox(
+                  height: 38, // Specify the desired height here
+                  child: ElevatedButton(
+                    onPressed: () => _selectDateRange(context),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Adjust the border radius as needed
+                      ),backgroundColor: AppColors.categoryCardColor2, // Set the background color
+                    ),
+                    child: Text(
+                      _startDate == null || _endDate == null
+                          ? 'Select Date'
+                          : ' ${_formatDate(_startDate)} - ${_formatDate(_endDate)}',
+                      style: TextStyle(color: Colors.black54,fontSize: 14), // Set the text color
                     ),
                   ),
                 ),
               ),
-
-            ],
-          ),
-          SizedBox(height: 10,),
-          SizedBox(
-            height: 38, // Specify the desired height here
-            child: ElevatedButton(
-              onPressed: () => _selectDateRange(context),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), // Adjust the border radius as needed
-                  side: BorderSide(color: Colors.black54), // Set the border color
-                ),
-                primary: Colors.white, // Set the background color
-              ),
-              child: Text(
-                _startDate == null || _endDate == null
-                    ? 'Select Date'
-                    : ' ${_formatDate(_startDate)} - ${_formatDate(_endDate)}',
-                style: TextStyle(color: Colors.black54,fontSize: 16), // Set the text color
-              ),
-            ),
-          ),
-
-          SizedBox(height: 10,),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 38,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(
-                        Icons.search,
-                        color: Colors.black54,
-                      ),
-                      hintText: "Search Date",
-                      hintStyle: TextStyle(color: Colors.black54),
-                      contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black54),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black54),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 10,),
+              const SizedBox(width: 10,),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 alignment: Alignment.center,
-                height: 38,
+                height: 37,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.blue
+                    color: AppColors.primaryColor2
                 ),
-                child:  Text('Search',
+                child:  const Text('Search',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -165,9 +140,6 @@ class _SelectDateAndSearchDateState extends State<SelectDateAndSearchDate> {
               )
             ],
           ),
-
-
-
 
         ],
 

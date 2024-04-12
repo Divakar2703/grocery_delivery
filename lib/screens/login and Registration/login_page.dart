@@ -4,11 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/data/models/request/PhoneLoginRequestModel.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/ragistation.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_phone_login.dart';
-
 import '../../constants.dart';
-import '../../init_screen.dart';
-import 'forget_password.dart';
-import 'otp_screen.dart';
+
 
 class LoginUser extends StatefulWidget {
   const LoginUser({super.key});
@@ -18,29 +15,32 @@ class LoginUser extends StatefulWidget {
 }
 
 class _LoginUserState extends State<LoginUser> {
-
   TextEditingController mobileController = TextEditingController();
   PhoneLoginViewModel phoneLoginViewModel = PhoneLoginViewModel();
+  bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
+  void checkValidation() {
+    if (mobileController.text.toString().length >= 10) {
+      getUserId();
+    } else {
+      showToast('Please enter valid mobile no.!');
+    }
   }
 
-  void checkValidation(){
-  if(mobileController.text.toString().length>=10){
-    getUserId();
-  }
-  else{
-    showToast('Please enter valid mobile no.!');
-  }
-  }
-  void getUserId() {
+  Future<void> getUserId() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     final phoneLoginRequestmodel = PhoneLoginRequestModel(
       phone: mobileController.text.toString(),
     );
 
-    phoneLoginViewModel.fetchPhoneLoginData(phoneLoginRequestmodel,context,);
+    await phoneLoginViewModel.fetchPhoneLoginData(phoneLoginRequestmodel, context);
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void showToast(String message) {
@@ -58,28 +58,30 @@ class _LoginUserState extends State<LoginUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
+      body: SingleChildScrollView(
+        child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-              Image(image: AssetImage("assets/images/d2.png")),
-                Row(
+                const Image(image: AssetImage("assets/images/d2.png")),
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      'Enter your mobile number\nto get OTP',
-                      style: TextStyle(
-                          fontFamily: 'Muli',
-                          color: Colors.black87,
-                          fontSize: 27,
-                          fontWeight: FontWeight.w900),
+                    Expanded(
+                      child: Text(
+                        'Enter your mobile number to get OTP',
+                        style: TextStyle(
+                            fontFamily: 'Muli',
+                            color: Colors.black87,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900),
+                      ),
                     ),
                   ],
                 ),
-
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Container(
@@ -87,9 +89,8 @@ class _LoginUserState extends State<LoginUser> {
                   decoration: BoxDecoration(
                     color: kPrimaryLightColor,
                     borderRadius: BorderRadius.circular(12),
-
                   ),
-                  child:TextField(
+                  child: TextField(
                     controller: mobileController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -99,47 +100,35 @@ class _LoginUserState extends State<LoginUser> {
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-
-                     prefixText:"+91 | ",
-                     prefixIcon: Icon(Icons.person),
-
-                     // suffixIcon: SizedBox(width: 8),
+                      prefixText: "+91 | ",
+                      prefixIcon: const Icon(Icons.person),
                       fillColor: kPrimaryLightColor,
                       filled: true,
                       hintText: 'Enter Your Mobile No.',
-                    contentPadding: EdgeInsets.all(8),
-                      hintStyle: TextStyle(
+                      contentPadding: const EdgeInsets.all(8),
+                      hintStyle: const TextStyle(
                         fontFamily: 'Muli',
                         color: Color(0xff0C134F),
                       ),
                     ),
-                  )
-
-
-
+                  ),
                 ),
-
-
-
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
-                InkWell(
-                  onTap: (){
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => OtpScreen()),
-                    // );
+                _isLoading
+                    ? const CircularProgressIndicator() // Show progress indicator when loading
+                    : InkWell(
+                  onTap: () {
                     checkValidation();
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: kPrimaryColor,
-                      border: Border.all(color: Colors.white38),
-                      borderRadius: BorderRadius.circular(12)
-                    ),
+                        color: kPrimaryColor,
+                        border: Border.all(color: Colors.white38),
+                        borderRadius: BorderRadius.circular(12)),
                     height: 50,
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'Get OTP',
                         style: TextStyle(
@@ -152,14 +141,13 @@ class _LoginUserState extends State<LoginUser> {
                     ),
                   ),
                 ),
-
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: "Don't have an account?",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -168,34 +156,29 @@ class _LoginUserState extends State<LoginUser> {
                             fontSize: 12),
                       ),
                       TextSpan(
-                          text: 'Sign Up',
-                          style: TextStyle(
-                              fontFamily: 'Muli',
-                              decoration: TextDecoration.underline,
-                              color: Colors.black87,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold),
-                          recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SignUp()),
-                          );
-                        },
+                        text: 'Sign Up',
+                        style: const TextStyle(
+                            fontFamily: 'Muli',
+                            decoration: TextDecoration.underline,
+                            color: Colors.black87,
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const SignUp()),
+                            );
+                          },
                       ),
-
-
-                      // Add any additional properties here
-
-                      // Add more TextSpan widgets as needed
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
         ),
+      ),
     );
   }
 }
