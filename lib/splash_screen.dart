@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:grocery_delivery_side/init_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:grocery_delivery_side/new_init_screen.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
 
     super.initState();
-
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Colors.greenAccent.shade100, // Set status bar color here
+    ));
     const delay = const Duration(seconds: 3);
     Future.delayed(delay, () => onTimerFinished());
   }
@@ -36,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if(_isLogin){
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const InitScreen(),
+          builder: (context) => const NewInitScrren(),
         ),
       );
     }else{

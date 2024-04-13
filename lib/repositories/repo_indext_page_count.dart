@@ -1,6 +1,5 @@
 import '../data/constants/app_url.dart';
 import '../data/models/response/indextPageCountResponseModel.dart';
-import '../data/models/response/phoneLoginResponseModel.dart';
 import '../data/network/BaseApiServices.dart';
 import '../data/network/NetworkApiServices.dart';
 

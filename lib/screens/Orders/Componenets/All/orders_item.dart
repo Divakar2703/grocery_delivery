@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grocery_delivery_side/data/models/response/OrderListResponseModel.dart';
 import 'package:grocery_delivery_side/data/processResponse/api_process_response.dart';
 import '../../../../style/colors.dart';
-import 'open_order_details_bottom_sheet.dart';
+import 'order_details_screen.dart';
 
 class OrdersItem extends StatefulWidget {
   final ApiProcessResponse<OrderListResponseModel> orderqListData;

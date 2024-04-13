@@ -1,10 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_register.dart';
 import '../../constants.dart';
 import '../../data/models/request/registerRequestModel.dart';
-import '../../init_screen.dart';
 import 'login_page.dart';
 
 

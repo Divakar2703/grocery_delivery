@@ -82,13 +82,13 @@ class PhoneLoginViewModel with ChangeNotifier {
     try {
       final SendOtpResponseModel sendOtpResponseModel = await _phoneLoginRepo.fetchSendOtpData(data);
 
-      setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));
 
       if(sendOtpResponseModel.status!='error'){
         Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
 
       }else{
-        AppToast.showToast(sendOtpResponseModel.message.toString());
+        setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));
+      AppToast.showToast(sendOtpResponseModel.message.toString());
       }
 
       if (kDebugMode) {
@@ -108,8 +108,8 @@ class PhoneLoginViewModel with ChangeNotifier {
       } else {
         setSendOtpData(ApiProcessResponse.error('An unexpected error occurred: $error'));
       }
-      final SendOtpResponseModel sendOtpResponseModel = await _phoneLoginRepo.fetchSendOtpData(data);
-      setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));
+      // final SendOtpResponseModel sendOtpResponseModel = await _phoneLoginRepo.fetchSendOtpData(data);
+      // setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));
 
 
       if (kDebugMode) {

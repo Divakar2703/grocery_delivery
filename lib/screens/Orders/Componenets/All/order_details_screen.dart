@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_delivery_side/screens/Orders/Componenets/All/item_product.dart';
-import 'package:grocery_delivery_side/screens/Orders/Componenets/All/return_order_button.dart';
+import 'package:grocery_delivery_side/screens/Orders/Componenets/All/return_order_buttom_sheet.dart';
 import 'package:grocery_delivery_side/style/colors.dart';
 import '../../../../constants.dart';
 import '../../../../data/constants/app_constants_value.dart';
@@ -14,6 +14,7 @@ import '../../../../viewmodels/view_model_order_list.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final Order item;
+
   const OrderDetailsScreen({
     Key? key,
     required this.item,
@@ -26,45 +27,85 @@ class OrderDetailsScreen extends StatefulWidget {
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   late OrderListViewModel orderListViewModel;
+  String payId='';
+  String orderId='';
+
   @override
   void initState() {
     super.initState();
     orderListViewModel = OrderListViewModel();
+    payId = widget.item.payid.toString();
+    orderId = widget.item.orderID.toString();
   }
 
-  acceptOrder(BuildContext context,String payId,Order item) {
-    final data = AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
+  acceptOrder(BuildContext context, String payId, Order item) {
+    final data = AcceptOrderRequestModel(
+        userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchAcceptOrderData(data, context);
-    orderListViewModel.orderId=item.orderID.toString();
-    orderListViewModel.sourceLat=item.sellerLatitude as double;
-    orderListViewModel.sourceLong=item.sellerLongitude as double;
-    orderListViewModel.destiLat=item.customerLatitude as double;
-    orderListViewModel.destiLong=item.customerLongitude as double;
+
+    // Attempt to convert string coordinates to doubles (handle exceptions)
+    try {
+      orderListViewModel.sourceLat = double.parse(item.sellerLatitude ?? '0.0');
+      orderListViewModel.sourceLong = double.parse(item.sellerLongitude ?? '0.0');
+      orderListViewModel.destiLat = double.parse(item.customerLatitude ?? '0.0');
+      orderListViewModel.destiLong = double.parse(item.customerLongitude ?? '0.0');
+    } on FormatException {
+      // Handle the case where parsing fails (e.g., show an error message)
+      print("Error: Invalid latitude or longitude format");
+    }
   }
 
   //when user will not there for receive order
-  cancelOrder(BuildContext context,String payId,String comment,String orderId) {
-    final data = CancelOrderRequestModel(userId: Constants.userIdForUse, comment:comment, orderId:orderId ,payId: payId);
+  cancelOrder(BuildContext context, String payId, String comment,
+      String orderId) {
+    final data = CancelOrderRequestModel(userId: Constants.userIdForUse,
+        comment: comment,
+        orderId: orderId,
+        payId: payId);
     orderListViewModel.fetchCancelOrderData(data, context);
   }
 
   //when delivery boy will not want to accept the order
-  rejectOrder(BuildContext context,String payId,String comment) {
-    final data = RejectOrderRequestModel(userId: Constants.userIdForUse, payId: payId,rejectedReason:comment,);
+  rejectOrder(BuildContext context, String payId, String comment) {
+    final data = RejectOrderRequestModel(
+      userId: Constants.userIdForUse, payId: payId, rejectedReason: comment,);
     orderListViewModel.fetchRejectOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller
-  returnOrder(BuildContext context,String payId,String comment) {
-    final data = AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
+  returnOrder(BuildContext context, String payId) {
+    final data = AcceptOrderRequestModel(
+        userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchReturnOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
-  returnOrderVerifyOtp(BuildContext context,String payId,String comment, String otp) {
-    final data = ReturnOrderVerifyOtpRquestModel(userId: Constants.userIdForUse,reason:comment,otp:otp, payId: payId,);
+  returnOrderVerifyOtp(BuildContext context, String payId, String comment,
+      String otp) {
+    final data = ReturnOrderVerifyOtpRquestModel(
+      userId: Constants.userIdForUse, reason: comment, otp: otp, payId: payId,);
     orderListViewModel.fetchReturnOrderVerifyOtpData(data, context);
   }
+
+  void showReturnOrderBottomSheet(BuildContext context, String tappedButton) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return ReturnOrderBottomSheet(
+            tappedButton: tappedButton, // or 'return' or 'verifyOtp'
+            payId: payId,
+            orderId: orderId,
+            cancelOrderCallback: cancelOrder,
+            rejectOrderCallback: rejectOrder,
+            returnOrderCallback: returnOrder,
+            returnOrderVerifyOtpCallback: returnOrderVerifyOtp
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -131,10 +172,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     itemCount: widget.item.product!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ItemProduct(
-                        productName: widget.item.product![index].productName.toString(),
-                        sellerName: widget.item.product![index].sellerName.toString(),
-                        quantity: widget.item.product![index].productQty.toString(),
-                        price: widget.item.product![index].productPrice.toString(),
+                        productName: widget.item.product![index].productName
+                            .toString(),
+                        sellerName: widget.item.product![index].sellerName
+                            .toString(),
+                        quantity: widget.item.product![index].productQty
+                            .toString(),
+                        price: widget.item.product![index].productPrice
+                            .toString(),
                         total: widget.item.product![index].total.toString(),
                         image: widget.item.product![index].image.toString(),
                       );
@@ -433,7 +478,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            openReturnOrderBottomSheet(context);
+                            showReturnOrderBottomSheet(context,
+                                "Return");
                           },
                           child: Container(
                             height: 35,
@@ -455,30 +501,38 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       const SizedBox(
                         width: 10,
                       ),
+
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            // Show progress dialog
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              // Prevent user from dismissing the dialog
-                              builder: (BuildContext context) {
-                                return const Center(
-                                  child:
-                                  CircularProgressIndicator(), // Or any other loading indicator
-                                );
-                              },
-                            );
-
-                            // Perform the accept order action
-                            cancelOrder(
-                                context, widget.item.payid.toString(), "item",widget.item.orderID.toString())
-                                .then((_) {
-                              // Dismiss the progress dialog when the action is completed
-                              Navigator.pop(
-                                  context); // Dismiss the progress dialog
-                            });
+                            showReturnOrderBottomSheet(context,
+                                "Reject");
+                          },
+                          child: Container(
+                            height: 35,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.purple.shade200),
+                            child: const Text(
+                              'Reject',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontFamily: "Muli",
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            showReturnOrderBottomSheet(context,
+                                "Cancel");
                           },
                           child: Container(
                             height: 35,
@@ -518,7 +572,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
                             // Perform the accept order action
                             acceptOrder(
-                                context, widget.item.payid.toString(), widget.item)
+                                context, widget.item.payid.toString(),
+                                widget.item)
                                 .then((_) {
                               // Dismiss the progress dialog when the action is completed
                               Navigator.pop(
@@ -544,7 +599,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 16.0,)
                 ],
+
               ),
             ),
           ),

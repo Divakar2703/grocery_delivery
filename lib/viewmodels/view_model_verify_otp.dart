@@ -1,18 +1,12 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:grocery_delivery_side/data/models/request/PhoneLoginRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/verifyOtpRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/verifyOtpResponseModel.dart';
-import 'package:grocery_delivery_side/init_screen.dart';
-import 'package:grocery_delivery_side/repositories/repo_phone_login.dart';
+import 'package:grocery_delivery_side/new_init_screen.dart';
 import 'package:grocery_delivery_side/repositories/repo_verify_otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../data/constants/app_constants_value.dart';
-import '../data/models/response/phoneLoginResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
 import '../helper/toast.dart';
 
@@ -38,7 +32,7 @@ class VerifyOtpViewModel with ChangeNotifier {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return InitScreen();
+          return NewInitScrren();
         },
       ),
     );
@@ -71,9 +65,6 @@ class VerifyOtpViewModel with ChangeNotifier {
       }
       final VerifyOtpResponseModel verifyOtpResponseModel = await _verifyOtpRepo.fetchVerifyOtpData(data);
       setVerifyOtpData(ApiProcessResponse.completed(verifyOtpResponseModel));
-
-      // final Map<String, dynamic> responseData = (await _homeRepo.fetchHomeData(data)) as Map<String, dynamic>;
-      // final HomePageResponseModel homePageResponseModel = HomePageResponseModel.fromJson(responseData as String);
 
       if (kDebugMode) {
         print("Kuchh to gadabad h Dya");

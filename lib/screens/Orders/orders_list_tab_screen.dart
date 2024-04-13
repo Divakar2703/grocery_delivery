@@ -1,13 +1,7 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
-
 import '../../constants.dart';
 import 'Componenets/All/orders_list_screen.dart';
-import 'Componenets/Cancelled/Cancelled_widget.dart';
-import 'Componenets/Delivered/delivered_widget.dart';
-import 'Componenets/Reject/rejectWidget.dart';
-import 'Componenets/Return/returnWidget.dart';
-import 'Componenets/Shipping/shippingWidget.dart';
 
 class OrderScreenNew extends StatefulWidget {
   const OrderScreenNew({Key? key}) : super(key: key);

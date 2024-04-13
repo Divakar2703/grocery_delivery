@@ -65,6 +65,7 @@ class _OtpScreenState extends State<OtpScreen> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: SafeArea(
           child:

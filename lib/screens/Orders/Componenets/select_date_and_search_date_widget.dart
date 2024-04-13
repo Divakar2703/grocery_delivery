@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_delivery_side/screens/map/delivery_loc_tracking.dart';
 import 'package:grocery_delivery_side/style/colors.dart';
 import 'package:intl/intl.dart';
 
@@ -122,19 +123,27 @@ class _SelectDateAndSearchDateState extends State<SelectDateAndSearchDate> {
                 ),
               ),
               const SizedBox(width: 10,),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                alignment: Alignment.center,
-                height: 37,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.primaryColor2
-                ),
-                child:  const Text('Search',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontFamily: "Muli",
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DeliveryLocTracking(sourceLat: 0.0, sourceLong: 0.0, destiLat: 0.0, destiLong: 0.0, orderId: ""),
+                    ));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  alignment: Alignment.center,
+                  height: 37,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.primaryColor2
+                  ),
+                  child:  const Text('Search',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontFamily: "Muli",
+                    ),
                   ),
                 ),
               )

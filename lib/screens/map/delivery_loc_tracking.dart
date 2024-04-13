@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:math' as math;
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -10,14 +9,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../constants.dart';
+
 class DeliveryLocTracking extends StatefulWidget {
-  final String sourceLat;
-  final String sourceLong;
-  final String destiLat;
-  final String destiLong;
-  final String orderId ;
-   // Specify the type of item parameter
-   DeliveryLocTracking({Key? key, required this.sourceLat, required this.sourceLong, required this.destiLat, required this.destiLong, required this.orderId}) : super(key: key);
+  final double sourceLat;
+  final double sourceLong;
+  final double destiLat;
+  final double destiLong;
+  final String orderId;
+
+  // Specify the type of item parameter
+  DeliveryLocTracking(
+      {Key? key,
+      required this.sourceLat,
+      required this.sourceLong,
+      required this.destiLat,
+      required this.destiLong,
+      required this.orderId})
+      : super(key: key);
 
   @override
   State<DeliveryLocTracking> createState() => _DeliveryLocTrackingState();
@@ -37,9 +47,12 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
   double _lastBearing = 0.0;
   bool _isNavigationStarted = false;
   late StreamSubscription<GyroscopeEvent> _gyroscopeSubscription;
-  List<LatLng> polylineCoordinates = []; // Declare polylineCoordinates as a member variable
+  List<LatLng> polylineCoordinates =
+      []; // Declare polylineCoordinates as a member variable
 
   double _currentRotation = 0.0; // Current device rotation
+  double _distance = 0.0;
+  double _estimatedTime = 0.0;
 
   @override
   void initState() {
@@ -49,7 +62,6 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     _startGyroscopeUpdates();
     _getCurrentLocation();
     _startLocationUpdates();
-
   }
 
   @override
@@ -59,17 +71,18 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     super.dispose();
   }
 
-
   void _startGyroscopeUpdates() {
-    _gyroscopeSubscription = gyroscopeEventStream().listen((GyroscopeEvent event) {
+    _gyroscopeSubscription =
+        gyroscopeEventStream().listen((GyroscopeEvent event) {
       setState(() {
-        _currentRotation = event.z; // You might need to adjust which sensor event to use based on your device's orientation
+        _currentRotation = event
+            .z; // You might need to adjust which sensor event to use based on your device's orientation
       });
     });
   }
 
   void setCustommarkerIcon() {
-    ImageConfiguration configuration = const ImageConfiguration(size: Size(24, 24));
+    ImageConfiguration configuration = const ImageConfiguration();
     BitmapDescriptor.fromAssetImage(configuration, 'assets/dman.png')
         .then((icon) {
       locationIcon = icon;
@@ -94,7 +107,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
           desiredAccuracy: LocationAccuracy.high);
 
       setState(() {
-        _sourceLocation = LatLng(widget.sourceLat as double,widget.sourceLong as double);
+        _sourceLocation = LatLng(widget.sourceLat, widget.sourceLong);
         markers.add(_buildMarker('Current Location', _sourceLocation!));
         _moveCameraToCurrentLocation(position.latitude, position.longitude);
         _loading = false;
@@ -102,8 +115,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
 
       // Update Firestore with initial location
       updateFirestoreLocation(position.latitude, position.longitude);
-     _onMapTapped(_sourceLocation!);
-  } catch (e) {
+    } catch (e) {
       print('Error getting current location: $e');
     }
   }
@@ -121,31 +133,28 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
   void _startLocationUpdates() {
     _positionStreamSubscription =
         Geolocator.getPositionStream().listen((Position position) {
-          double bearing = _calculateBearing(
-              _sourceLocation!.latitude,
-              _sourceLocation!.longitude,
-              position.latitude,
-              position.longitude);
-          setState(() {
-            updateFirestoreLocation(position.latitude, position.longitude);
-            _sourceLocation = LatLng(position.latitude, position.longitude);
-            // markers.clear();
-            markers.add(_buildMarker('Current Location', _sourceLocation!));
-            _lastBearing = bearing;
+      double bearing = _calculateBearing(_sourceLocation!.latitude,
+          _sourceLocation!.longitude, position.latitude, position.longitude);
+      setState(() {
+        updateFirestoreLocation(position.latitude, position.longitude);
+        _sourceLocation = LatLng(position.latitude, position.longitude);
+        // markers.clear();
+        markers.add(_buildMarker('Current Location', _sourceLocation!));
+        _lastBearing = bearing;
+      });
 
-          });
-          if (_isNavigationStarted) {
-            _getPolyline(); // Update polyline on location change if navigation started
-          }
-          if(!polylineCoordinates.isEmpty){
-            rotateMap();
-          }
-        });
+      _getPolyline(); // Update polyline on location change if navigation started
+
+      if (!polylineCoordinates.isEmpty) {
+        rotateMap();
+      }
+    });
   }
 
-  double _calculateBearing(
-      double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
-    double theta = math.atan2(endLongitude - startLongitude, endLatitude - startLatitude);
+  double _calculateBearing(double startLatitude, double startLongitude,
+      double endLatitude, double endLongitude) {
+    double theta =
+        math.atan2(endLongitude - startLongitude, endLatitude - startLatitude);
     double bearing = (theta * (180 / math.pi) + 360) % 360;
     return bearing;
   }
@@ -158,6 +167,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
         17,
       ),
     );
+    markers.add(_buildMarker('Current Location', _sourceLocation!));
   }
 
   @override
@@ -167,25 +177,45 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
         child: Stack(
           children: [
             GoogleMap(
-              initialCameraPosition: _sourceLocation != null
-                  ? CameraPosition(
-                target: _sourceLocation!,
-                zoom: 17
-              )
-                  : const CameraPosition(
-                target: LatLng(0, 0),
-                zoom: 2,
-              ),
-              mapType: MapType.normal,
-              markers: markers,
-              polylines: polylines,
-              onTap: _onMapTapped,
-              onMapCreated: _onMapCreated
-            ),
+                initialCameraPosition: _sourceLocation != null
+                    ? CameraPosition(target: _sourceLocation!, zoom: 17)
+                    : const CameraPosition(
+                        target: LatLng(0, 0),
+                        zoom: 2,
+                      ),
+                mapType: MapType.normal,
+                markers: markers,
+                polylines: polylines,
+                onTap: _onMapTapped,
+                onMapCreated: _onMapCreated),
             if (_loading)
               const Center(
                 child: CircularProgressIndicator(),
               ),
+            Positioned(
+              top: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Distance: ${_distance.toStringAsFixed(2)} km',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Estimated Time: ${_estimatedTime.toStringAsFixed(2)} mins',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -210,16 +240,17 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 8,),
+            const SizedBox(
+              height: 8,
+            ),
             ElevatedButton(
               onPressed: _startNavigation,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.black,
+                backgroundColor: kPrimaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                minimumSize: const Size(double.infinity, 45),
               ),
               child: const Row(
                 children: [
@@ -237,48 +268,19 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
                 ],
               ),
             ),
-            const SizedBox(height: 8,),
-            ElevatedButton(
-              onPressed: _startNavigation,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                minimumSize: const Size(double.infinity, 45),
-              ),
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.message,
-                    color: Colors.white,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Drop message to Delivery Boy',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+            const SizedBox(
+              height: 8,
             ),
-            const SizedBox(height: 8,),
             ElevatedButton(
-              onPressed: (){
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const Chat()),
-                // );
+              onPressed: () {
+                _startCall();
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.black,
+                backgroundColor: kPrimaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                minimumSize: const Size(double.infinity, 45),
               ),
               child: const Row(
                 children: [
@@ -296,29 +298,31 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
                 ],
               ),
             ),
-            const SizedBox(height:8),
+            const SizedBox(height: 8),
           ],
         ),
       ),
     );
   }
+
   void _startCall() async {
     const phoneNumber = '9024232511'; // phone number to call
-    final Uri url = 'tel:$phoneNumber' as Uri;
+    final Uri url = Uri.parse('tel:$phoneNumber');
 
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+    if (await canLaunch(url.toString())) {
+      await launch(url.toString());
     } else {
       throw 'Could not launch $url';
     }
   }
-  void _onMapCreated(GoogleMapController controller) {
 
+  void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
     mapController = controller;
     // Rotate the map to align with the polyline
     rotateMap();
   }
+
   void rotateMap() {
     double rotationAngle = calculateBearingAngle();
     mapController.animateCamera(
@@ -358,7 +362,6 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     });
   }
 
-
   void _moveCameraToBounds() async {
     if (_sourceLocation != null && _destinationLocation != null) {
       final GoogleMapController controller = await _controller.future;
@@ -376,30 +379,29 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     }
   }
 
-
-
   void _onMapTapped(LatLng position) async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
     if (placemarks.isNotEmpty) {
       Placemark placemark = placemarks.first;
-      String completeAddress = '${placemark.street}, ${placemark.subLocality}, ${placemark.locality}, ${placemark.country}';
+      String completeAddress =
+          '${placemark.street}, ${placemark.subLocality}, ${placemark.locality}, ${placemark.country}';
       searchAddressController.text = completeAddress;
 
       setState(() {
         _destinationLocation = position;
-        _destinationLocation = LatLng(widget.destiLat as double,widget.destiLong as double);
+        // _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
         if (_sourceLocation != null) {
-          markers.removeWhere((marker) => marker.markerId.value == 'Destination Location');
-          markers.add(_buildMarkerDestination('Destination Location', position));
+          markers.removeWhere(
+              (marker) => marker.markerId.value == 'Destination Location');
+          markers
+              .add(_buildMarkerDestination('Destination Location', position));
           markers.add(_buildMarker('Current Location', _sourceLocation!));
         }
         _getPolyline();
-
       });
-
     }
   }
-
 
   Marker _buildMarkerDestination(String markerId, LatLng position) {
     return Marker(
@@ -410,13 +412,13 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     );
   }
 
-
   Future<void> _getPolyline() async {
     if (_sourceLocation != null && _destinationLocation != null) {
       PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
-        'AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y', // Replace with your Google Maps API Key
+        'AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y',
         PointLatLng(_sourceLocation!.latitude, _sourceLocation!.longitude),
-        PointLatLng(_destinationLocation!.latitude, _destinationLocation!.longitude),
+        PointLatLng(
+            _destinationLocation!.latitude, _destinationLocation!.longitude),
       );
 
       if (result.points.isNotEmpty) {
@@ -429,19 +431,31 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
 
         setState(() {
           polylines.clear();
-          updateFirestoreLocation(_sourceLocation!.latitude, _sourceLocation!.longitude);
+          updateFirestoreLocation(
+              _sourceLocation!.latitude, _sourceLocation!.longitude);
           rotateMap();
           polylines.add(Polyline(
-            polylineId: const PolylineId('route'),
-            color: Colors.black,
-            points: polylineCoordinates,
-            width: 2
-          ));
+              polylineId: const PolylineId('route'),
+              color: Colors.black,
+              points: polylineCoordinates,
+              width: 2));
+          _calculateDistanceAndTime();
         });
       }
     }
   }
 
+  void _calculateDistanceAndTime() {
+    _distance = Geolocator.distanceBetween(
+            _sourceLocation!.latitude,
+            _sourceLocation!.longitude,
+            _destinationLocation!.latitude,
+            _destinationLocation!.longitude) /
+        1000; // in km
+
+    // Assuming average speed of 30 km/hr
+    _estimatedTime = (_distance / 30) * 60; // in minutes
+  }
 
   void updateFirestoreLocation(double latitude, double longitude) {
     print('Latitude: $latitude, Longitude: $longitude');
@@ -449,21 +463,16 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     String currentDate = DateTime.now().toString(); // Get current date
     String orderId = "Order123"; // Generate your order ID here
 
-    FirebaseFirestore.instance
-        .collection('Grocery')
-        .doc(orderId)
-        .set({
+    FirebaseFirestore.instance.collection('Grocery').doc(orderId).set({
       'geolocation': GeoPoint(latitude, longitude),
       'date': currentDate,
-      'rotation':_currentRotation,
-      'destination': GeoPoint(_destinationLocation!.latitude, _destinationLocation!.longitude)
-    })
-        .then((value) {
+      'rotation': _currentRotation,
+      'destination': GeoPoint(
+          _destinationLocation!.latitude, _destinationLocation!.longitude)
+    }).then((value) {
       print("Location Updated in Firestore");
-    })
-        .catchError((error) {
+    }).catchError((error) {
       print("Failed to update location: $error");
     });
   }
-
 }

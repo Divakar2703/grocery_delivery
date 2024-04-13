@@ -3,19 +3,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import SystemChrome
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
-import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
 import 'package:grocery_delivery_side/splash_screen.dart';
 import 'package:grocery_delivery_side/style/theme.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_order_list.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_phone_login.dart';
+import 'package:grocery_delivery_side/viewmodels/view_model_profile.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_register.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_send_otp.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
 import 'firebase_options.dart';
-import 'init_screen.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // This function is called when the app is in the background.
@@ -43,18 +41,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Set status bar color here
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor:kPrimaryColor, // Replace with your desired color
       statusBarBrightness: Brightness.dark, // Change the brightness as needed
     ));
-    //
-    // return MaterialApp(
-    //   title: 'Flutter Demo',
-    //   debugShowCheckedMode
-    //   Banner: false,
-    //   theme: AppTheme.lightTheme(context),
-    //   home: const LoginUser(),
-    // );
 
     return MultiProvider(
       providers: [
@@ -64,7 +54,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OrderListViewModel()),
         // ChangeNotifierProvider(create: (_) => SubsPlanViewModel()),
         // ChangeNotifierProvider(create: (_) => ReserverClubViewModel()),
-        // ChangeNotifierProvider(create: (_) => ProfileViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfileViewModel()),
 
 
       ],

@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/data/models/request/acceptOrderRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/cancelOrderRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/rejectOrderRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/returnOrderVerifyOtpRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/acceptOrderResponseModel.dart';
 import '../data/models/request/orderListRequestModel.dart';
 import '../data/models/response/OrderListResponseModel.dart';
@@ -15,10 +18,10 @@ class OrderListViewModel with ChangeNotifier {
   final _orderListRepo = OrderListRepository();
 
   Order? item;
-  String sourceLat='';
-  String sourceLong='';
-  String destiLat='';
-  String destiLong='';
+  double sourceLat=0.0;
+  double sourceLong=0.0;
+  double destiLat=0.0;
+  double destiLong=0.0;
   String orderId = '';
 
   ApiProcessResponse<OrderListResponseModel> orderqListData = ApiProcessResponse.loading();
@@ -27,15 +30,6 @@ class OrderListViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  ApiProcessResponse<AcceptOrderResponseModel> acceptOrderResponseData = ApiProcessResponse.loading();
-  setAcceptOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
-    acceptOrderResponseData = response;
-    notifyListeners();
-  }
-
-  void setItem(Order newItem) {
-    item = newItem;
-  }
 
   Future<void> fetchOrderListData(OrderListRequestModel data, BuildContext context) async {
     setOrderListData(ApiProcessResponse.loading());
@@ -76,7 +70,11 @@ class OrderListViewModel with ChangeNotifier {
     }
   }
 
-
+  ApiProcessResponse<AcceptOrderResponseModel> acceptOrderResponseData = ApiProcessResponse.loading();
+  setAcceptOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    acceptOrderResponseData = response;
+    notifyListeners();
+  }
   Future<void> fetchAcceptOrderData(AcceptOrderRequestModel data, BuildContext context) async {
     setAcceptOrderData(ApiProcessResponse.loading());
     try {
@@ -120,6 +118,187 @@ class OrderListViewModel with ChangeNotifier {
   }
 
 
+
+
+  //cancel order
+  ApiProcessResponse<AcceptOrderResponseModel> cancelOrderResponseData = ApiProcessResponse.loading();
+  setCancelOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    cancelOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchCancelOrderData(CancelOrderRequestModel data, BuildContext context) async {
+    setCancelOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setCancelOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setCancelOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setCancelOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setCancelOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setCancelOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setCancelOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+
+  //Reject order
+  ApiProcessResponse<AcceptOrderResponseModel> rejectOrderResponseData = ApiProcessResponse.loading();
+  setRejectOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    rejectOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchRejectOrderData(RejectOrderRequestModel data, BuildContext context) async {
+    setRejectOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setRejectOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setRejectOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setRejectOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setRejectOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setRejectOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setRejectOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+  //Return order
+  ApiProcessResponse<AcceptOrderResponseModel> returnOrderResponseData = ApiProcessResponse.loading();
+  setReturnOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    returnOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchReturnOrderData(AcceptOrderRequestModel data, BuildContext context) async {
+    setReturnOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setReturnOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setReturnOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setReturnOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setReturnOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setReturnOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setReturnOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+  //Return order verify Otp
+  ApiProcessResponse<AcceptOrderResponseModel> returnOrderVerifyOtpResponseData = ApiProcessResponse.loading();
+  setReturnOrderVerifyOtpData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    returnOrderVerifyOtpResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchReturnOrderVerifyOtpData(ReturnOrderVerifyOtpRquestModel data, BuildContext context) async {
+    setReturnOrderVerifyOtpData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setReturnOrderVerifyOtpData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
+
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
   void showToast(String message) {
     Fluttertoast.showToast(
       msg: message,

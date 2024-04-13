@@ -9,7 +9,7 @@ class AppUrl{
   static var orderListUrl= "${baseUrl}orderlist";
   static var profileUpdateUrl= "${baseUrl}profiledata_update";
   static var acceptOrder= "${baseUrl}accept_order";
-  static var CancelOrder= "${baseUrl}accept_order";
+  static var cancelOrder= "${baseUrl}cancel_order";
   static var returnOrder= "${baseUrl}retrun_order";
   static var returnOrderCheckOtp= "${baseUrl}check_otp_for_retrun";
   static var deliveredOrderGetOtp= "${baseUrl}delivered_order";
