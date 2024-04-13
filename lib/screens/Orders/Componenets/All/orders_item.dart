@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_delivery_side/data/models/response/OrderListResponseModel.dart';
 import 'package:grocery_delivery_side/data/processResponse/api_process_response.dart';
-
-import '../../../../data/models/request/acceptOrderRequestModel.dart';
 import '../../../../style/colors.dart';
-import '../../../../viewmodels/view_model_order_list.dart';
 import 'open_order_details_bottom_sheet.dart';
 
 class OrdersItem extends StatefulWidget {
@@ -16,24 +13,7 @@ class OrdersItem extends StatefulWidget {
 }
 
 class _PCardState extends State<OrdersItem> {
-  late OrderListViewModel orderListViewModel;
-  @override
-  void initState() {
-    super.initState();
-    orderListViewModel = OrderListViewModel();
-  }
 
-  void acceptOrder(BuildContext context,String payId,Order item) {
-    final data = AcceptOrderRequestModel(userId: "Delivery104", payId: payId);
-    orderListViewModel.fetchAcceptOrderData(data, context);
-    orderListViewModel.orderId=item.orderID.toString();
-    orderListViewModel.sourceLat=item.sellerLatitude.toString();
-    orderListViewModel.sourceLong=item.sellerLongitude.toString();
-    orderListViewModel.destiLat=item.customerLatitude.toString();
-    orderListViewModel.orderId=item.customerLongitude.toString();
-    // orderListViewModel.setItem(item);
-    print('Order Accepted');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +24,10 @@ class _PCardState extends State<OrdersItem> {
         padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 0.0),
         child: GestureDetector(
           onTap: () {
-           openOrderDetailsBottomSheet(context,item,acceptOrder);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => OrderDetailsScreen(item: item,)),
+            );
           },
           child: Material(
             shadowColor: AppColors.lightGreyGreen,
