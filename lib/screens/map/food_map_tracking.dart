@@ -1,0 +1,499 @@
+import 'dart:async';
+import 'dart:math' as math;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sensors_plus/sensors_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:math';
+import '../../constants.dart';
+
+class FoodDeliveryTracking extends StatefulWidget {
+  final double sourceLat;
+  final double sourceLong;
+  final double destiLat;
+  final double destiLong;
+  final String orderId;
+
+  const FoodDeliveryTracking({Key? key,
+    required this.sourceLat,
+    required this.sourceLong,
+    required this.destiLat,
+    required this.destiLong,
+    required this.orderId})
+      : super(key: key);
+
+  @override
+  State<FoodDeliveryTracking> createState() => _FoodDeliveryTrackingState();
+}
+
+class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
+  final Completer<GoogleMapController> _controller = Completer();
+  late GoogleMapController mapController;
+  late TextEditingController searchAddressController;
+  late Set<Marker> markers = {};
+  late Set<Polyline> polylines = {};
+  bool _loading = false;
+  BitmapDescriptor locationIcon = BitmapDescriptor.defaultMarker;
+  LatLng? _sourceLocation;
+  LatLng? _destinationLocation;
+  late StreamSubscription<Position> _positionStreamSubscription;
+  double _lastBearing = 0.0;
+  bool _isNavigationStarted = false;
+  late StreamSubscription<GyroscopeEvent> _gyroscopeSubscription;
+  List<LatLng> polylineCoordinates =
+  []; // Declare polylineCoordinates as a member variable
+
+  double _currentRotation = 0.0; // Current device rotation
+  double _distance = 0.0;
+  double _estimatedTime = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    print("delivery boy location ====================================================${widget.destiLat},,,,, ${widget.destiLong}");
+    searchAddressController = TextEditingController();
+    setCustommarkerIcon();
+    _startGyroscopeUpdates();
+    _getCurrentLocation();
+    _startLocationUpdates();
+  }
+
+  @override
+  void dispose() {
+    _positionStreamSubscription.cancel();
+    _gyroscopeSubscription.cancel();
+    super.dispose();
+  }
+
+  void _startGyroscopeUpdates() {
+    _gyroscopeSubscription =
+        gyroscopeEventStream().listen((GyroscopeEvent event) {
+          setState(() {
+            _currentRotation = event
+                .z; // You might need to adjust which sensor event to use based on your device's orientation
+          });
+        });
+  }
+
+  void setCustommarkerIcon() {
+    ImageConfiguration configuration = const ImageConfiguration(size: Size(24, 24));
+    BitmapDescriptor.fromAssetImage(configuration, 'assets/dman.png')
+        .then((icon) {
+      locationIcon = icon;
+    });
+  }
+
+  void _getCurrentLocation() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      LocationPermission permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        setState(() {
+          _loading = false;
+        });
+        return;
+      }
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      setState(() {
+        _sourceLocation = LatLng(position.latitude, position.longitude);
+        // _sourceLocation = LatLng(widget.sourceLat, widget.sourceLong);
+        markers.add(_buildMarker('Current Location', _sourceLocation!));
+        _moveCameraToCurrentLocation(position.latitude, position.longitude);
+
+        _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
+        if (_sourceLocation != null) {
+          markers.removeWhere(
+                  (marker) => marker.markerId.value == 'Destination Location');
+          markers
+              .add(_buildMarkerDestination('Destination Location', _destinationLocation!));
+          markers.add(_buildMarker('Current Location', _sourceLocation!));
+          _getPolyline();
+        }
+        _loading = false;
+
+
+
+      });
+
+
+      // Update Firestore with initial location
+      updateFirestoreLocation(position.latitude, position.longitude);
+    } catch (e) {
+      print('Error getting current location: $e');
+    }
+  }
+
+  Marker _buildMarker(String markerId, LatLng position) {
+    return Marker(
+      markerId: MarkerId(markerId),
+      position: position,
+      infoWindow: InfoWindow(title: markerId),
+      icon: locationIcon,
+      rotation: _currentRotation,
+    );
+  }
+
+  void _startLocationUpdates() {
+    _positionStreamSubscription =
+        Geolocator.getPositionStream().listen((Position position) {
+          double bearing = _calculateBearing(_sourceLocation!.latitude,
+              _sourceLocation!.longitude, position.latitude, position.longitude);
+          setState(() {
+            updateFirestoreLocation(position.latitude, position.longitude);
+            _sourceLocation = LatLng(position.latitude, position.longitude);
+            // markers.clear();
+            markers.add(_buildMarker('Current Location', _sourceLocation!));
+            _lastBearing = bearing;
+          });
+
+          _getPolyline(); // Update polyline on location change if navigation started
+
+          if (!polylineCoordinates.isEmpty) {
+            rotateMap();
+          }
+        });
+  }
+
+  double _calculateBearing(double startLatitude, double startLongitude,
+      double endLatitude, double endLongitude) {
+    double theta =
+    math.atan2(endLongitude - startLongitude, endLatitude - startLatitude);
+    double bearing = (theta * (180 / math.pi) + 360) % 360;
+    return bearing;
+  }
+
+  void _moveCameraToCurrentLocation(double latitude, double longitude) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLngZoom(
+        LatLng(latitude, longitude),
+        17,
+      ),
+    );
+    markers.add(_buildMarker('Current Location', _sourceLocation!));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            GoogleMap(
+                initialCameraPosition: _sourceLocation != null
+                    ? CameraPosition(target: _sourceLocation!, zoom: 17)
+                    : const CameraPosition(
+                  target: LatLng(0, 0),
+                  zoom: 2,
+                ),
+                mapType: MapType.normal,
+                markers: markers,
+                polylines: polylines,
+                onTap: _onMapTapped,
+                onMapCreated: _onMapCreated),
+            if (_loading)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            Positioned(
+              top: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Distance: ${_distance.toStringAsFixed(2)} km',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Estimated Time: ${_estimatedTime.toStringAsFixed(2)} mins',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomSheet: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              height: 8,
+            ),
+            ElevatedButton(
+              onPressed: _startNavigation,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: kPrimaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Row(
+                children: [
+                  Icon(
+                    Icons.navigation,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'Start Navigation',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _startCall();
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: kPrimaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Row(
+                children: [
+                  Icon(
+                    Icons.call,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'Contact to Delivery boy',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _startCall() async {
+    // Phone number to call
+    const phoneNumber = '9024232511';
+
+    // Create a uri to represent the phone number
+    final Uri url = Uri.parse('tel:$phoneNumber');
+
+    // Check if the device can handle phone calls
+    if (await canLaunch(url.toString())) {
+      // If yes, launch the call intent
+      await launch(url.toString());
+    } else {
+      // If no, throw an error
+      throw 'Could not launch call: $url';
+    }
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller.complete(controller);
+    mapController = controller;
+    // Rotate the map to align with the polyline
+    rotateMap();
+  }
+
+  void rotateMap() {
+    double rotationAngle = calculateBearingAngle();
+    mapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: polylineCoordinates.first,
+          zoom: 17,
+          bearing: rotationAngle,
+        ),
+      ),
+    );
+  }
+
+  double calculateBearingAngle() {
+    LatLng point1 = polylineCoordinates[0];
+    LatLng point2 = polylineCoordinates[1];
+
+    double lat1 = point1.latitude * pi / 180;
+    double lon1 = point1.longitude * pi / 180;
+    double lat2 = point2.latitude * pi / 180;
+    double lon2 = point2.longitude * pi / 180;
+
+    double y = sin(lon2 - lon1) * cos(lat2);
+    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(lon2 - lon1);
+    double bearing = atan2(y, x) * 180 / pi;
+
+    return bearing;
+  }
+
+  void _startNavigation() {
+    setState(() {
+      _isNavigationStarted = true;
+    });
+    _getPolyline().then((_) {
+      _moveCameraToBounds();
+      rotateMap();
+    });
+  }
+
+  void _moveCameraToBounds() async {
+    if (_sourceLocation != null && _destinationLocation != null) {
+      final GoogleMapController controller = await _controller.future;
+      LatLngBounds bounds = LatLngBounds(
+        southwest: LatLng(
+          math.min(_sourceLocation!.latitude, _destinationLocation!.latitude),
+          math.min(_sourceLocation!.longitude, _destinationLocation!.longitude),
+        ),
+        northeast: LatLng(
+          math.max(_sourceLocation!.latitude, _destinationLocation!.latitude),
+          math.max(_sourceLocation!.longitude, _destinationLocation!.longitude),
+        ),
+      );
+      controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 100));
+    }
+  }
+
+  void _onMapTapped(LatLng position) async {
+    List<Placemark> placemarks =
+    await placemarkFromCoordinates(position.latitude, position.longitude);
+    if (placemarks.isNotEmpty) {
+      Placemark placemark = placemarks.first;
+      String completeAddress =
+          '${placemark.street}, ${placemark.subLocality}, ${placemark.locality}, ${placemark.country}';
+      searchAddressController.text = completeAddress;
+
+      setState(() {
+        _destinationLocation = position;
+        _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
+        if (_sourceLocation != null) {
+          markers.removeWhere(
+                  (marker) => marker.markerId.value == 'Destination Location');
+          markers
+              .add(_buildMarkerDestination('Destination Location', position));
+          markers.add(_buildMarker('Current Location', _sourceLocation!));
+        }
+        _getPolyline();
+      });
+    }
+  }
+
+  Marker _buildMarkerDestination(String markerId, LatLng position) {
+    return Marker(
+      markerId: MarkerId(markerId),
+      position: position,
+      infoWindow: InfoWindow(title: markerId),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    );
+  }
+
+  Future<void> _getPolyline() async {
+    _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
+    if (_sourceLocation != null && _destinationLocation != null) {
+      PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
+        'AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y',
+        PointLatLng(_sourceLocation!.latitude, _sourceLocation!.longitude),
+        PointLatLng(
+            _destinationLocation!.latitude, _destinationLocation!.longitude),
+      );
+
+      if (result.points.isNotEmpty) {
+        List<PointLatLng> decodedPoints = result.points;
+
+        // Convert List<PointLatLng> to List<LatLng>
+        polylineCoordinates = decodedPoints
+            .map((point) => LatLng(point.latitude, point.longitude))
+            .toList();
+
+        setState(() {
+          polylines.clear();
+          updateFirestoreLocation(
+              _sourceLocation!.latitude, _sourceLocation!.longitude);
+          rotateMap();
+          polylines.add(Polyline(
+              polylineId: const PolylineId('route'),
+              color: Colors.black,
+              points: polylineCoordinates,
+              width: 2));
+          _calculateDistanceAndTime();
+        });
+      }
+    }
+  }
+
+  void _calculateDistanceAndTime() {
+    _distance = Geolocator.distanceBetween(
+        _sourceLocation!.latitude,
+        _sourceLocation!.longitude,
+        _destinationLocation!.latitude,
+        _destinationLocation!.longitude) /
+        1000; // in km
+
+    // Assuming average speed of 30 km/hr
+    _estimatedTime = (_distance / 30) * 60; // in minutes
+  }
+
+  void updateFirestoreLocation(double latitude, double longitude) {
+    print('Latitude: $latitude, Longitude: $longitude');
+
+    String currentDate = DateTime.now().toString(); // Get current date
+    // String orderId = "order123"; // Generate your order ID here
+    String orderId = widget.orderId; // Generate your order ID here
+
+    FirebaseFirestore.instance.collection('Food').doc(orderId).set({
+      'geolocation': GeoPoint(latitude, longitude),
+      'date': currentDate,
+      'rotation': _currentRotation,
+      'destination': GeoPoint(
+          _destinationLocation!.latitude, _destinationLocation!.longitude)
+    }).then((value) {
+      print("Location Updated in Firestore");
+    }).catchError((error) {
+      print("Failed to update location: $error");
+    });
+  }
+}

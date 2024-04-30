@@ -9,6 +9,7 @@ import 'package:grocery_delivery_side/helper/empty_animation.dart';
 import 'package:grocery_delivery_side/constants.dart';
 import 'package:grocery_delivery_side/data/processResponse/status.dart';
 
+import '../../../../data/constants/app_constants_value.dart';
 import '../select_date_and_search_date_widget.dart';
 
 class AllWidget extends StatefulWidget {
@@ -20,21 +21,39 @@ class AllWidget extends StatefulWidget {
   State<AllWidget> createState() => _AllWidgetState();
 }
 
-class _AllWidgetState extends State<AllWidget> {
+class _AllWidgetState extends State<AllWidget> with
+  WidgetsBindingObserver  {
   late OrderListViewModel orderListViewModel;
+  late OrderListRequestModel data;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     orderListViewModel = OrderListViewModel();
-    final data = OrderListRequestModel(userId: "Delivery104", type: widget.type);
+    data = OrderListRequestModel(userId: Constants.userIdForUse, type: widget.type);
     orderListViewModel.fetchOrderListData(data, context);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Call the fetch data method here
+      orderListViewModel.fetchOrderListData(data, context);
+    }
   }
 
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<OrderListViewModel>(
+    return
+      ChangeNotifierProvider<OrderListViewModel>(
       create: (BuildContext context) => orderListViewModel,
       child: Consumer<OrderListViewModel>(
         builder: (context, value, _) {
@@ -49,25 +68,9 @@ class _AllWidgetState extends State<AllWidget> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: Color(0xfff9f9f9),
-                        ),
-                        child: Column(
-                          children: [
-                            SelectDateAndSearchDate(),
-                            SizedBox(height: 5),
-                            SizedBox(height: 5),
-                            Divider(
-                              thickness: 1,
-                            ),
-                            SizedBox(height: 10),
-                            OrdersItem(orderqListData: value.orderqListData),
-                          ],
-                        ),
-                      ),
+                      // const SelectDateAndSearchDate(),
+                      // const SizedBox(height: 10),
+                      OrdersItem(orderqListData: value.orderqListData,type: widget.type,),
                     ],
                   ),
                 ),

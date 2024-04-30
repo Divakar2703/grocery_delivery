@@ -45,6 +45,7 @@ class Order {
   String? customerLatitude;
   String? customerLongitude;
   String? customerContactNo;
+  String? customerDeliverySlot;
   String? sellerName;
   String? sellerContactno;
   String? pickUpAddress;
@@ -95,6 +96,7 @@ class Order {
     customerLatitude = json['Customer latitude'];
     customerLongitude = json['Customer longitude'];
     customerContactNo = json['Customer Contact no'];
+    customerDeliverySlot = json['Customer Delivery slot'];
     sellerName = json['Seller Name'];
     sellerContactno = json['Seller Contactno'];
     pickUpAddress = json['Pick Up Address'];
@@ -127,6 +129,7 @@ class Order {
     data['Customer latitude'] = this.customerLatitude;
     data['Customer longitude'] = this.customerLongitude;
     data['Customer Contact no'] = this.customerContactNo;
+    data['Customer Delivery slot'] = this.customerDeliverySlot;
     data['Seller Name'] = this.sellerName;
     data['Seller Contactno'] = this.sellerContactno;
     data['Pick Up Address'] = this.pickUpAddress;
@@ -152,7 +155,10 @@ class Product {
   String? productPrice;
   String? productWeight;
   String? image;
+  String? netPrice;
+  dynamic adminProfit;
   dynamic total;
+  List<Addon>? addon;
 
   Product(
       {this.productId,
@@ -163,7 +169,10 @@ class Product {
         this.productPrice,
         this.productWeight,
         this.image,
-        this.total});
+        this.netPrice,
+        this.adminProfit,
+        this.total,
+        this.addon});
 
   Product.fromJson(Map<String, dynamic> json) {
     productId = json['product_id'];
@@ -174,7 +183,15 @@ class Product {
     productPrice = json['product_price'];
     productWeight = json['product_weight'];
     image = json['image'];
+    netPrice = json['Net Price'];
+    adminProfit = json['Admin Profit'];
     total = json['Total'];
+    if (json['addon'] != null) {
+      addon = <Addon>[];
+      json['addon'].forEach((v) {
+        addon!.add(new Addon.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -187,7 +204,34 @@ class Product {
     data['product_price'] = this.productPrice;
     data['product_weight'] = this.productWeight;
     data['image'] = this.image;
+    data['Net Price'] = this.netPrice;
+    data['Admin Profit'] = this.adminProfit;
     data['Total'] = this.total;
+    if (this.addon != null) {
+      data['addon'] = this.addon!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Addon {
+  String? addonName;
+  String? addonPrice;
+  int? addonQty;
+
+  Addon({this.addonName, this.addonPrice, this.addonQty});
+
+  Addon.fromJson(Map<String, dynamic> json) {
+    addonName = json['addon name'];
+    addonPrice = json['addon price'];
+    addonQty = json['addon qty'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['addon name'] = this.addonName;
+    data['addon price'] = this.addonPrice;
+    data['addon qty'] = this.addonQty;
     return data;
   }
 }

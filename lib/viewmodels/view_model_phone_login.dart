@@ -84,7 +84,7 @@ class PhoneLoginViewModel with ChangeNotifier {
 
 
       if(sendOtpResponseModel.status!='error'){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
 
       }else{
         setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));

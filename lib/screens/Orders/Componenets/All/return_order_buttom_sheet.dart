@@ -9,6 +9,8 @@ class ReturnOrderBottomSheet extends StatefulWidget {
   final Function(BuildContext context, String payId, String comment) rejectOrderCallback;
   final Function(BuildContext context, String payId) returnOrderCallback;
   final Function(BuildContext context, String payId, String comment, String otp) returnOrderVerifyOtpCallback;
+  final Function(BuildContext context, String payId) deliverOrderCallback;
+  final Function(BuildContext context, String payId, String otp) deliverOrderVerifyOtpCallback;
 
   ReturnOrderBottomSheet({
     this.tappedButton,
@@ -17,6 +19,7 @@ class ReturnOrderBottomSheet extends StatefulWidget {
     required this.returnOrderCallback,
     required this.returnOrderVerifyOtpCallback,
     required this.cancelOrderCallback, required this.orderId,
+    required this.deliverOrderCallback, required this.deliverOrderVerifyOtpCallback,
   });
 
   @override
@@ -27,6 +30,7 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
   late TextEditingController otpController;
   late TextEditingController reasonController;
   bool _showProgressDialog = false;
+  bool _showOtpField = false;
 
   @override
   void initState() {
@@ -42,12 +46,17 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
     super.dispose();
   }
 
+  void hideProgressDialog() {
+    setState(() {
+      _showProgressDialog = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Container(
-        height: 320,
         width: double.infinity,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
@@ -81,39 +90,6 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  if (widget.tappedButton == 'Return')
-                    Column(
-                      children: [
-                        const Text(
-                          "OTP",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 10,),
-                        Container(
-                          height: 36,
-                          child: TextField(
-                            controller: otpController,
-                            decoration: InputDecoration(
-                              hintText: "Enter OTP",
-                              hintStyle: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                              contentPadding: const EdgeInsets.only(left: 16),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.black54),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.black54),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10,),
-                      ],
-                    ),
                   Container(
                     height: 100,
                     decoration: BoxDecoration(
@@ -143,111 +119,145 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
                     ),
                   ),
                   const SizedBox(height: 10,),
-                  if (widget.tappedButton == 'Reject')
-                    GestureDetector(
-                      onTap: () {
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
                         _showProgressDialog = true;
-                        setState(() {});
+                      });
+                      if (widget.tappedButton == 'Reject') {
                         String reason = reasonController.text;
                         widget.rejectOrderCallback(context, widget.payId, reason);
-                        // You should update the state based on the response from the function call to hide the progress dialog.
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 36,
-                        width: 100,
-                        decoration: BoxDecoration(
-                            color: kPrimaryColor,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: const Text('Reject',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontFamily: "Muli",
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (widget.tappedButton == 'Return')
-                    GestureDetector(
-                      onTap: () {
-                        _showProgressDialog = true;
-                        setState(() {});
+                        hideProgressDialog();
+                        Navigator.pop(context);
+
+                      } else if (widget.tappedButton == 'Return') {
                         widget.returnOrderCallback(context, widget.payId);
-                        widget.tappedButton = "verifyOtp";
-                        // You should update the state based on the response from the function call to hide the progress dialog.
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 36,
-                        width: 100,
-                        decoration: BoxDecoration(
-                            color: kPrimaryColor,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: const Text('Return',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontFamily: "Muli",
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (widget.tappedButton == 'Cancel')
-                    GestureDetector(
-                      onTap: () {
-                        _showProgressDialog = true;
-                        setState(() {});
+                        _showOtpField = true;
+                        hideProgressDialog();
+                      } else if (widget.tappedButton == 'Deliver') {
+                        widget.deliverOrderCallback(context, widget.payId);
+                        _showOtpField = true;
+                        hideProgressDialog();
+                      } else if (widget.tappedButton == 'Cancel') {
                         widget.cancelOrderCallback(context, reasonController.text,widget.orderId,widget.payId);
-                        },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 36,
-                        width: 100,
-                        decoration: BoxDecoration(
-                            color: kPrimaryColor,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: const Text('Return',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontFamily: "Muli",
-                          ),
+                        hideProgressDialog();
+                        Navigator.pop(context);
+
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 36,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Text(
+                        widget.tappedButton == 'verifyOtp' ? 'Verify OTP' : widget.tappedButton!,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontFamily: "Muli",
                         ),
                       ),
                     ),
-                  if (widget.tappedButton == 'verifyOtp')
-                    GestureDetector(
-                      onTap: () {
-                        _showProgressDialog = true;
-                        setState(() {});
-                        String otp = otpController.text;
-                        String reason = reasonController.text;
-                        widget.returnOrderVerifyOtpCallback(context, widget.payId, reason, otp);
-                        // You should update the state based on the response from the function call to hide the progress dialog.
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 36,
-                        width: 100,
-                        decoration: BoxDecoration(
-                            color: kPrimaryColor,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: const Text('Verify OTP',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontFamily: "Muli",
+                  ),
+                  const SizedBox(height: 16,),
+                  if (widget.tappedButton == 'Return' || widget.tappedButton == 'Deliver')
+                    Column(
+                      children: [
+                        // const Text(
+                        //   "OTP",
+                        //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        // ),
+                        const SizedBox(height: 10,),
+                        if (_showOtpField)
+                          Column(
+                            children: [
+                              Container(
+                                height: 66,
+                                child: TextField(
+                                  controller: otpController,
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 6,
+                                  decoration: InputDecoration(
+                                    hintText: "Enter OTP",
+                                    hintStyle: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                    ),
+                                    contentPadding: const EdgeInsets.only(left: 16),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(color: Colors.black54),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(color: Colors.black54),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10,),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _showProgressDialog = true;
+                                  });
+                                  if (widget.tappedButton == 'Return') {
+                                    if (_showOtpField) {
+                                      String otp = otpController.text;
+                                      String comment = reasonController.text;
+                                      widget.returnOrderVerifyOtpCallback(context, widget.payId, comment, otp);
+                                      hideProgressDialog();
+                                      Navigator.pop(context);
+                                    } else {
+                                      // If OTP field is not shown yet, toggle its visibility
+                                      setState(() {
+                                        _showOtpField = true;
+                                        _showProgressDialog = false;
+                                      });
+                                    }
+                                  } else if (widget.tappedButton == 'Deliver') {
+                                    if (_showOtpField) {
+                                      String otp = otpController.text;
+                                      widget.deliverOrderVerifyOtpCallback(context, widget.payId, otp);
+                                      hideProgressDialog();
+                                      Navigator.pop(context);
+                                    } else {
+                                      // If OTP field is not shown yet, toggle its visibility
+                                      setState(() {
+                                        _showOtpField = true;
+                                        _showProgressDialog = false;
+                                      });
+                                    }
+                                  }
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 36,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    color: kPrimaryColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                   'Verify OTP',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontFamily: "Muli",
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
+                      ],
                     ),
                   if (_showProgressDialog)
-                    CircularProgressIndicator(), // Show the progress dialog if needed
+                    const CircularProgressIndicator(), // Show the progress dialog if needed
                 ],
               ),
             ),
@@ -256,5 +266,4 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
       ),
     );
   }
-
 }

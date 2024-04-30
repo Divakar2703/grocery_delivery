@@ -2,9 +2,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:grocery_delivery_side/data/models/request/indextPageCountRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/response/getProfileResponseModel.dart';
+import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
+import 'package:grocery_delivery_side/viewmodels/view_model_profile.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/constants/app_constants_value.dart';
+import '../../data/processResponse/api_process_response.dart';
+import '../../data/processResponse/status.dart';
+import '../../helper/empty_animation.dart';
+import '../Orders/Componenets/All/simmer_order_list.dart';
 import 'edit_profile.dart';
 
 class Profile extends StatefulWidget {
@@ -16,6 +26,15 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   String selectedImagePath = ''; // To store the selected image path
+  late ProfileViewModel profileViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    profileViewModel = ProfileViewModel();
+    final data = IndextPageCountRequestModel(userId: Constants.userIdForUse);
+        profileViewModel.fetchProfileData(data, context);
+  }
 
   Future selectImage(BuildContext context) {
     return showDialog(
@@ -142,167 +161,204 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff81bab4),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              padding: EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(30),
-                      topLeft: Radius.circular(30))),
-              width: double.infinity,
-              child: Column(
-                children: [
-                  SizedBox(height: 80,),
-                  Transform.translate(
-                    offset: Offset(0, -35), // Adjust the values as needed
-                    child: GestureDetector(
-                      onTap: (){
-                        selectImage(context);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white, // Set the border color
-                            width: 5.0, // Set the border width
-                          ),
-                        ),
-                        child: CircleAvatar(
-                          backgroundImage: selectedImagePath.isNotEmpty
-                              ? AssetImage(selectedImagePath)
-                              : AssetImage("assets/images/Profile Image.png"),
-                          radius: 50,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'Chandrabhan Singh',
-                    style: TextStyle(
-                      fontFamily: "Muli",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    'mlacbsaakya@gmail.com',
-                    style: TextStyle(
-                      fontFamily: 'Muli',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  ProfileContainer(),
-                  Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xff81bab4),
-                            spreadRadius: 2,
-                            blurRadius: 03,
-                            offset: Offset(1, 1), // changes position of shadow
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white),
-                    width: double.infinity,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Address :',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontFamily: "Muli",
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(width: 30),
-                        Expanded(
-                          child: Text(
-                            'bilaspur north , Wardha , Maharashtra , India , - 343553',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.grey.shade700,
-                              fontFamily: "Muli",
-                              fontWeight: FontWeight.w500,
+      backgroundColor: CupertinoColors.white,
+      body: ChangeNotifierProvider<ProfileViewModel>(
+        create: (BuildContext context) => profileViewModel,
+        child: Consumer<ProfileViewModel>(
+          builder: (context, value, _) {
+            switch (value.getProfileData.status ?? "") {
+              case Status.LOADING:
+                return Expanded(child: Center(child: buildShimmerProductDetails()));
+              case Status.ERROR:
+                return Expanded(child: Center(child: emptyAnimationWidget()));
+              case Status.COMPLETED:
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30),
+                                topLeft: Radius.circular(30))),
+                        width: double.infinity,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 80,),
+                            Transform.translate(
+                              offset: const Offset(0, -35), // Adjust the values as needed
+                              child: GestureDetector(
+                                onTap: (){
+                                  selectImage(context);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white, // Set the border color
+                                      width: 5.0, // Set the border width
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    backgroundImage: selectedImagePath.isNotEmpty
+                                        ? AssetImage(selectedImagePath)
+                                        : const AssetImage("assets/images/Profile Image.png"),
+                                    radius: 50,
+                                  ),
+                                ),
+                              ),
                             ),
-                            //   maxLines: 1, // Set maximum number of lines
-                            //    overflow: TextOverflow.ellipsis, // Handle overflow by showing ellipsis
-                          ),
+                             Text(
+                              value.getProfileData.data!.name.toString(),
+                              style: TextStyle(
+                                fontFamily: "Muli",
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                             Text(
+                              value.getProfileData.data!.emailId.toString(),
+                              style: TextStyle(
+                                fontFamily: 'Muli',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                             ProfileContainer(getProfileData: value.getProfileData!.data,),
+                            Container(
+                              margin:
+                              const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    const BoxShadow(
+                                      color: Color(0xff81bab4),
+                                      spreadRadius: 2,
+                                      blurRadius: 03,
+                                      offset: Offset(1, 1), // changes position of shadow
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white),
+                              width: double.infinity,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Address :',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontFamily: "Muli",
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 30),
+                                  Expanded(
+                                    child: Text(
+                                      value.getProfileData.data!.address.toString(),
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey.shade700,
+                                        fontFamily: "Muli",
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      //   maxLines: 1, // Set maximum number of lines
+                                      //    overflow: TextOverflow.ellipsis, // Handle overflow by showing ellipsis
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                             CardWidget_R(
+                              title: 'Update Your Profile',
+                               getProfileResponseModel: value.getProfileData!.data,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(8),
+                              width: 120,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: const Color(0xff81bab4),
+                              ),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: SvgPicture.asset(
+                                      "assets/icons/logout-svgrepo-com-2.svg",
+                                      // Replace with your SVG path
+                                      height: 18,
+                                      width: 16,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () async {
+                                      // Clear shared preferences
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      await prefs.clear();
+
+                                      // Navigate to login screen
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const LoginUser(),
+                                          ));
+                                    },
+                                  ),
+                                  const Text(
+                                    'LogOut',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontFamily: "Muli",
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                  CardWidget_R(
-                    title: 'Update Your Profile',
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(8),
-                    width: 120,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Color(0xff81bab4),
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: SvgPicture.asset(
-                            "assets/icons/logout-svgrepo-com-2.svg",
-                            // Replace with your SVG path
-                            height: 18,
-                            width: 16,
-                            color: Colors.red,
-                          ),
-                          onPressed: () {
-                            //  Navigator.of(context).pop();
-                          },
-                        ),
-                        Text(
-                          'LogOut',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontFamily: "Muli",
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                );
+            }
+            return Container();
+          },
         ),
       ),
     );
+
+
+
+
+
+
   }
 }
 
-class ProfileContainer extends StatelessWidget {
-  const ProfileContainer({super.key});
+class ProfileContainer extends StatefulWidget {
+  final GetProfileResponseModel? getProfileData;
+  const ProfileContainer({super.key, required this.getProfileData});
 
+  @override
+  State<ProfileContainer> createState() => _ProfileContainerState();
+}
+
+class _ProfileContainerState extends State<ProfileContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
+        const BoxShadow(
           color: Color(0xff81bab4),
           spreadRadius: 2,
           blurRadius: 03,
@@ -315,9 +371,10 @@ class ProfileContainer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 16, right: 10, left: 10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
+
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
@@ -328,11 +385,11 @@ class ProfileContainer extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.4),
                         spreadRadius: 2,
                         blurRadius: 04,
-                        offset: Offset(2, 2), // changes position of shadow
+                        offset: const Offset(2, 2), // changes position of shadow
                       ),
                     ],
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(
                         CupertinoIcons.arrow_turn_right_up,
@@ -367,61 +424,61 @@ class ProfileContainer extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white38,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.4),
-                        spreadRadius: 2,
-                        blurRadius: 04,
-                        offset: Offset(2, 2), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.star_lefthalf_fill,
-                        size: 18,
-                        color: Colors.red,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            'Status',
-                            style: TextStyle(
-                              fontFamily: 'Muli',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            'Active',
-                            style: TextStyle(
-                              fontFamily: 'Mulish',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.red,
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+                // Container(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(10),
+                //     color: Colors.white38,
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.grey.withOpacity(0.4),
+                //         spreadRadius: 2,
+                //         blurRadius: 04,
+                //         offset: Offset(2, 2), // changes position of shadow
+                //       ),
+                //     ],
+                //   ),
+                //   child: Row(
+                //     children: [
+                //       Icon(
+                //         CupertinoIcons.star_lefthalf_fill,
+                //         size: 18,
+                //         color: Colors.red,
+                //       ),
+                //       SizedBox(
+                //         width: 10,
+                //       ),
+                //       Column(
+                //         children: [
+                //           Text(
+                //             'Status',
+                //             style: TextStyle(
+                //               fontFamily: 'Muli',
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 15,
+                //               color: Colors.black,
+                //             ),
+                //           ),
+                //           Text(
+                //             'Active',
+                //             style: TextStyle(
+                //               fontFamily: 'Mulish',
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 15,
+                //               color: Colors.red,
+                //             ),
+                //           )
+                //         ],
+                //       )
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             child: Divider(
               color: Colors.grey,
               thickness: 1,
@@ -431,7 +488,7 @@ class ProfileContainer extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
@@ -506,27 +563,27 @@ class ProfileContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
-                        'Bhupendra thakur',
+                        widget.getProfileData!.name.toString(),
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
                             fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        'Bhupefowf',
+                        Constants.userIdForUse,
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
                             fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
@@ -537,33 +594,36 @@ class ProfileContainer extends StatelessWidget {
                             fontFamily: "Muli",
                             fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        '+9124302430',
+                        widget.getProfileData!.mobileNo.toString(),
+
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
                             fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        '30-11--0001',
+                        widget.getProfileData!.leaveStartDate.toString(),
+
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
                             fontFamily: "Muli",
                             fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        '30-11--0001',
+                        widget.getProfileData!.levEndDate.toString(),
+
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
@@ -582,14 +642,20 @@ class ProfileContainer extends StatelessWidget {
   }
 }
 
-class CardWidget_R extends StatelessWidget {
+class CardWidget_R extends StatefulWidget {
   final String title;
+  final GetProfileResponseModel? getProfileResponseModel;
 
   const CardWidget_R({
     Key? key,
-    required this.title,
+    required this.title, required this.getProfileResponseModel,
   }) : super(key: key);
 
+  @override
+  State<CardWidget_R> createState() => _CardWidget_RState();
+}
+
+class _CardWidget_RState extends State<CardWidget_R> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -598,11 +664,11 @@ class CardWidget_R extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => EditProfile()),
+            MaterialPageRoute(builder: (context) =>  EditProfile(getProfileData: widget.getProfileResponseModel,)),
           );
         },
         child: Card(
-          shadowColor: Color(0xff81bab4),
+          shadowColor: const Color(0xff81bab4),
           elevation: 2,
           child: Padding(
             padding: const EdgeInsets.only(
@@ -612,8 +678,8 @@ class CardWidget_R extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  title,
-                  style: TextStyle(
+                  widget.title,
+                  style: const TextStyle(
                     fontFamily: 'Muli',
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -622,7 +688,7 @@ class CardWidget_R extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.arrow_right), // Wrap icon with Icon widget
+                  icon: const Icon(Icons.arrow_right), // Wrap icon with Icon widget
                 ),
               ],
             ),

@@ -3,6 +3,8 @@ import 'package:grocery_delivery_side/screens/map/delivery_loc_tracking.dart';
 import 'package:grocery_delivery_side/style/colors.dart';
 import 'package:intl/intl.dart';
 
+import '../orderListTabFoodGrocery.dart';
+
 class SelectDateAndSearchDate extends StatefulWidget {
   const SelectDateAndSearchDate({super.key});
 
@@ -125,10 +127,11 @@ class _SelectDateAndSearchDateState extends State<SelectDateAndSearchDate> {
               const SizedBox(width: 10,),
               GestureDetector(
                 onTap: (){
+                  // 26.98059427340072, 75.77338746034187
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DeliveryLocTracking(sourceLat: 0.0, sourceLong: 0.0, destiLat: 0.0, destiLong: 0.0, orderId: ""),
-                    ));
+                    MaterialPageRoute(builder: (context) => ParentOrderListFoodGrocery()),
+                    );
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 16),

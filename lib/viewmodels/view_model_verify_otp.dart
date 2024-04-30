@@ -17,18 +17,18 @@ class VerifyOtpViewModel with ChangeNotifier {
   String? mobile = '';
 
   ApiProcessResponse<VerifyOtpResponseModel> verifyOtpData = ApiProcessResponse.loading();
-
   setVerifyOtpData(ApiProcessResponse<VerifyOtpResponseModel> response) {
     verifyOtpData = response;
     notifyListeners();
   }
+  
   void navigateToHome(BuildContext context) async{
     final SharedPreferences sp =  await SharedPreferences.getInstance();
     sp.setString(Constants.userId, userId!);
     // sp.setString(Constants.name, userName!);
     sp.setString(Constants.mobile, mobile!);
     sp.setBool(Constants.isLogin, true);
-
+    Constants.userIdForUse = sp.getString(Constants.userId) ?? '';
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) {

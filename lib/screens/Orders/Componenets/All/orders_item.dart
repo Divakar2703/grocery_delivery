@@ -6,7 +6,8 @@ import 'order_details_screen.dart';
 
 class OrdersItem extends StatefulWidget {
   final ApiProcessResponse<OrderListResponseModel> orderqListData;
-  OrdersItem({super.key, required this.orderqListData});
+  final String type;
+  OrdersItem({super.key, required this.orderqListData, required this.type});
 
   @override
   State<OrdersItem> createState() => _PCardState();
@@ -26,7 +27,7 @@ class _PCardState extends State<OrdersItem> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => OrderDetailsScreen(item: item,)),
+              MaterialPageRoute(builder: (context) => OrderDetailsScreen(item: item,type: widget.type)),
             );
           },
           child: Material(
@@ -39,7 +40,6 @@ class _PCardState extends State<OrdersItem> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.white,
-
                 shape:
                 BoxShape.rectangle, // Ensure rectangular shape for the border
               ),
@@ -50,7 +50,7 @@ class _PCardState extends State<OrdersItem> {
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: AppColors.categoryCardColor,
+                      color: AppColors.white,
                     ),
                     width: 60, // Width of the image container
                     height: 60, // Responsive height

@@ -38,7 +38,7 @@ class ItemProduct extends StatelessWidget {
               width: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Colors.red,
+                color: Colors.white,
               ),
               child: Image.network(
                 '$image',

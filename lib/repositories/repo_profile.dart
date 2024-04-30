@@ -1,4 +1,5 @@
 import 'package:grocery_delivery_side/data/models/response/ProfileUpdateResponseModel.dart';
+import 'package:grocery_delivery_side/data/models/response/getProfileResponseModel.dart';
 import 'package:grocery_delivery_side/data/models/response/registerResponseModel.dart';
 
 import '../data/constants/app_url.dart';
@@ -21,4 +22,18 @@ class ProfileRepository {
       throw e;
     }
   }
+
+  Future<GetProfileResponseModel> fetchProfileData(dynamic data) async {
+    try {
+      dynamic response = await _apiServices.getPostApiResponse(
+          AppUrl.profileGetUrl, data);
+      print('================11111111==============$response');
+      print('==============2222222================${GetProfileResponseModel
+          .fromJson(response)}');
+      return response = GetProfileResponseModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
 }

@@ -4,6 +4,7 @@ class Constants {
   //normal values
   static var userIdForUse = 'Delivery524';
   static var userIdInt = '';
+  static var fToken = '';
 
   //shared preference values
   static var userId ='USERID';

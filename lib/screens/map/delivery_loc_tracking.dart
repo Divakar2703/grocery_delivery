@@ -18,6 +18,7 @@ class DeliveryLocTracking extends StatefulWidget {
   final double destiLat;
   final double destiLong;
   final String orderId;
+  final String userContactNo;
 
   // Specify the type of item parameter
   DeliveryLocTracking(
@@ -26,7 +27,7 @@ class DeliveryLocTracking extends StatefulWidget {
       required this.sourceLong,
       required this.destiLat,
       required this.destiLong,
-      required this.orderId})
+      required this.orderId, required this.userContactNo})
       : super(key: key);
 
   @override
@@ -57,6 +58,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
   @override
   void initState() {
     super.initState();
+    print("delivery boy location ====================================================${widget.destiLat},,,,, ${widget.destiLong}");
     searchAddressController = TextEditingController();
     setCustommarkerIcon();
     _startGyroscopeUpdates();
@@ -82,7 +84,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
   }
 
   void setCustommarkerIcon() {
-    ImageConfiguration configuration = const ImageConfiguration();
+    ImageConfiguration configuration = const ImageConfiguration(size: Size(24, 24));
     BitmapDescriptor.fromAssetImage(configuration, 'assets/dman.png')
         .then((icon) {
       locationIcon = icon;
@@ -107,11 +109,26 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
           desiredAccuracy: LocationAccuracy.high);
 
       setState(() {
-        _sourceLocation = LatLng(widget.sourceLat, widget.sourceLong);
+        _sourceLocation = LatLng(position.latitude, position.longitude);
+        // _sourceLocation = LatLng(widget.sourceLat, widget.sourceLong);
         markers.add(_buildMarker('Current Location', _sourceLocation!));
         _moveCameraToCurrentLocation(position.latitude, position.longitude);
+
+        _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
+        if (_sourceLocation != null) {
+          markers.removeWhere(
+                  (marker) => marker.markerId.value == 'Destination Location');
+          markers
+              .add(_buildMarkerDestination('Destination Location', _destinationLocation!));
+          markers.add(_buildMarker('Current Location', _sourceLocation!));
+          _getPolyline();
+        }
         _loading = false;
+
+
+
       });
+
 
       // Update Firestore with initial location
       updateFirestoreLocation(position.latitude, position.longitude);
@@ -273,7 +290,8 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
             ),
             ElevatedButton(
               onPressed: () {
-                _startCall();
+                // _makePhoneCall();
+                _makePhoneCall(widget.userContactNo);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -305,16 +323,35 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     );
   }
 
-  void _startCall() async {
-    const phoneNumber = '9024232511'; // phone number to call
-    final Uri url = Uri.parse('tel:$phoneNumber');
-
-    if (await canLaunch(url.toString())) {
-      await launch(url.toString());
-    } else {
-      throw 'Could not launch $url';
+  void _makePhoneCall(String contactNo) async {
+    final Uri phoneCallUri = Uri(
+      scheme: 'tel',
+      path: contactNo,
+    );
+    try {
+      await launchUrl(phoneCallUri);
+    } catch (e) {
+      // Handle the exception here
+      print('Could not launch $phoneCallUri: $e');
     }
   }
+
+
+
+  // void _makePhoneCall() async {
+  //   const phoneNumber = '8306614863'; // Replace with the actual phone number
+  //   final Uri phoneCallUri = Uri(
+  //     scheme: 'tel',
+  //     path: phoneNumber,
+  //   );
+  //   try {
+  //     await launchUrl(phoneCallUri);
+  //   } catch (e) {
+  //     // Handle the exception here
+  //     print('Could not launch $phoneCallUri: $e');
+  //   }
+  // }
+
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -390,7 +427,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
 
       setState(() {
         _destinationLocation = position;
-        // _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
+        _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
         if (_sourceLocation != null) {
           markers.removeWhere(
               (marker) => marker.markerId.value == 'Destination Location');
@@ -413,6 +450,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
   }
 
   Future<void> _getPolyline() async {
+    _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
     if (_sourceLocation != null && _destinationLocation != null) {
       PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
         'AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y',
@@ -461,7 +499,8 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     print('Latitude: $latitude, Longitude: $longitude');
 
     String currentDate = DateTime.now().toString(); // Get current date
-    String orderId = "Order123"; // Generate your order ID here
+    // String orderId = "order123"; // Generate your order ID here
+    String orderId = widget.orderId; // Generate your order ID here
 
     FirebaseFirestore.instance.collection('Grocery').doc(orderId).set({
       'geolocation': GeoPoint(latitude, longitude),

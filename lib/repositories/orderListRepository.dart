@@ -59,9 +59,9 @@ class OrderListRepository {
   Future<AcceptOrderResponseModel> fetchRejectOrderData(dynamic data) async {
     try {
       dynamic response = await _apiServices.getPostApiResponse(
-          AppUrl.registerUrl, data);
+          AppUrl.rejectOrder, data);
       print('================Reject 11111111==============$response');
-      print('================url data======${AppUrl.acceptOrder}========$data');
+      print('================url data======${AppUrl.rejectOrder}========$data');
       print('==============2222222================${AcceptOrderResponseModel
           .fromJson(response)}');
       return response = AcceptOrderResponseModel.fromJson(response);
@@ -99,4 +99,36 @@ class OrderListRepository {
       throw e;
     }
   }
+
+  //Deliver order
+  Future<AcceptOrderResponseModel> fetchDeliverOrderData(dynamic data) async {
+    try {
+      dynamic response = await _apiServices.getPostApiResponse(
+          AppUrl.deliveredOrderGetOtp, data);
+      print('================Return 11111111==============$response');
+      print('================url data======${AppUrl.deliveredOrderGetOtp}========$data');
+      print('==============2222222================${AcceptOrderResponseModel
+          .fromJson(response)}');
+      return response = AcceptOrderResponseModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+
+  //Deliver order otp verification
+  Future<AcceptOrderResponseModel> fetchDeliverOrderVerifyOtpData(dynamic data) async {
+    try {
+      dynamic response = await _apiServices.getPostApiResponse(
+          AppUrl.checkdeliveredOtp, data);
+      print('================Return 11111111==============$response');
+      print('================url data======${AppUrl.deliveredOrderGetOtp}========$data');
+      print('==============2222222================${AcceptOrderResponseModel
+          .fromJson(response)}');
+      return response = AcceptOrderResponseModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
 }

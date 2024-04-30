@@ -65,4 +65,30 @@ class NetworkApiServices extends BaseApiServices {
             response.statusCode.toString());
     }
   }
+
+  @override
+  Future getPostApiFoodResponse(String url, data) async {
+    dynamic responseJson;
+    var body = json.encode(data);
+    print('Netservice================$body');
+
+    try {
+      print('Netservice try================$body');
+
+      Response response = await post(Uri.parse(url),
+          headers: {
+            "Authorization": "Basic " +
+                base64Encode(utf8.encode("food123:food123"))
+          },
+          body: body).timeout(Duration(seconds: 90));
+
+      responseJson = returnResponse(response);
+      print('Netservice2================$responseJson');
+
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+
+    }
+    return responseJson;
+  }
 }

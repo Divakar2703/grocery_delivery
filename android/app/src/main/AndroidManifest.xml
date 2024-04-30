@@ -5,10 +5,11 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
 
     <application
-        android:label="grocery_delivery_side"
+        android:label="Easy Partner"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">
@@ -42,4 +43,11 @@
         <meta-data android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y"/>
     </application>
+    <queries>
+        <!-- If you want to open a dialer -->
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+    </queries>
 </manifest>

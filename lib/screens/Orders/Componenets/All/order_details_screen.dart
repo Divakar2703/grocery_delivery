@@ -7,10 +7,13 @@ import '../../../../constants.dart';
 import '../../../../data/constants/app_constants_value.dart';
 import '../../../../data/models/request/acceptOrderRequestModel.dart';
 import '../../../../data/models/request/cancelOrderRequestModel.dart';
+import '../../../../data/models/request/deliverOrderVerifyOtpRequestModel.dart';
 import '../../../../data/models/request/rejectOrderRequestModel.dart';
 import '../../../../data/models/request/returnOrderVerifyOtpRequestModel.dart';
 import '../../../../data/models/response/OrderListResponseModel.dart';
 import '../../../../viewmodels/view_model_order_list.dart';
+import '../../../map/delivery_loc_tracking.dart';
+import 'deliver_verify_Otp.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final Order item;
@@ -18,6 +21,7 @@ class OrderDetailsScreen extends StatefulWidget {
   const OrderDetailsScreen({
     Key? key,
     required this.item,
+    required String type,
   }) : super(key: key);
 
   @override
@@ -25,10 +29,9 @@ class OrderDetailsScreen extends StatefulWidget {
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
-
   late OrderListViewModel orderListViewModel;
-  String payId='';
-  String orderId='';
+  String payId = '';
+  String orderId = '';
 
   @override
   void initState() {
@@ -36,29 +39,39 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     orderListViewModel = OrderListViewModel();
     payId = widget.item.payid.toString();
     orderId = widget.item.orderID.toString();
-  }
 
-  acceptOrder(BuildContext context, String payId, Order item) {
-    final data = AcceptOrderRequestModel(
-        userId: Constants.userIdForUse, payId: payId);
-    orderListViewModel.fetchAcceptOrderData(data, context);
-
-    // Attempt to convert string coordinates to doubles (handle exceptions)
     try {
-      orderListViewModel.sourceLat = double.parse(item.sellerLatitude ?? '0.0');
-      orderListViewModel.sourceLong = double.parse(item.sellerLongitude ?? '0.0');
-      orderListViewModel.destiLat = double.parse(item.customerLatitude ?? '0.0');
-      orderListViewModel.destiLong = double.parse(item.customerLongitude ?? '0.0');
+      orderListViewModel.sourceLat =
+          double.parse(widget.item.sellerLatitude ?? '0.0');
+      orderListViewModel.sourceLong =
+          double.parse(widget.item.sellerLongitude ?? '0.0');
+      orderListViewModel.destiLat =
+          double.parse(widget.item.customerLatitude ?? '0.0');
+      orderListViewModel.destiLong =
+          double.parse(widget.item.customerLongitude ?? '0.0');
     } on FormatException {
       // Handle the case where parsing fails (e.g., show an error message)
       print("Error: Invalid latitude or longitude format");
     }
   }
 
+  acceptOrder(BuildContext context, String payId, Order item) {
+    final data =
+        AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
+    orderListViewModel.fetchAcceptOrderData(data, context);
+
+    // Attempt to convert string coordinates to doubles (handle exceptions)
+  }
+
   //when user will not there for receive order
-  cancelOrder(BuildContext context, String payId, String comment,
-      String orderId) {
-    final data = CancelOrderRequestModel(userId: Constants.userIdForUse,
+  cancelOrder(
+    BuildContext context,
+    String comment,
+    String orderId,
+    String payId,
+  ) {
+    final data = CancelOrderRequestModel(
+        userId: Constants.userIdForUse,
         comment: comment,
         orderId: orderId,
         payId: payId);
@@ -68,43 +81,93 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   //when delivery boy will not want to accept the order
   rejectOrder(BuildContext context, String payId, String comment) {
     final data = RejectOrderRequestModel(
-      userId: Constants.userIdForUse, payId: payId, rejectedReason: comment,);
+      userId: Constants.userIdForUse,
+      payId: payId,
+      rejectedReason: comment,
+    );
     orderListViewModel.fetchRejectOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller
   returnOrder(BuildContext context, String payId) {
-    final data = AcceptOrderRequestModel(
-        userId: Constants.userIdForUse, payId: payId);
+    final data =
+        AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchReturnOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
-  returnOrderVerifyOtp(BuildContext context, String payId, String comment,
-      String otp) {
+  returnOrderVerifyOtp(
+      BuildContext context, String payId, String comment, String otp) {
     final data = ReturnOrderVerifyOtpRquestModel(
-      userId: Constants.userIdForUse, reason: comment, otp: otp, payId: payId,);
+      userId: Constants.userIdForUse,
+      reason: comment,
+      otp: otp,
+      payId: payId,
+    );
     orderListViewModel.fetchReturnOrderVerifyOtpData(data, context);
   }
 
+  //when delivery boy will return the order to the seller
+  deliverOrder(BuildContext context, String payId) {
+    final data =
+        AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
+    orderListViewModel.fetchdeliverOrderData(data, context);
+  }
+
+  //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
+  deliveryOrderVerifyOtp(BuildContext context, String payId, String otp) {
+    final data = DeliverOrderVerifyOtpRequestModel(
+      userId: Constants.userIdForUse,
+      otp: otp,
+      payId: payId,
+    );
+    orderListViewModel.fetchDeliverOrderVerifyOtpData(data, context);
+  }
+
   void showReturnOrderBottomSheet(BuildContext context, String tappedButton) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return ReturnOrderBottomSheet(
-            tappedButton: tappedButton, // or 'return' or 'verifyOtp'
-            payId: payId,
-            orderId: orderId,
-            cancelOrderCallback: cancelOrder,
-            rejectOrderCallback: rejectOrder,
-            returnOrderCallback: returnOrder,
-            returnOrderVerifyOtpCallback: returnOrderVerifyOtp
+    final returnOrderBottomSheet = ReturnOrderBottomSheet(
+      tappedButton: tappedButton,
+      // or 'return' or 'verifyOtp'
+      payId: payId,
+      orderId: orderId,
+      cancelOrderCallback: cancelOrder,
+      rejectOrderCallback: rejectOrder,
+      returnOrderCallback: returnOrder,
+      returnOrderVerifyOtpCallback: returnOrderVerifyOtp,
+      deliverOrderCallback: deliverOrder,
+      deliverOrderVerifyOtpCallback: deliveryOrderVerifyOtp,
+    );
+
+    Navigator.of(context).push(_createRoute(returnOrderBottomSheet));
+  }
+
+  void showDeliverOtpVerifyBottomSheet(BuildContext context) {
+    final deliverOtpVerification = DeliverOtpVerification(
+      payId: payId,
+      orderId: orderId,
+      deliverOrderVerifyOtpCallback: deliveryOrderVerifyOtp,
+    );
+
+    Navigator.of(context).push(_createRoute(deliverOtpVerification));
+  }
+
+  Route _createRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+        final tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        final offsetAnimation = animation.drive(tween);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
         );
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -172,14 +235,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     itemCount: widget.item.product!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ItemProduct(
-                        productName: widget.item.product![index].productName
-                            .toString(),
-                        sellerName: widget.item.product![index].sellerName
-                            .toString(),
-                        quantity: widget.item.product![index].productQty
-                            .toString(),
-                        price: widget.item.product![index].productPrice
-                            .toString(),
+                        productName:
+                            widget.item.product![index].productName.toString(),
+                        sellerName:
+                            widget.item.product![index].sellerName.toString(),
+                        quantity:
+                            widget.item.product![index].productQty.toString(),
+                        price:
+                            widget.item.product![index].productPrice.toString(),
                         total: widget.item.product![index].total.toString(),
                         image: widget.item.product![index].image.toString(),
                       );
@@ -366,7 +429,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${widget.item.deliveredDate}",
+                                "${widget.item.customerDeliverySlot}",
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -475,133 +538,200 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   ),
                   Row(
                     children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            showReturnOrderBottomSheet(context,
-                                "Return");
-                          },
-                          child: Container(
-                            height: 35,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
+                      if (widget.item.type == "Requested Orders")
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              showReturnOrderBottomSheet(context, "Reject");
+                            },
+                            child: Container(
+                              height: 35,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.blue.shade200),
-                            child: const Text(
-                              'Return',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontFamily: "Muli",
+                                color: Colors.purple.shade200,
+                              ),
+                              child: const Text(
+                                'Reject',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontFamily: "Muli",
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      if (widget.item.type == "Requested Orders")
+                        const SizedBox(width: 10),
+                      if (widget.item.type == "Requested Orders")
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              // Show progress dialog
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                // Prevent user from dismissing the dialog
+                                builder: (BuildContext context) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              );
 
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            showReturnOrderBottomSheet(context,
-                                "Reject");
-                          },
-                          child: Container(
-                            height: 35,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
+                              // Perform the accept order action
+                              acceptOrder(context, widget.item.payid.toString(),
+                                      widget.item)
+                                  .then((_) {
+                                // Dismiss the progress dialog when the action is completed
+                                Navigator.pop(context);
+                              });
+                            },
+                            child: Container(
+                              height: 35,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.purple.shade200),
-                            child: const Text(
-                              'Reject',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontFamily: "Muli",
+                                color: kPrimaryColor,
+                              ),
+                              child: const Text(
+                                'Accept',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontFamily: "Muli",
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            showReturnOrderBottomSheet(context,
-                                "Cancel");
-                          },
-                          child: Container(
-                            height: 35,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
+                      if (widget.item.type == "Assign Orders")
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              showReturnOrderBottomSheet(context, "Cancel");
+                            },
+                            child: Container(
+                              height: 35,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.red.shade200),
-                            child: const Text(
-                              'Cancel',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontFamily: "Muli",
+                                color: Colors.red.shade200,
+                              ),
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontFamily: "Muli",
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Show progress dialog
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              // Prevent user from dismissing the dialog
-                              builder: (BuildContext context) {
-                                return const Center(
-                                  child:
-                                  CircularProgressIndicator(), // Or any other loading indicator
-                                );
-                              },
-                            );
+                      if (widget.item.type == "Assign Orders")
+                        const SizedBox(width: 10),
+                      if (widget.item.type == "Assign Orders")
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              showReturnOrderBottomSheet(context, "Return");
+                            },
+                            child: Container(
+                              height: 35,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.blue.shade200,
+                              ),
+                              child: const Text(
+                                'Return',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontFamily: "Muli",
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (widget.item.type == "Assign Orders")
+                        const SizedBox(width: 10),
+                      if (widget.item.type == "Assign Orders")
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
 
-                            // Perform the accept order action
-                            acceptOrder(
-                                context, widget.item.payid.toString(),
-                                widget.item)
-                                .then((_) {
-                              // Dismiss the progress dialog when the action is completed
-                              Navigator.pop(
-                                  context); // Dismiss the progress dialog
-                            });
-                          },
-                          child: Container(
-                            height: 35,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
+                              deliverOrder(context, payId);
+                                // Dismiss the progress dialog when the action is completed
+                               showDeliverOtpVerifyBottomSheet(context);
+
+                            },
+                            child: Container(
+                              height: 35,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: kPrimaryColor),
-                            child: const Text(
-                              'Accept',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontFamily: "Muli",
+                                color: Colors.green.shade200,
+                              ),
+                              child: const Text(
+                                'Deliver',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontFamily: "Muli",
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      if (widget.item.type == "Assign Orders")
+                        const SizedBox(width: 10),
+                      if (widget.item.type == "Assign Orders")
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DeliveryLocTracking(
+                                          sourceLat:
+                                              orderListViewModel.sourceLat,
+                                          sourceLong:
+                                              orderListViewModel.sourceLong,
+                                          destiLat: orderListViewModel.destiLat,
+                                          destiLong:
+                                              orderListViewModel.destiLong,
+                                          orderId: orderId,
+                                      userContactNo: widget.item!.customerContactNo.toString(),
+                                        )),
+                              );
+                            },
+                            child: Container(
+                              height: 35,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.orange.shade200,
+                              ),
+                              child: const Text(
+                                'Track',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontFamily: "Muli",
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
-                  const SizedBox(height: 16.0,)
+                  const SizedBox(
+                    height: 16.0,
+                  )
                 ],
-
               ),
             ),
           ),

@@ -1,0 +1,430 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:grocery_delivery_side/data/models/request/acceptOrderRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/cancelOrderRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/deliverOrderVerifyOtpRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/rejectOrderRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/returnOrderVerifyOtpRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/response/acceptOrderResponseModel.dart';
+import 'package:grocery_delivery_side/screens/Orders/Componenets/All/orders_list_screen.dart';
+import '../data/models/request/orderListRequestModel.dart';
+import '../data/models/response/OrderListResponseModel.dart';
+import '../data/processResponse/api_process_response.dart';
+import '../repositories/orderListRepository.dart';
+import '../repositories/repo_order_list_food.dart';
+import '../screens/map/delivery_loc_tracking.dart';
+
+class OrderListFoodViewModel with ChangeNotifier {
+  final _orderListRepo = OrderListFoodRepository();
+
+  Order? item;
+  double sourceLat=0.0;
+  double sourceLong=0.0;
+  double destiLat=0.0;
+  double destiLong=0.0;
+  String orderId = '';
+
+  ApiProcessResponse<OrderListResponseModel> orderqListData = ApiProcessResponse.loading();
+  setOrderListData(ApiProcessResponse<OrderListResponseModel> response) {
+    orderqListData = response;
+    notifyListeners();
+  }
+
+
+  Future<void> fetchOrderListData(OrderListRequestModel data, BuildContext context) async {
+    setOrderListData(ApiProcessResponse.loading());
+    try {
+
+      final OrderListResponseModel orderListResponseModel = await _orderListRepo.fetchOrderListData(data);
+
+      if (orderListResponseModel.status == 'error') {
+        setOrderListData(
+            ApiProcessResponse.error(orderListResponseModel.message));
+      } else {
+        setOrderListData(ApiProcessResponse.completed(orderListResponseModel));
+
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${orderListResponseModel.status}");
+      }
+
+    } catch (error) {
+      if (error is SocketException) {
+        setOrderListData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setOrderListData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setOrderListData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setOrderListData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+      final OrderListResponseModel orderListResponseModel = await _orderListRepo.fetchOrderListData(data);
+      setOrderListData(ApiProcessResponse.completed(orderListResponseModel));
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+  ApiProcessResponse<AcceptOrderResponseModel> acceptOrderResponseData = ApiProcessResponse.loading();
+  setAcceptOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    acceptOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchAcceptOrderData(AcceptOrderRequestModel data, BuildContext context) async {
+    setAcceptOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setAcceptOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setAcceptOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? "Order Accepted");
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => DeliveryLocTracking(sourceLat: sourceLat,sourceLong: sourceLong,destiLat: destiLat,destiLong: destiLong,orderId: orderId,)),
+        // );
+
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
+        //     ));
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setAcceptOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setAcceptOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setAcceptOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setAcceptOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+
+
+  //cancel order
+  ApiProcessResponse<AcceptOrderResponseModel> cancelOrderResponseData = ApiProcessResponse.loading();
+  setCancelOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    cancelOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchCancelOrderData(CancelOrderRequestModel data, BuildContext context) async {
+    setCancelOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchCancelOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setCancelOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setCancelOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? "Order Cancelled");
+
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
+        //     ));
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setCancelOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setCancelOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setCancelOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setCancelOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+
+  //Reject order
+  ApiProcessResponse<AcceptOrderResponseModel> rejectOrderResponseData = ApiProcessResponse.loading();
+  setRejectOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    rejectOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchRejectOrderData(RejectOrderRequestModel data, BuildContext context) async {
+    setRejectOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchRejectOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setRejectOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setRejectOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+
+        showToast(acceptOrderResponseModel.message?? "Order Rejected");
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Requested Orders"),
+        //     ));
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setRejectOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setRejectOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setRejectOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setRejectOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+  //Return order
+  ApiProcessResponse<AcceptOrderResponseModel> returnOrderResponseData = ApiProcessResponse.loading();
+  setReturnOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    returnOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchReturnOrderData(AcceptOrderRequestModel data, BuildContext context) async {
+    setReturnOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchReturnOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setReturnOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setReturnOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? " ");
+
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setReturnOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setReturnOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setReturnOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setReturnOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+  //Return order verify Otp
+  ApiProcessResponse<AcceptOrderResponseModel> returnOrderVerifyOtpResponseData = ApiProcessResponse.loading();
+  setReturnOrderVerifyOtpData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    returnOrderVerifyOtpResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchReturnOrderVerifyOtpData(ReturnOrderVerifyOtpRquestModel data, BuildContext context) async {
+    setReturnOrderVerifyOtpData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchReturnOrderVerifyOtpData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setReturnOrderVerifyOtpData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? "Order Returned");
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
+        //     ));
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setReturnOrderVerifyOtpData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+  //Deliver order
+  ApiProcessResponse<AcceptOrderResponseModel> deliverOrderResponseData = ApiProcessResponse.loading();
+  setDeliverOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    deliverOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchdeliverOrderData(AcceptOrderRequestModel data, BuildContext context) async {
+    setDeliverOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchDeliverOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setDeliverOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setDeliverOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? " ");
+
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setDeliverOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setDeliverOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setDeliverOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setDeliverOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+//Deliver order verify Otp
+  ApiProcessResponse<AcceptOrderResponseModel> deliverOrderVerifyOtpResponseData = ApiProcessResponse.loading();
+  setDeliverOrderVerifyOtpData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    deliverOrderVerifyOtpResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchDeliverOrderVerifyOtpData(DeliverOrderVerifyOtpRequestModel data, BuildContext context) async {
+    setDeliverOrderVerifyOtpData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchDeliverOrderVerifyOtpData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setDeliverOrderVerifyOtpData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? "Order Returned");
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
+        //     ));
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.grey,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+}

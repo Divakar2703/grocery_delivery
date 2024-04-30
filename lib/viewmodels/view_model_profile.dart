@@ -5,7 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/data/models/request/ProfileUpdateRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/indextPageCountRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/ProfileUpdateResponseModel.dart';
+import 'package:grocery_delivery_side/data/models/response/getProfileResponseModel.dart';
 import 'package:grocery_delivery_side/repositories/repo_profile.dart';
 import '../data/processResponse/api_process_response.dart';
 
@@ -54,6 +56,53 @@ class ProfileViewModel with ChangeNotifier {
       }
     }
   }
+
+
+  ApiProcessResponse<GetProfileResponseModel> getProfileData = ApiProcessResponse.loading();
+
+  setProfileData(ApiProcessResponse<GetProfileResponseModel> response) {
+    getProfileData = response;
+    notifyListeners();
+  }
+
+  Future<void> fetchProfileData(IndextPageCountRequestModel data, BuildContext context) async {
+    setProfileData(ApiProcessResponse.loading());
+    try {
+      final GetProfileResponseModel getProfileResponseModel = await _profileRepo.fetchProfileData(data);
+
+      if (kDebugMode) {
+        print("Data aa ha hai${getProfileResponseModel.status}");
+      }
+
+      if(getProfileResponseModel.status == 'error'){
+        setProfileData(
+            ApiProcessResponse.error(getProfileResponseModel.message));
+      }else{
+        setProfileData(ApiProcessResponse.completed(getProfileResponseModel));
+        showToast(getProfileResponseModel.message.toString());
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setProfileData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setProfileData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setProfileData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setProfileData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+
+
   void showToast(String message) {
     Fluttertoast.showToast(
       msg: message,

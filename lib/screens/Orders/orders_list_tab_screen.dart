@@ -2,6 +2,7 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import 'Componenets/All/orders_list_screen.dart';
+import 'food_orders/food_order_list_tab_screen.dart';
 
 class OrderScreenNew extends StatefulWidget {
   const OrderScreenNew({Key? key}) : super(key: key);
@@ -32,7 +33,80 @@ class _OrderScreenNewState extends State<OrderScreenNew> {
           length: 6,
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Material(
+                        borderRadius: BorderRadius.circular(12),
+                        elevation: 3,
+                        color: kPrimaryColor,
+                        child: InkWell(
+                          onTap: (){
+                            // Add functionality for Grocery button
+                          },
+                          child: const SizedBox(
+                            height: 40,
+                            child: Center(
+                              child: Text(
+                                'Grocery',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Material(
+                        borderRadius: BorderRadius.circular(12),
+                        elevation: 3,
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => const OrderScreenNewFood(),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  const begin = Offset(1.0, 0.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.ease;
+
+                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                  return SlideTransition(
+                                    position: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          child: const SizedBox(
+                            height: 40,
+                            child: Center(
+                              child: Text(
+                                'Food',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+
+              ),
+              const Divider(
+                thickness: 1,
+              ),
+              const SizedBox(height: 8),
+
               ButtonsTabBar(
                 height: 35,
                 buttonMargin: const EdgeInsets.symmetric(horizontal: 16),
@@ -77,7 +151,7 @@ class _OrderScreenNewState extends State<OrderScreenNew> {
                     AllWidget(type: "Delivered",),
                     AllWidget(type: "Return",),
                     AllWidget(type: "Reject",),
-                    AllWidget(type: "Cancel Order",),
+                    AllWidget(type: "Cancel Orders",),
                     // ShippingWidget(),
                     // DeliveredWidget(),
                     // ReturnWidget(),

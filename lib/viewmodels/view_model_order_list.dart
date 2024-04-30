@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/data/models/request/acceptOrderRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/cancelOrderRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/request/deliverOrderVerifyOtpRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/rejectOrderRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/returnOrderVerifyOtpRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/acceptOrderResponseModel.dart';
+import 'package:grocery_delivery_side/screens/Orders/Componenets/All/orders_list_screen.dart';
 import '../data/models/request/orderListRequestModel.dart';
 import '../data/models/response/OrderListResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
@@ -84,20 +86,28 @@ class OrderListViewModel with ChangeNotifier {
       if (acceptOrderResponseModel.status == 'error') {
         setAcceptOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Order Cancelled failed!..");
+
       } else {
         setAcceptOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? "Order Cancelled");
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => DeliveryLocTracking(sourceLat: sourceLat,sourceLong: sourceLong,destiLat: destiLat,destiLong: destiLong,orderId: orderId,)),
-        );
+        goBack(context);
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => DeliveryLocTracking(sourceLat: sourceLat,sourceLong: sourceLong,destiLat: destiLat,destiLong: destiLong,orderId: orderId,)),
+        // );
+
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
+        //     ));
 
       }
 
       if (kDebugMode) {
         print("Data aa ha hai${acceptOrderResponseModel.status}");
       }
-
 
     } catch (error) {
       if (error is SocketException) {
@@ -118,8 +128,6 @@ class OrderListViewModel with ChangeNotifier {
   }
 
 
-
-
   //cancel order
   ApiProcessResponse<AcceptOrderResponseModel> cancelOrderResponseData = ApiProcessResponse.loading();
   setCancelOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
@@ -130,15 +138,22 @@ class OrderListViewModel with ChangeNotifier {
     setCancelOrderData(ApiProcessResponse.loading());
     try {
 
-      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchCancelOrderData(data);
 
       if (acceptOrderResponseModel.status == 'error') {
         setCancelOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Order Cancelled failed!..");
+
       } else {
         setCancelOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? "Order Cancelled");
 
-
+        goBack(context);
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
+        // ));
       }
 
       if (kDebugMode) {
@@ -176,15 +191,22 @@ class OrderListViewModel with ChangeNotifier {
     setRejectOrderData(ApiProcessResponse.loading());
     try {
 
-      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchRejectOrderData(data);
 
       if (acceptOrderResponseModel.status == 'error') {
         setRejectOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Order Reject failed!..");
+
       } else {
         setRejectOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
 
-
+        showToast(acceptOrderResponseModel.message?? "Order Rejected");
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Requested Orders"),
+        //     ));
+        goBack(context);
       }
 
       if (kDebugMode) {
@@ -221,13 +243,16 @@ class OrderListViewModel with ChangeNotifier {
     setReturnOrderData(ApiProcessResponse.loading());
     try {
 
-      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchReturnOrderData(data);
 
       if (acceptOrderResponseModel.status == 'error') {
         setReturnOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Failed!..");
+
       } else {
         setReturnOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? " ");
 
 
       }
@@ -266,14 +291,21 @@ class OrderListViewModel with ChangeNotifier {
     setReturnOrderVerifyOtpData(ApiProcessResponse.loading());
     try {
 
-      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchAcceptOrderData(data);
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchReturnOrderVerifyOtpData(data);
 
       if (acceptOrderResponseModel.status == 'error') {
         setReturnOrderVerifyOtpData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Order Returned Failed!..");
+
       } else {
         setReturnOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
-
+        showToast(acceptOrderResponseModel.message?? "Order Returned");
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
+        //     ));
+        goBack(context);
 
       }
 
@@ -299,6 +331,107 @@ class OrderListViewModel with ChangeNotifier {
       }
     }
   }
+
+
+  //Deliver order
+  ApiProcessResponse<AcceptOrderResponseModel> deliverOrderResponseData = ApiProcessResponse.loading();
+  setDeliverOrderData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    deliverOrderResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchdeliverOrderData(AcceptOrderRequestModel data, BuildContext context) async {
+    setDeliverOrderData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchDeliverOrderData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setDeliverOrderData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? " ");
+
+      } else {
+        setDeliverOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? " ");
+
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setDeliverOrderData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setDeliverOrderData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setDeliverOrderData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setDeliverOrderData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+//Deliver order verify Otp
+  ApiProcessResponse<AcceptOrderResponseModel> deliverOrderVerifyOtpResponseData = ApiProcessResponse.loading();
+  setDeliverOrderVerifyOtpData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    deliverOrderVerifyOtpResponseData = response;
+    notifyListeners();
+  }
+  Future<void> fetchDeliverOrderVerifyOtpData(DeliverOrderVerifyOtpRequestModel data, BuildContext context) async {
+    setDeliverOrderVerifyOtpData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _orderListRepo.fetchDeliverOrderVerifyOtpData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setDeliverOrderVerifyOtpData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "");
+
+
+      } else {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
+        showToast(acceptOrderResponseModel.message?? "");
+        goBack(context);
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
+        //     ));
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
   void showToast(String message) {
     Fluttertoast.showToast(
       msg: message,
@@ -310,4 +443,9 @@ class OrderListViewModel with ChangeNotifier {
       fontSize: 16.0,
     );
   }
+
+  Future<void> goBack(BuildContext context) async {
+    Navigator.pop(context);
+  }
+
 }

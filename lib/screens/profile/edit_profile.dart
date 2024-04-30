@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:grocery_delivery_side/data/models/request/ProfileUpdateRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/response/getProfileResponseModel.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_profile.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,7 +11,8 @@ import 'package:location/location.dart' as loc;
 import '../../data/constants/app_constants_value.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+ final  GetProfileResponseModel? getProfileData;
+  EditProfile({Key? key, required this.getProfileData}) : super(key: key);
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -51,7 +53,7 @@ class _EditProfileState extends State<EditProfile> {
 
   void getUserDataFromSharedPref() async{
     final SharedPreferences sp =  await SharedPreferences.getInstance();
-    nameController.text = sp.getString(Constants.userId) ?? '';
+    userIdController.text = sp.getString(Constants.userId) ?? '';
     mobileController.text = sp.getString(Constants.mobile) ?? '';
   }
 
@@ -96,6 +98,8 @@ class _EditProfileState extends State<EditProfile> {
         countryController.text = country;
         cityController.text = locality;
         pinCodeController.text = pinCode;
+        emailController.text = widget.getProfileData!.emailId.toString();
+        nameController.text = widget.getProfileData!.name.toString();
       });
     }
   }
