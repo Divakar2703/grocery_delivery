@@ -88,10 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: const Column(
                   children: [
-                    SizedBox(height: 15),
+                    SizedBox(height: 20),
                     HomeHeader(),
-                    SizedBox(height: 15),
-                    SearchField(),
+                    // SizedBox(height: 8),
+                    // SearchField(),
                   ],
                 ),
               ),

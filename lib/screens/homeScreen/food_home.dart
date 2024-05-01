@@ -62,54 +62,75 @@ class _FoodHomeState extends State<FoodHome> {
                 return Center(child: emptyAnimationWidget());
               case Status.COMPLETED:
                 return SingleChildScrollView(
-                  child: Column(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
                     children: [
-                      PaymentsCard(
-                        TotalOrders:
-                        value.indextPageCountData.data?.totalFoodOrders
-                            .toString() ??
-                            "",
-                        CompleteOrders: value.indextPageCountData.data
-                            ?.completeFoodOrders.toString() ??
-                            "",
-                        PackedOrders: value.indextPageCountData.data
-                            ?.packedFoodOrders.toString() ??
-                            "",
-                        TotalCODOrders: value.indextPageCountData.data
-                            ?.totalShippingFoodOrders.toString() ??
-                            "",
-                        TotalshippingOrders: value.indextPageCountData
-                            .data?.totalReturnFoodOrders.toString() ??
-                            "",
-                        TotalReturnOrders: value.indextPageCountData.data
-                            ?.totalRejectFoodOrders.toString() ??
-                            "",
-                        TotalRejectOrders: value.indextPageCountData.data
-                            ?.deliveryCancelFoodOrder.toString() ??
-                            "",
-                        Deliverycancelorder: value.indextPageCountData
-                            .data?.totalOnlineFoodOrders.toString() ??
-                            "",
-                        TotalOnlineOrders: value.indextPageCountData
-                            .data?.totalOnlineFoodPaymentCollection
-                            .toString() ??
-                            "",
-                        TotalOnlinePaymentcollection:
-                        value.indextPageCountData.data?.totalCODFoodOrders
-                            .toString() ??
-                            "",
-                        TotalCODPaymentcollection: value.indextPageCountData
-                            .data?.totalCODFoodPaymentCollection
-                            .toString() ??
-                            "",
-                        TotalPendingCODPayments: value.indextPageCountData
-                            .data?.totalPendingFoodCODPayments
-                            .toString() ??
-                            "",
-                      ),
+
+            Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Total\nOrders", cardCount: value.indextPageCountData.data?.totalFoodOrders.toString() ??"", cardImage: "assets/images/m.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Complete\nOrders", cardCount: value.indextPageCountData.data?.completeFoodOrders.toString() ??"", cardImage: "assets/images/m1.png")
+            
+            ],
+          ),
+          const SizedBox(height: 16),
+                      Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Packed\nOrders", cardCount: value.indextPageCountData.data?.packedFoodOrders.toString() ??"", cardImage: "assets/images/cc.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Total COD\nOrders", cardCount: value.indextPageCountData.data?.totalCODFoodOrders.toString() ??"", cardImage: "assets/images/p.png")
+            
+            ],
+          ),
+                    const SizedBox(height: 16),
+                      Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Total\nshipping\nOrderss", cardCount: value.indextPageCountData.data?.totalShippingFoodOrders.toString() ??"", cardImage: "assets/images/k.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Total\nReturn\nOrders", cardCount: value.indextPageCountData.data?.totalReturnFoodOrders.toString() ??"", cardImage: "assets/images/c.png")
+            
+            ],
+          ),
+                              const SizedBox(height: 16),
+                      Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Reject\nOrders", cardCount: value.indextPageCountData.data?.totalRejectFoodOrders.toString() ??"", cardImage: "assets/images/k.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Delivery\ncancel\norder", cardCount: value.indextPageCountData.data?.deliveryCancelFoodOrder.toString() ??"", cardImage: "assets/images/c.png")
+            
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Online\nOrders", cardCount: value.indextPageCountData.data?.totalOnlineFoodOrders.toString() ??"", cardImage: "assets/images/c.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Online\nPayment\ncollection", cardCount: value.indextPageCountData.data?.totalOnlineFoodPaymentCollection.toString() ??"", cardImage: "assets/images/k.png")
+            
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "COD\nPayment\ncollection", cardCount: value.indextPageCountData.data?.totalCODFoodPaymentCollection.toString() ??"", cardImage: "assets/images/c.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Pending\nCOD\nPayments", cardCount: value.indextPageCountData.data?.totalPendingFoodCODPayments.toString() ??"", cardImage: "assets/images/k.png")
+            
+            ],
+          ),
+
 
                     ],
                   ),
+                  )
                 );
             }
 

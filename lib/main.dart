@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import SystemChrome
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/splash_screen.dart';
 import 'package:grocery_delivery_side/style/theme.dart';
@@ -76,6 +77,11 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // Handle incoming messages
       print("Received Message: ${message.notification?.body}");
+                showSimpleNotification(Text(message.notification?.title??'',style: TextStyle(color: Colors.black,fontSize: 12)),
+          subtitle: Text(message.notification?.body ??'',style: TextStyle(color: Colors.black,fontSize: 10),),
+          leading: SvgPicture.asset('assets/icons/Bell.svg'),
+          background: Colors.yellow,
+          duration: Duration(seconds: 10));
     });
   }
 
