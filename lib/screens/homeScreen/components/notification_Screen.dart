@@ -1,107 +1,188 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_delivery_side/constants.dart';
+import 'package:grocery_delivery_side/viewmodels/view_model_notification.dart';
+import 'package:provider/provider.dart';
 
-void openNotificationBottomSheet(BuildContext context) {
-  // Sample list of notifications
-  List<Map<String, String>> notifications = [
-    {
-      'title': 'Pallavi Menghare Order Assign',
-      'timestamp': '19 Mar 2024 12:21:pm',
-    },
-    {
-      'title': 'Pallavi Menghare Order Assign',
-      'timestamp': '19 Mar 2024 12:21:pm',
-    },
-    // Add more notification items as needed
-  ];
+import '../../../data/constants/app_constants_value.dart';
+import '../../../data/models/request/indextPageCountRequestModel.dart';
+import '../../../data/processResponse/status.dart';
+import '../../../helper/empty_animation.dart';
+import '../../../style/colors.dart';
+import '../../../viewmodels/view_model_order_list.dart';
+import '../../Orders/Componenets/All/simmer_order_list.dart';
 
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true, // Set this to true
+class NotificationScreen extends StatefulWidget {
+  @override
+  _NotificationScreenState createState() => _NotificationScreenState();
+}
 
-    builder: (BuildContext context) {
-      return Container(
-        height: 500,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-          child: Scaffold(
-            backgroundColor: Color(0xFFFAFBFB),
-            appBar: AppBar(
-              // backgroundColor:Color(0xFFF2F8FA),
-              elevation: 4.0,
-              centerTitle: true,
-              automaticallyImplyLeading: false,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.grey,
-                    size: 20,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-              title: Text(
-                "Notifications",
-                style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500
-                ),
-              ),
+class _NotificationScreenState extends State<NotificationScreen> {
+
+  late NotificationListViewModel notificationListViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    notificationListViewModel = NotificationListViewModel();
+    final indexCountRequestmodel = IndextPageCountRequestModel(
+      userId: Constants.userIdForUse,
+    );
+
+    notificationListViewModel.fetchNotificationListData(
+      indexCountRequestmodel,
+      context,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+      appBar: AppBar(
+        // backgroundColor:Color(0xFFF2F8FA),
+        elevation: 4.0,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.close,
+              color: Colors.grey,
+              size: 20,
             ),
-            body: ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        title: Text(
-                          notifications[index]['title']!,
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500
-                          ),
-                        ),
-                        subtitle: Text(
-                          notifications[index]['timestamp']!,
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w600
-                          ),
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.grey,
-                            size: 16,
-                          ),
-                          onPressed: () {
-                            // Action when close icon is pressed
-                          },
-                        ),
-                      ),
-                      Divider(
-                        thickness: 1,
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+        title: const Text(
+          "Notifications",
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
           ),
         ),
-      );
-    },
-  );
+      ),
+      body: ChangeNotifierProvider<NotificationListViewModel>(
+        create: (BuildContext context) => notificationListViewModel,
+        child: Consumer<NotificationListViewModel>(
+          builder: (context, value, _) {
+            switch (value.notificationListData.status ?? "") {
+              case Status.LOADING:
+                return Expanded(child: Center(child: buildShimmerProductDetails()));
+              case Status.ERROR:
+                return Expanded(child: Center(child: emptyAnimationWidget()));
+              case Status.COMPLETED:
+                return Container(
+                  padding: const EdgeInsets.all(12),
+                  child: SingleChildScrollView(
+                    child:
+                    Column(
+                      children: value.notificationListData.data!.notification!.map((item) {
+                        return
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 0.0),
+                            child: Material(
+                              shadowColor: AppColors.white,
+                              elevation: 0, // Set elevation value as desired
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(8.0, 12.0, 0.0, 12.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white,
+                                  shape:
+                                  BoxShape.rectangle, // Ensure rectangular shape for the border
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Container(
+                                    //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    //   decoration: BoxDecoration(
+                                    //     borderRadius: BorderRadius.circular(5),
+                                    //     color: AppColors.white,
+                                    //   ),
+                                    //   width: 60, // Width of the image container
+                                    //   height: 60, // Responsive height
+                                    //   child: Image.network(
+                                    //     "${item.product![0].image}", // Replace with your image path
+                                    //     // Adjust the fit as needed
+                                    //   ),
+                                    // ),
+                                    // const SizedBox(
+                                    //     width: 16), // Add some space between the image and text
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "${item.createdBy} ",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey.shade800),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            "Order ID: ${item.orderId}",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey.shade700),
+                                          ),
+                                          Text(
+                                            "Date: ${item.createdDate}",
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.primaryColor),
+                                          ),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        width: 16), // Add some space between the text and status
+                                    // Column(
+                                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    //   children: [
+                                    //     Text(
+                                    //       "\u20B9${item.orderAmount}",
+                                    //       style: const TextStyle(
+                                    //           fontSize: 14,
+                                    //           fontWeight: FontWeight.w600,
+                                    //           color: Colors.blue),
+                                    //     ),
+                                    //
+                                    //
+                                    //   ],
+                                    // ),
+
+                                    const SizedBox(
+                                        width: 8), // Add some space between the status and the edge
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+
+                      }).toList(),
+                    )
+                  ),
+                );
+            }
+            return Container();
+          },
+        ),
+      )
+
+    );
+
+  }
 }

@@ -65,7 +65,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   //when user will not there for receive order
   cancelOrder(
-    BuildContext context,
     String comment,
     String orderId,
     String payId,
@@ -79,7 +78,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   //when delivery boy will not want to accept the order
-  rejectOrder(BuildContext context, String payId, String comment) {
+  rejectOrder(String payId, String comment) {
     final data = RejectOrderRequestModel(
       userId: Constants.userIdForUse,
       payId: payId,
@@ -89,7 +88,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   //when delivery boy will return the order to the seller
-  returnOrder(BuildContext context, String payId) {
+  returnOrder(String payId) {
     final data =
         AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchReturnOrderData(data, context);
@@ -97,7 +96,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
   returnOrderVerifyOtp(
-      BuildContext context, String payId, String comment, String otp) {
+      String payId, String comment, String otp) {
     final data = ReturnOrderVerifyOtpRquestModel(
       userId: Constants.userIdForUse,
       reason: comment,
@@ -108,14 +107,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   //when delivery boy will return the order to the seller
-  deliverOrder(BuildContext context, String payId) {
+  deliverOrder(String payId) {
     final data =
         AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchdeliverOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
-  deliveryOrderVerifyOtp(BuildContext context, String payId, String otp) {
+  deliveryOrderVerifyOtp(String payId, String otp) {
     final data = DeliverOrderVerifyOtpRequestModel(
       userId: Constants.userIdForUse,
       otp: otp,
@@ -242,7 +241,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         quantity:
                             widget.item.product![index].productQty.toString(),
                         price:
-                            widget.item.product![index].productPrice.toString(),
+                            widget.item.product![index].netPrice.toString(),
                         total: widget.item.product![index].total.toString(),
                         image: widget.item.product![index].image.toString(),
                       );
@@ -440,7 +439,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 height: 3,
                               ),
                               Text(
-                                "${widget.item.orderAmount}",
+                                "${widget.item.orderAmount} (Delivery Charge Included)",
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -579,14 +578,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                   );
                                 },
                               );
-
                               // Perform the accept order action
                               acceptOrder(context, widget.item.payid.toString(),
-                                      widget.item)
-                                  .then((_) {
-                                // Dismiss the progress dialog when the action is completed
-                                Navigator.pop(context);
-                              });
+                                      widget.item);
                             },
                             child: Container(
                               height: 35,
@@ -663,7 +657,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           child: GestureDetector(
                             onTap: () {
 
-                              deliverOrder(context, payId);
+                              deliverOrder(payId);
                                 // Dismiss the progress dialog when the action is completed
                                showDeliverOtpVerifyBottomSheet(context);
 

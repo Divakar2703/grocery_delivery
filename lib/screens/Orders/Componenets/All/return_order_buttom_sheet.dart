@@ -5,12 +5,12 @@ class ReturnOrderBottomSheet extends StatefulWidget {
   String? tappedButton;
   final String payId;
   final String orderId;
-  final Function(BuildContext context, String payId, String orderId, String comment) cancelOrderCallback;
-  final Function(BuildContext context, String payId, String comment) rejectOrderCallback;
-  final Function(BuildContext context, String payId) returnOrderCallback;
-  final Function(BuildContext context, String payId, String comment, String otp) returnOrderVerifyOtpCallback;
-  final Function(BuildContext context, String payId) deliverOrderCallback;
-  final Function(BuildContext context, String payId, String otp) deliverOrderVerifyOtpCallback;
+  final Function(String payId, String orderId, String comment) cancelOrderCallback;
+  final Function(String payId, String comment) rejectOrderCallback;
+  final Function(String payId) returnOrderCallback;
+  final Function(String payId, String comment, String otp) returnOrderVerifyOtpCallback;
+  final Function(String payId) deliverOrderCallback;
+  final Function(String payId, String otp) deliverOrderVerifyOtpCallback;
 
   ReturnOrderBottomSheet({
     this.tappedButton,
@@ -126,20 +126,20 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
                       });
                       if (widget.tappedButton == 'Reject') {
                         String reason = reasonController.text;
-                        widget.rejectOrderCallback(context, widget.payId, reason);
+                        widget.rejectOrderCallback(widget.payId, reason);
                         hideProgressDialog();
                         Navigator.pop(context);
 
                       } else if (widget.tappedButton == 'Return') {
-                        widget.returnOrderCallback(context, widget.payId);
+                        widget.returnOrderCallback(widget.payId);
                         _showOtpField = true;
                         hideProgressDialog();
                       } else if (widget.tappedButton == 'Deliver') {
-                        widget.deliverOrderCallback(context, widget.payId);
+                        widget.deliverOrderCallback(widget.payId);
                         _showOtpField = true;
                         hideProgressDialog();
                       } else if (widget.tappedButton == 'Cancel') {
-                        widget.cancelOrderCallback(context, reasonController.text,widget.orderId,widget.payId);
+                        widget.cancelOrderCallback(reasonController.text,widget.orderId,widget.payId);
                         hideProgressDialog();
                         Navigator.pop(context);
 
@@ -209,7 +209,7 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
                                     if (_showOtpField) {
                                       String otp = otpController.text;
                                       String comment = reasonController.text;
-                                      widget.returnOrderVerifyOtpCallback(context, widget.payId, comment, otp);
+                                      widget.returnOrderVerifyOtpCallback(widget.payId, comment, otp);
                                       hideProgressDialog();
                                       Navigator.pop(context);
                                     } else {
@@ -222,7 +222,7 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
                                   } else if (widget.tappedButton == 'Deliver') {
                                     if (_showOtpField) {
                                       String otp = otpController.text;
-                                      widget.deliverOrderVerifyOtpCallback(context, widget.payId, otp);
+                                      widget.deliverOrderVerifyOtpCallback(widget.payId, otp);
                                       hideProgressDialog();
                                       Navigator.pop(context);
                                     } else {

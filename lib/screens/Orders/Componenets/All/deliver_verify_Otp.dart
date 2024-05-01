@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DeliverOtpVerification extends StatefulWidget {
   final String payId;
   final String orderId;
-  final Function(BuildContext context, String payId, String otp) deliverOrderVerifyOtpCallback;
+  final Function(String payId, String otp) deliverOrderVerifyOtpCallback;
 
   const DeliverOtpVerification(
       {super.key, required this.payId, required this.orderId, required this.deliverOrderVerifyOtpCallback,
@@ -18,7 +18,7 @@ class _DeliverOtpVerificationState extends State<DeliverOtpVerification> {
   String? _verificationCode; // To store the actual OTP
 
   void  verifyOtp(String otp) {
-      widget.deliverOrderVerifyOtpCallback(context, widget.payId, otp); // Example route
+      widget.deliverOrderVerifyOtpCallback(widget.payId, otp); // Example route
   }
 
   @override

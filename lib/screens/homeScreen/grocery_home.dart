@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:grocery_delivery_side/data/models/request/updateLocationResModel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../data/constants/app_constants_value.dart';
 import '../../data/models/request/indextPageCountRequestModel.dart';
+import '../../data/models/request/updateLocationReqModel.dart';
 import '../../data/processResponse/status.dart';
 import '../../helper/empty_animation.dart';
 import '../../viewmodels/view_model_indext_page_count.dart';
 import '../Orders/Componenets/All/simmer_order_list.dart';
 import 'components/payments_card.dart';
+import 'package:location/location.dart' as loc;
+
 
 
 class GroceryHome extends StatefulWidget {
@@ -17,25 +22,30 @@ class GroceryHome extends StatefulWidget {
   State<GroceryHome> createState() => _GroceryHomeState();
 }
 
-
 class _GroceryHomeState extends State<GroceryHome> {
   late IndextPageCountViewModel indextPageCountViewModel;
+  loc.LocationData? locationData;
+  List<Placemark>? placemark;
+  bool _isLoading = false;
+
 
   @override
   void initState() {
     super.initState();
     indextPageCountViewModel = IndextPageCountViewModel();
-    getHomePageData();
+    askLocationPermission();
+    // getHomePageData();
   }
 
   void askLocationPermission() async {
     final status = await Permission.location.request();
     if (status == PermissionStatus.granted) {
       getHomePageData();
+      getLocation();
     } else {
       getHomePageData();
-      // Handle denied permission
-      // You can display a message or navigate the user to a screen where they can manually enable location permission
+      // getLocation();
+
     }
   }
 
@@ -48,6 +58,38 @@ class _GroceryHomeState extends State<GroceryHome> {
       indexCountRequestmodel,
       context,
     );
+  }
+
+
+  void getLocation() async {
+    setState(() {
+      _isLoading = true;
+    });
+    locationData = await loc.Location.instance.getLocation();
+    if (locationData != null) {
+      getAddressUpdateLocation();
+    }
+  }
+
+  void getAddressUpdateLocation() async {
+    placemark = await placemarkFromCoordinates(
+      locationData!.latitude!,
+      locationData!.longitude!,
+    );
+
+    if (placemark != null && placemark!.isNotEmpty) {
+      final updateLocationReqModel = UpdateLocationReqModel(
+          userId: Constants.userIdForUse,
+          latitude: locationData!.latitude!.toString(),
+          longitude: locationData!.longitude!.toString(),
+
+      );
+
+      indextPageCountViewModel.fetchUpdatedLocationData(
+        updateLocationReqModel,
+        context,
+      );
+    }
   }
 
   @override

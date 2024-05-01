@@ -61,7 +61,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
   }
 
   //when user will not there for receive order
-  cancelOrder(BuildContext context, String comment,
+  cancelOrder(String comment,
       String orderId, String payId,) {
     final data = CancelOrderRequestModel(userId: Constants.userIdForUse,
         comment: comment,
@@ -71,21 +71,21 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
   }
 
   //when delivery boy will not want to accept the order
-  rejectOrder(BuildContext context, String payId, String comment) {
+  rejectOrder(String payId, String comment) {
     final data = RejectOrderRequestModel(
       userId: Constants.userIdForUse, payId: payId, rejectedReason: comment,);
     orderListViewModel.fetchRejectOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller
-  returnOrder(BuildContext context, String payId) {
+  returnOrder(String payId) {
     final data = AcceptOrderRequestModel(
         userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchReturnOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
-  returnOrderVerifyOtp(BuildContext context, String payId, String comment,
+  returnOrderVerifyOtp(String payId, String comment,
       String otp) {
     final data = ReturnOrderVerifyOtpRquestModel(
       userId: Constants.userIdForUse, reason: comment, otp: otp, payId: payId,);
@@ -93,14 +93,14 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
   }
 
   //when delivery boy will return the order to the seller
-  deliverOrder(BuildContext context, String payId) {
+  deliverOrder(String payId) {
     final data = AcceptOrderRequestModel(
         userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchdeliverOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
-  deliveryOrderVerifyOtp(BuildContext context, String payId,
+  deliveryOrderVerifyOtp(String payId,
       String otp) {
     final data = DeliverOrderVerifyOtpRequestModel(
       userId: Constants.userIdForUse, otp: otp, payId: payId,);
@@ -645,7 +645,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              deliverOrder(context, payId);
+                              deliverOrder(payId);
                               // Dismiss the progress dialog when the action is completed
                               showDeliverOtpVerifyBottomSheet(context);
                             },

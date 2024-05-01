@@ -7,10 +7,11 @@ import '../../data/models/request/PhoneLoginRequestModel.dart';
 import '../../viewmodels/view_model_phone_login.dart';
 
 class OtpScreen extends StatefulWidget {
-  String? userId;
-  String? mobile;
+  final String? userId;
+  final String? mobile;
+  final String? fromScreen;
 
-  OtpScreen({super.key, required this.userId, required this.mobile});
+  OtpScreen({super.key, required this.userId, required this.mobile, this.fromScreen});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -27,6 +28,7 @@ class _OtpScreenState extends State<OtpScreen> {
   void initState() {
     verifyOtpViewModel.userId = widget.userId.toString();
     verifyOtpViewModel.mobile = widget.mobile.toString();
+    verifyOtpViewModel.fromScreen = widget.fromScreen.toString();
     super.initState();
   }
 
@@ -125,11 +127,6 @@ class _OtpScreenState extends State<OtpScreen> {
                     Expanded(
                       child: Text(
                         'We have send Otp to your Mobile No. ${widget.mobile}',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'Muli',
-                            fontWeight: FontWeight.w400),
                       ),
                     ),
                   ],

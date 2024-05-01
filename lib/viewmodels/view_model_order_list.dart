@@ -14,6 +14,7 @@ import '../data/models/request/orderListRequestModel.dart';
 import '../data/models/response/OrderListResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
 import '../repositories/orderListRepository.dart';
+import '../screens/Orders/orders_list_tab_screen.dart';
 import '../screens/map/delivery_loc_tracking.dart';
 
 class OrderListViewModel with ChangeNotifier {
@@ -91,18 +92,7 @@ class OrderListViewModel with ChangeNotifier {
       } else {
         setAcceptOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Cancelled");
-
         goBack(context);
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => DeliveryLocTracking(sourceLat: sourceLat,sourceLong: sourceLong,destiLat: destiLat,destiLong: destiLong,orderId: orderId,)),
-        // );
-
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
-        //     ));
-
       }
 
       if (kDebugMode) {
@@ -150,10 +140,6 @@ class OrderListViewModel with ChangeNotifier {
         showToast(acceptOrderResponseModel.message?? "Order Cancelled");
 
         goBack(context);
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
-        // ));
       }
 
       if (kDebugMode) {
@@ -202,10 +188,6 @@ class OrderListViewModel with ChangeNotifier {
         setRejectOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
 
         showToast(acceptOrderResponseModel.message?? "Order Rejected");
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Requested Orders"),
-        //     ));
         goBack(context);
       }
 
@@ -301,10 +283,6 @@ class OrderListViewModel with ChangeNotifier {
       } else {
         setReturnOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Returned");
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
-        //     ));
         goBack(context);
 
       }
@@ -402,11 +380,8 @@ class OrderListViewModel with ChangeNotifier {
       } else {
         setDeliverOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "");
-        goBack(context);
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
-        //     ));
+       goBack(context);
+
       }
 
       if (kDebugMode) {
@@ -445,7 +420,20 @@ class OrderListViewModel with ChangeNotifier {
   }
 
   Future<void> goBack(BuildContext context) async {
-    Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => OrderScreenNew(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+          (Route<dynamic> route) => false,
+    );
   }
+
 
 }

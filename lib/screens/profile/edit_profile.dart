@@ -94,12 +94,15 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         _isLoading = false;
         // Set the text in the state, country, and city text fields
-        stateController.text = state;
-        countryController.text = country;
-        cityController.text = locality;
-        pinCodeController.text = pinCode;
+        addressController.text = widget.getProfileData!.address.toString();
+        stateController.text = widget.getProfileData!.state.toString();
+        countryController.text = widget.getProfileData!.country.toString();
+        cityController.text = widget.getProfileData!.city.toString();
+        pinCodeController.text = widget.getProfileData!.pinCode.toString();
         emailController.text = widget.getProfileData!.emailId.toString();
         nameController.text = widget.getProfileData!.name.toString();
+        fromDateController.text = widget.getProfileData!.leaveStartDate.toString();
+        toDateController.text = widget.getProfileData!.levEndDate.toString();
       });
     }
   }

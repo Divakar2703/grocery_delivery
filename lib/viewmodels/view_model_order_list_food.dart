@@ -10,6 +10,7 @@ import 'package:grocery_delivery_side/data/models/request/rejectOrderRequestMode
 import 'package:grocery_delivery_side/data/models/request/returnOrderVerifyOtpRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/acceptOrderResponseModel.dart';
 import 'package:grocery_delivery_side/screens/Orders/Componenets/All/orders_list_screen.dart';
+import 'package:grocery_delivery_side/screens/Orders/food_orders/food_order_list_tab_screen.dart';
 import '../data/models/request/orderListRequestModel.dart';
 import '../data/models/response/OrderListResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
@@ -32,7 +33,6 @@ class OrderListFoodViewModel with ChangeNotifier {
     orderqListData = response;
     notifyListeners();
   }
-
 
   Future<void> fetchOrderListData(OrderListRequestModel data, BuildContext context) async {
     setOrderListData(ApiProcessResponse.loading());
@@ -91,15 +91,7 @@ class OrderListFoodViewModel with ChangeNotifier {
         setAcceptOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Accepted");
 
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => DeliveryLocTracking(sourceLat: sourceLat,sourceLong: sourceLong,destiLat: destiLat,destiLong: destiLong,orderId: orderId,)),
-        // );
-
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
-        //     ));
+        goBack(context);
 
       }
 
@@ -147,11 +139,8 @@ class OrderListFoodViewModel with ChangeNotifier {
       } else {
         setCancelOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Cancelled");
+        goBack(context);
 
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
-        //     ));
       }
 
       if (kDebugMode) {
@@ -198,10 +187,8 @@ class OrderListFoodViewModel with ChangeNotifier {
         setRejectOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
 
         showToast(acceptOrderResponseModel.message?? "Order Rejected");
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Requested Orders"),
-        //     ));
+        goBack(context);
+
       }
 
       if (kDebugMode) {
@@ -292,10 +279,7 @@ class OrderListFoodViewModel with ChangeNotifier {
       } else {
         setReturnOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Returned");
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
-        //     ));
+        goBack(context);
 
       }
 
@@ -387,10 +371,7 @@ class OrderListFoodViewModel with ChangeNotifier {
       } else {
         setDeliverOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Returned");
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => AllWidget(type: "Assign Orders"),
-        //     ));
+       goBack(context);
       }
 
       if (kDebugMode) {
@@ -415,7 +396,21 @@ class OrderListFoodViewModel with ChangeNotifier {
       }
     }
   }
-
+  Future<void> goBack(BuildContext context) async {
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => OrderScreenNewFood(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+          (Route<dynamic> route) => false,
+    );
+  }
   void showToast(String message) {
     Fluttertoast.showToast(
       msg: message,

@@ -5,6 +5,7 @@ import 'package:grocery_delivery_side/data/models/request/verifyOtpRequestModel.
 import 'package:grocery_delivery_side/data/models/response/verifyOtpResponseModel.dart';
 import 'package:grocery_delivery_side/new_init_screen.dart';
 import 'package:grocery_delivery_side/repositories/repo_verify_otp.dart';
+import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/constants/app_constants_value.dart';
 import '../data/processResponse/api_process_response.dart';
@@ -15,6 +16,7 @@ class VerifyOtpViewModel with ChangeNotifier {
   String? userId = '';
   String? userName = '';
   String? mobile = '';
+  String? fromScreen = '';
 
   ApiProcessResponse<VerifyOtpResponseModel> verifyOtpData = ApiProcessResponse.loading();
   setVerifyOtpData(ApiProcessResponse<VerifyOtpResponseModel> response) {
@@ -29,13 +31,24 @@ class VerifyOtpViewModel with ChangeNotifier {
     sp.setString(Constants.mobile, mobile!);
     sp.setBool(Constants.isLogin, true);
     Constants.userIdForUse = sp.getString(Constants.userId) ?? '';
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return NewInitScrren();
-        },
-      ),
-    );
+    if(fromScreen=='register'){
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => LoginUser()),
+            (Route<dynamic> route) => false, // This predicate will always return false, which clears the entire stack
+      );
+
+    }else{
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => NewInitScrren()),
+            (Route<dynamic> route) => false, // This predicate will always return false, which clears the entire stack
+      );
+
+    }
+
   }
   Future<void> fetchVerifyOtpData(VerifyOtpRequestModel data, BuildContext context) async {
     setVerifyOtpData(ApiProcessResponse.loading());

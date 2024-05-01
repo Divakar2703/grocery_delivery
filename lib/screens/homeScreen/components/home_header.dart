@@ -6,12 +6,16 @@ import '../../profile/profile_screen.dart';
 import 'icon_btn_with_counter.dart';
 import 'notification_Screen.dart';
 
-
-class HomeHeader extends StatelessWidget {
+class HomeHeader extends StatefulWidget {
   const HomeHeader({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<HomeHeader> createState() => _HomeHeaderState();
+}
+
+class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -25,9 +29,12 @@ class HomeHeader extends StatelessWidget {
             );
           },
           child: CircleAvatar(
-            backgroundColor: primaryColor, // Set your desired background color here
-            radius: 23, // Set the radius of the avatar
-            foregroundColor: Colors.white, // Set the color of the border
+            backgroundColor: primaryColor,
+            // Set your desired background color here
+            radius: 23,
+            // Set the radius of the avatar
+            foregroundColor: Colors.white,
+            // Set the color of the border
             child: ClipOval(
               child: Container(
                 decoration: BoxDecoration(
@@ -38,7 +45,8 @@ class HomeHeader extends StatelessWidget {
                   ),
                 ),
                 child: Image.asset(
-                  "assets/images/Profile Image.png", // Replace with your image asset path
+                  "assets/images/Profile Image.png",
+                  // Replace with your image asset path
                   fit: BoxFit.cover, // Adjust the BoxFit property as needed
                 ),
               ),
@@ -46,25 +54,24 @@ class HomeHeader extends StatelessWidget {
           ),
         ),
 
-
         const SizedBox(width: 8),
 
-          const Text(
-            'Delivery Boy',
-            style: TextStyle(
+        const Text(
+          'Delivery Boy',
+          style: TextStyle(
               fontSize: 22,
               color: Colors.white,
-             fontFamily: "Muli",
-              fontWeight: FontWeight.w600
-            ),
-          ),
+              fontFamily: "Muli",
+              fontWeight: FontWeight.w600),
+        ),
 
-      //  const SizedBox(width: 8),
+        //  const SizedBox(width: 8),
 
-       const Spacer(),
+        const Spacer(),
         GestureDetector(
-          onTap: (){
-            openNotificationBottomSheet(context);
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => NotificationScreen(),fullscreenDialog: true,));
           },
           child: IconBtnWithCounter(
             svgSrc: "assets/icons/Bell.svg",

@@ -6,6 +6,7 @@ class AppUrl{
   static var sendOtpUrl="${baseUrl}sendotp";
   static var verifyOtpUrl="${baseUrl}Verifyotp";
   static var registerUrl="${baseUrl}register";
+  static var updatedLocationUrl="${baseUrl}Update_location";
   static var indextPageCountUrl="${baseUrl}indextpage-count";
   static var orderListUrl= "${baseUrl}orderlist";
   static var profileUpdateUrl= "${baseUrl}profiledata_update";
@@ -19,6 +20,7 @@ class AppUrl{
   static var checkdeliveredOtp= "${baseUrl}check_otp_for_deliveroredr";
   static var codSummaryListUrl= "${baseUrl}delivery_cod_summary";
   static var walletSummaryListUrl= "${baseUrl}delivery_wallet_summary";
+  static var notificationListUrl= "${baseUrl}deliveryboy_notification";
 
   //food Api
   static var orderListFoodUrl= "${baseUrl}foodorderlist";

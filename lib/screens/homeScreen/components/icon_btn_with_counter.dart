@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../constants.dart';
@@ -20,8 +20,8 @@ class IconBtnWithCounter extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        openNotificationBottomSheet(context);
-      },
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => NotificationScreen(),fullscreenDialog: true,));      },
       borderRadius: BorderRadius.circular(100),
      // onTap: press,
       child: Stack(

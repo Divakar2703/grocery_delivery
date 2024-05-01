@@ -1,18 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:grocery_delivery_side/data/models/request/PhoneLoginRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/sendOtpRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/sendOtpResponseModel.dart';
-import 'package:grocery_delivery_side/repositories/repo_phone_login.dart';
 import 'package:grocery_delivery_side/repositories/repo_send_otp.dart';
-
-import '../data/models/request/verifyOtpRequestModel.dart';
-import '../data/models/response/phoneLoginResponseModel.dart';
-import '../data/models/response/verifyOtpResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
 
 class SendOtpViewModel with ChangeNotifier {
@@ -27,10 +20,8 @@ class SendOtpViewModel with ChangeNotifier {
   Future<void> fetchSendOtpData(SendOtpRequestModel data, BuildContext context) async {
     setSendOtpData(ApiProcessResponse.loading());
     try {
-      // final Map<String, dynamic> responseData = (await _homeRepo.fetchHomeData(data)) as Map<String, dynamic>;
       final SendOtpResponseModel sendOtpResponseModel = await _sendOtpRepo.fetchSendOtpData(data);
 
-      // final HomePageResponseModel homePageResponseModel = HomePageResponseModel.fromJson(responseData as String);
       setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));
 
       if (kDebugMode) {
@@ -58,16 +49,10 @@ class SendOtpViewModel with ChangeNotifier {
       final SendOtpResponseModel sendOtpResponseModel = await _sendOtpRepo.fetchSendOtpData(data);
       setSendOtpData(ApiProcessResponse.completed(sendOtpResponseModel));
 
-      // final Map<String, dynamic> responseData = (await _homeRepo.fetchHomeData(data)) as Map<String, dynamic>;
-      // final HomePageResponseModel homePageResponseModel = HomePageResponseModel.fromJson(responseData as String);
-
       if (kDebugMode) {
         print("Kuchh to gadabad h Dya");
       }
     }
   }
-
-
-
 
 }

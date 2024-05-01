@@ -24,16 +24,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Confirm Exit'),
-        content: Text('Are you sure you want to exit the app?'),
+        title: const Text('Confirm Exit'),
+        content: const Text('Are you sure you want to exit the app?'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Yes'),
+            child: const Text('Yes'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('No'),
+            child: const Text('No'),
           ),
         ],
       ),
@@ -86,11 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                child: Column(
+                child: const Column(
                   children: [
-                    const SizedBox(height: 15),
+                    SizedBox(height: 15),
                     HomeHeader(),
-                    const SizedBox(height: 15),
+                    SizedBox(height: 15),
                     SearchField(),
                   ],
                 ),
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'grocery': 'Grocery',
                           'food': 'Food',
                         },
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         controller: _selectedSegment,
                         backgroundColor: kPrimaryColor,
                       ),
@@ -122,11 +122,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (_, key, __) {
                         switch (key) {
                           case 'grocery':
-                            return GroceryHome();
+                            return const GroceryHome();
                           case 'food':
-                            return FoodHome();
+                            return const FoodHome();
                           default:
-                            return GroceryHome();
+                            return const GroceryHome();
                         }
                       },
                     ),
