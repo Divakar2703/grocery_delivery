@@ -90,7 +90,6 @@ class OrderListFoodViewModel with ChangeNotifier {
       } else {
         setAcceptOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Accepted");
-
         goBack(context);
 
       }

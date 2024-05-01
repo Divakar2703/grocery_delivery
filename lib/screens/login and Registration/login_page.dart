@@ -102,27 +102,27 @@ class _LoginUserState extends State<LoginUser> {
   void initState() {
     super.initState();
     _totalNotifications = 0;
-    registerNotification();
-    checkForInitialMessage();
+    // registerNotification();
+    // checkForInitialMessage();
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // Extract notification data
-      String notificationTitle = message.notification?.title ?? '';
-      String notificationBody = message.notification?.body ?? '';
-      String dataTitle = message.data['title'] ?? '';
-      String dataBody = message.data['body'] ?? '';
-
-      // Update notification info and total count
-      setState(() {
-        _notificationInfo = PushNotification(
-          title: notificationTitle,
-          body: notificationBody,
-          dataTitle: dataTitle,
-          dataBody: dataBody,
-        );
-        _totalNotifications++;
-      });
-    });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   // Extract notification data
+    //   String notificationTitle = message.notification?.title ?? '';
+    //   String notificationBody = message.notification?.body ?? '';
+    //   String dataTitle = message.data['title'] ?? '';
+    //   String dataBody = message.data['body'] ?? '';
+    //
+    //   // Update notification info and total count
+    //   setState(() {
+    //     _notificationInfo = PushNotification(
+    //       title: notificationTitle,
+    //       body: notificationBody,
+    //       dataTitle: dataTitle,
+    //       dataBody: dataBody,
+    //     );
+    //     _totalNotifications++;
+    //   });
+    // });
 
   }
   void checkValidation() {
