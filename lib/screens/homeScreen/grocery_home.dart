@@ -65,54 +65,73 @@ class _GroceryHomeState extends State<GroceryHome> {
                 return Center(child: emptyAnimationWidget());
               case Status.COMPLETED:
                 return SingleChildScrollView(
-                  child: Column(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
                     children: [
-                      PaymentsCard(
-                        TotalOrders:
-                        value.indextPageCountData.data?.totalOrders
-                            .toString() ??
-                            "",
-                        CompleteOrders: value.indextPageCountData.data
-                            ?.completeOrders.toString() ??
-                            "",
-                        PackedOrders: value.indextPageCountData.data
-                            ?.packedOrders.toString() ??
-                            "",
-                        TotalCODOrders: value.indextPageCountData.data
-                            ?.totalShippingOrders.toString() ??
-                            "",
-                        TotalshippingOrders: value.indextPageCountData
-                            .data?.totalReturnOrders.toString() ??
-                            "",
-                        TotalReturnOrders: value.indextPageCountData.data
-                            ?.totalRejectOrders.toString() ??
-                            "",
-                        TotalRejectOrders: value.indextPageCountData.data
-                            ?.deliveryCancelOrder.toString() ??
-                            "",
-                        Deliverycancelorder: value.indextPageCountData
-                            .data?.totalOnlineOrders.toString() ??
-                            "",
-                        TotalOnlineOrders: value.indextPageCountData
-                            .data?.totalOnlinePaymentCollection
-                            .toString() ??
-                            "",
-                        TotalOnlinePaymentcollection:
-                        value.indextPageCountData.data?.totalCODOrders
-                            .toString() ??
-                            "",
-                        TotalCODPaymentcollection: value.indextPageCountData
-                            .data?.totalCODPaymentCollection
-                            .toString() ??
-                            "",
-                        TotalPendingCODPayments: value.indextPageCountData
-                            .data?.totalPendingCODPayments
-                            .toString() ??
-                            "",
-                      ),
 
-                    ],
+            Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Total\nOrders", cardCount: value.indextPageCountData.data?.totalOrders.toString() ??"", cardImage: "assets/images/m.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Complete\nOrders", cardCount: value.indextPageCountData.data?.completeOrders.toString() ??"", cardImage: "assets/images/m1.png")
+            
+            ],
+          ),
+          const SizedBox(height: 16),
+                      Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Packed\nOrders", cardCount: value.indextPageCountData.data?.packedOrders.toString() ??"", cardImage: "assets/images/cc.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Total COD\nOrders", cardCount: value.indextPageCountData.data?.totalCODOrders.toString() ??"", cardImage: "assets/images/p.png")
+            
+            ],
+          ),
+                    const SizedBox(height: 16),
+                      Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Total\nshipping\nOrderss", cardCount: value.indextPageCountData.data?.totalShippingOrders.toString() ??"", cardImage: "assets/images/k.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Total\nReturn\nOrders", cardCount: value.indextPageCountData.data?.totalReturnOrders.toString() ??"", cardImage: "assets/images/c.png")
+            
+            ],
+          ),
+                              const SizedBox(height: 16),
+                      Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Reject\nOrders", cardCount: value.indextPageCountData.data?.totalRejectOrders.toString() ??"", cardImage: "assets/images/k.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Delivery\ncancel\norder", cardCount: value.indextPageCountData.data?.deliveryCancelOrder.toString() ??"", cardImage: "assets/images/c.png")
+            
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "Online\nOrders", cardCount: value.indextPageCountData.data?.totalOnlineOrders.toString() ??"", cardImage: "assets/images/c.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Online\nPayment\ncollection", cardCount: value.indextPageCountData.data?.totalOnlinePaymentCollection.toString() ??"", cardImage: "assets/images/k.png")
+            
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              HomeCardView(cardTitle: "COD\nPayment\ncollection", cardCount: value.indextPageCountData.data?.totalCODPaymentCollection.toString() ??"", cardImage: "assets/images/c.png"),
+              const SizedBox(width: 10),
+              HomeCardView(cardTitle: "Pending\nCOD\nPayments", cardCount: value.indextPageCountData.data?.totalPendingCODPayments.toString() ??"", cardImage: "assets/images/k.png")
+            
+            ],
+          ),
+                      ],
                   ),
+                  )
                 );
             }
 

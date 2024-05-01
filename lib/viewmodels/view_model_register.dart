@@ -86,7 +86,6 @@ class RegisterViewModel with ChangeNotifier {
 
       if(sendOtpResponseModel.status!='error'){
         Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(userId: userId,mobile: mobile,),),);
-
       }else{
         AppToast.showToast(sendOtpResponseModel.message.toString());
       }
