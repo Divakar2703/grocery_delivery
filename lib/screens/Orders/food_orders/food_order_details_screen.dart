@@ -17,21 +17,21 @@ import '../Componenets/All/return_order_buttom_sheet.dart';
 
 class FoodOrderDetailsScreen extends StatefulWidget {
   final Order item;
+
   const FoodOrderDetailsScreen({
     Key? key,
-    required this.item, required String type,
+    required this.item,
+    required String type,
   }) : super(key: key);
-
 
   @override
   State<FoodOrderDetailsScreen> createState() => _FoodOrderDetailsScreenState();
 }
 
 class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
-
   late OrderListFoodViewModel orderListViewModel;
-  String payId='';
-  String orderId='';
+  String payId = '';
+  String orderId = '';
 
   @override
   void initState() {
@@ -41,10 +41,14 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
     orderId = widget.item.orderID.toString();
 
     try {
-      orderListViewModel.sourceLat = double.parse(widget.item.sellerLatitude ?? '0.0');
-      orderListViewModel.sourceLong = double.parse(widget.item.sellerLongitude ?? '0.0');
-      orderListViewModel.destiLat = double.parse(widget.item.customerLatitude ?? '0.0');
-      orderListViewModel.destiLong = double.parse(widget.item.customerLongitude ?? '0.0');
+      orderListViewModel.sourceLat =
+          double.parse(widget.item.sellerLatitude ?? '0.0');
+      orderListViewModel.sourceLong =
+          double.parse(widget.item.sellerLongitude ?? '0.0');
+      orderListViewModel.destiLat =
+          double.parse(widget.item.customerLatitude ?? '0.0');
+      orderListViewModel.destiLong =
+          double.parse(widget.item.customerLongitude ?? '0.0');
     } on FormatException {
       // Handle the case where parsing fails (e.g., show an error message)
       print("Error: Invalid latitude or longitude format");
@@ -52,18 +56,21 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
   }
 
   acceptOrder(BuildContext context, String payId, Order item) {
-    final data = AcceptOrderRequestModel(
-        userId: Constants.userIdForUse, payId: payId);
+    final data =
+        AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchAcceptOrderData(data, context);
 
     // Attempt to convert string coordinates to doubles (handle exceptions)
-
   }
 
   //when user will not there for receive order
-  cancelOrder(String comment,
-      String orderId, String payId,) {
-    final data = CancelOrderRequestModel(userId: Constants.userIdForUse,
+  cancelOrder(
+    String comment,
+    String orderId,
+    String payId,
+  ) {
+    final data = CancelOrderRequestModel(
+        userId: Constants.userIdForUse,
         comment: comment,
         orderId: orderId,
         payId: payId);
@@ -73,45 +80,52 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
   //when delivery boy will not want to accept the order
   rejectOrder(String payId, String comment) {
     final data = RejectOrderRequestModel(
-      userId: Constants.userIdForUse, payId: payId, rejectedReason: comment,);
+      userId: Constants.userIdForUse,
+      payId: payId,
+      rejectedReason: comment,
+    );
     orderListViewModel.fetchRejectOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller
   returnOrder(String payId) {
-    final data = AcceptOrderRequestModel(
-        userId: Constants.userIdForUse, payId: payId);
+    final data =
+        AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchReturnOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
-  returnOrderVerifyOtp(String payId, String comment,
-      String otp) {
+  returnOrderVerifyOtp(String payId, String comment, String otp) {
     final data = ReturnOrderVerifyOtpRquestModel(
-      userId: Constants.userIdForUse, reason: comment, otp: otp, payId: payId,);
+      userId: Constants.userIdForUse,
+      reason: comment,
+      otp: otp,
+      payId: payId,
+    );
     orderListViewModel.fetchReturnOrderVerifyOtpData(data, context);
   }
 
   //when delivery boy will return the order to the seller
   deliverOrder(String payId) {
-    final data = AcceptOrderRequestModel(
-        userId: Constants.userIdForUse, payId: payId);
+    final data =
+        AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchdeliverOrderData(data, context);
   }
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
-  deliveryOrderVerifyOtp(String payId,
-      String otp) {
+  deliveryOrderVerifyOtp(String payId, String otp) {
     final data = DeliverOrderVerifyOtpRequestModel(
-      userId: Constants.userIdForUse, otp: otp, payId: payId,);
+      userId: Constants.userIdForUse,
+      otp: otp,
+      payId: payId,
+    );
     orderListViewModel.fetchDeliverOrderVerifyOtpData(data, context);
   }
 
-
-
   void showReturnOrderBottomSheet(BuildContext context, String tappedButton) {
     final returnOrderBottomSheet = ReturnOrderBottomSheet(
-      tappedButton: tappedButton, // or 'return' or 'verifyOtp'
+      tappedButton: tappedButton,
+      // or 'return' or 'verifyOtp'
       payId: payId,
       orderId: orderId,
       cancelOrderCallback: cancelOrder,
@@ -120,11 +134,11 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
       returnOrderVerifyOtpCallback: returnOrderVerifyOtp,
       deliverOrderCallback: deliverOrder,
       deliverOrderVerifyOtpCallback: deliveryOrderVerifyOtp,
-
     );
 
     Navigator.of(context).push(_createRoute(returnOrderBottomSheet));
   }
+
   void showDeliverOtpVerifyBottomSheet(BuildContext context) {
     final deliverOtpVerification = DeliverOtpVerification(
       payId: payId,
@@ -135,7 +149,6 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
     Navigator.of(context).push(_createRoute(deliverOtpVerification));
   }
 
-
   Route _createRoute(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => page,
@@ -143,7 +156,8 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         const curve = Curves.easeInOut;
-        final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        final tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         final offsetAnimation = animation.drive(tween);
         return SlideTransition(
           position: offsetAnimation,
@@ -219,14 +233,14 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                     itemCount: widget.item.product!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ItemProduct(
-                        productName: widget.item.product![index].productName
-                            .toString(),
-                        sellerName: widget.item.product![index].sellerName
-                            .toString(),
-                        quantity: widget.item.product![index].productQty
-                            .toString(),
-                        price: widget.item.product![index].productPrice
-                            .toString(),
+                        productName:
+                            widget.item.product![index].productName.toString(),
+                        sellerName:
+                            widget.item.product![index].sellerName.toString(),
+                        quantity:
+                            widget.item.product![index].productQty.toString(),
+                        price:
+                            widget.item.product![index].netPrice.toString(),
                         total: widget.item.product![index].total.toString(),
                         image: widget.item.product![index].image.toString(),
                       );
@@ -413,7 +427,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${widget.item.deliveredDate}",
+                                "${widget.item.customerDeliverySlot}",
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -565,7 +579,8 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                               );
 
                               // Perform the accept order action
-                              acceptOrder(context, widget.item.payid.toString(), widget.item)
+                              acceptOrder(context, widget.item.payid.toString(),
+                                      widget.item)
                                   .then((_) {
                                 // Dismiss the progress dialog when the action is completed
                                 Navigator.pop(context);
@@ -675,8 +690,19 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => FoodDeliveryTracking(sourceLat: orderListViewModel.sourceLat
-                                  ,sourceLong: orderListViewModel.sourceLong,destiLat: orderListViewModel.destiLat,destiLong: orderListViewModel.destiLong,orderId: orderId,)),
+                                MaterialPageRoute(
+                                    builder: (context) => FoodDeliveryTracking(
+                                          sourceLat:
+                                              orderListViewModel.sourceLat,
+                                          sourceLong:
+                                              orderListViewModel.sourceLong,
+                                          destiLat: orderListViewModel.destiLat,
+                                          destiLong:
+                                              orderListViewModel.destiLong,
+                                          orderId: orderId,
+                                      userContactNo: widget.item!.customerContactNo.toString(),
+
+                                    )),
                               );
                             },
                             child: Container(
@@ -699,10 +725,10 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                         ),
                     ],
                   ),
-
-                  const SizedBox(height: 16.0,)
+                  const SizedBox(
+                    height: 16.0,
+                  )
                 ],
-
               ),
             ),
           ),

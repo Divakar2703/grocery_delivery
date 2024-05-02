@@ -31,4 +31,6 @@ class AppUrl{
   static var returnOrderFoodCheckOtp= "${baseUrl}foodcheck_otp_for_retrun";
   static var deliveredOrderFoodGetOtp= "${baseUrl}fooddelivered_order";
   static var checkDeliveredFoodOtp= "${baseUrl}foodcheck_otp_for_deliveroredr";
+  static var codFoodSummaryListUrl= "${baseUrl}fooddelivery_cod_summary";
+  static var walletFoodSummaryListUrl= "${baseUrl}fooddelivery_wallet_summary";
 }

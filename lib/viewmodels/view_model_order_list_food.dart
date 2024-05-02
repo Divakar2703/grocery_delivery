@@ -46,7 +46,6 @@ class OrderListFoodViewModel with ChangeNotifier {
       } else {
         setOrderListData(ApiProcessResponse.completed(orderListResponseModel));
 
-
       }
 
       if (kDebugMode) {
@@ -87,6 +86,8 @@ class OrderListFoodViewModel with ChangeNotifier {
       if (acceptOrderResponseModel.status == 'error') {
         setAcceptOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Something went wrong!.");
+
       } else {
         setAcceptOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Accepted");
@@ -135,6 +136,8 @@ class OrderListFoodViewModel with ChangeNotifier {
       if (acceptOrderResponseModel.status == 'error') {
         setCancelOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Something went wrong!.");
+
       } else {
         setCancelOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Cancelled");
@@ -182,6 +185,8 @@ class OrderListFoodViewModel with ChangeNotifier {
       if (acceptOrderResponseModel.status == 'error') {
         setRejectOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Something went wrong!.");
+
       } else {
         setRejectOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
 
@@ -229,10 +234,11 @@ class OrderListFoodViewModel with ChangeNotifier {
       if (acceptOrderResponseModel.status == 'error') {
         setReturnOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Something went wrong!.");
+
       } else {
         setReturnOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
-        showToast(acceptOrderResponseModel.message?? " ");
-
+        showToast(acceptOrderResponseModel.message?? "OTP sent!..");
 
       }
 
@@ -275,6 +281,8 @@ class OrderListFoodViewModel with ChangeNotifier {
       if (acceptOrderResponseModel.status == 'error') {
         setReturnOrderVerifyOtpData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Something went wrong!.");
+
       } else {
         setReturnOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
         showToast(acceptOrderResponseModel.message?? "Order Returned");
@@ -321,9 +329,11 @@ class OrderListFoodViewModel with ChangeNotifier {
       if (acceptOrderResponseModel.status == 'error') {
         setDeliverOrderData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "Something went wrong!.");
+
       } else {
         setDeliverOrderData(ApiProcessResponse.completed(acceptOrderResponseModel));
-        showToast(acceptOrderResponseModel.message?? " ");
+        showToast(acceptOrderResponseModel.message?? "Otp sent");
 
 
       }
@@ -367,9 +377,11 @@ class OrderListFoodViewModel with ChangeNotifier {
       if (acceptOrderResponseModel.status == 'error') {
         setDeliverOrderVerifyOtpData(
             ApiProcessResponse.error(acceptOrderResponseModel.message));
+        showToast(acceptOrderResponseModel.message?? "OTP not verified please try again!.");
+
       } else {
         setDeliverOrderVerifyOtpData(ApiProcessResponse.completed(acceptOrderResponseModel));
-        showToast(acceptOrderResponseModel.message?? "Order Returned");
+        showToast(acceptOrderResponseModel.message?? "Order Delivered");
        goBack(context);
       }
 

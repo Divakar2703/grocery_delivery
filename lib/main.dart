@@ -99,10 +99,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => SendOtpViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => OrderListViewModel()),
-        // ChangeNotifierProvider(create: (_) => SubsPlanViewModel()),
-        // ChangeNotifierProvider(create: (_) => ReserverClubViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
-        ChangeNotifierProvider(create: (_) => SummaryViewModel()),
+        // ChangeNotifierProvider(create: (_) => SummaryViewModel()),
         ChangeNotifierProvider(create: (_) => OrderListFoodViewModel()),
 
 

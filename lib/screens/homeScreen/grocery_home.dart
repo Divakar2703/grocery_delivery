@@ -34,18 +34,27 @@ class _GroceryHomeState extends State<GroceryHome> {
     super.initState();
     indextPageCountViewModel = IndextPageCountViewModel();
     askLocationPermission();
-    // getHomePageData();
+    getHomePageData();
   }
 
   void askLocationPermission() async {
-    final status = await Permission.location.request();
-    if (status == PermissionStatus.granted) {
+    final status = await Permission.location.status;
+
+    if (status.isGranted) {
       getHomePageData();
       getLocation();
     } else {
-      getHomePageData();
-      // getLocation();
-
+      if (!status.isDenied) {
+        final newStatus = await Permission.location.request();
+        if (newStatus == PermissionStatus.granted) {
+          getHomePageData();
+          getLocation();
+        } else {
+          // Handle case when permission is denied
+          // You might want to show a message to the user
+          print("Location permission denied");
+        }
+      }
     }
   }
 

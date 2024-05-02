@@ -6,6 +6,7 @@ import 'package:grocery_delivery_side/data/models/response/verifyOtpResponseMode
 import 'package:grocery_delivery_side/new_init_screen.dart';
 import 'package:grocery_delivery_side/repositories/repo_verify_otp.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/constants/app_constants_value.dart';
 import '../data/processResponse/api_process_response.dart';
@@ -32,12 +33,13 @@ class VerifyOtpViewModel with ChangeNotifier {
     sp.setBool(Constants.isLogin, true);
     Constants.userIdForUse = sp.getString(Constants.userId) ?? '';
     if(fromScreen=='register'){
-
+      AppToast.showToast("Registered successfully! Please login after admin verification.");
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (BuildContext context) => LoginUser()),
             (Route<dynamic> route) => false, // This predicate will always return false, which clears the entire stack
       );
+
 
     }else{
 

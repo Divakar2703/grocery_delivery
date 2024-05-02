@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/selectDateAndSearchDateWalletSummary.dart';
 import 'package:provider/provider.dart';
-import '../../data/constants/app_constants_value.dart';
-import '../../data/models/request/indextPageCountRequestModel.dart';
-import '../../data/processResponse/status.dart';
-import '../../helper/empty_animation.dart';
-import '../../style/colors.dart';
-import '../../viewmodels/view_model_summary.dart';
-import '../Orders/Componenets/All/simmer_order_list.dart';
+import '../../../data/constants/app_constants_value.dart';
+import '../../../data/models/request/indextPageCountRequestModel.dart';
+import '../../../data/processResponse/status.dart';
+import '../../../helper/empty_animation.dart';
+import '../../../style/colors.dart';
+import '../../../viewmodels/view_model_summary.dart';
+import '../../Orders/Componenets/All/simmer_order_list.dart';
 
 
 class CODWidget extends StatefulWidget {
@@ -34,7 +33,8 @@ class _AllWidgetState extends State<CODWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return
+      SingleChildScrollView(
       child: ChangeNotifierProvider<SummaryViewModel>(
         create: (BuildContext context) => summaryViewModel,
         child: Consumer<SummaryViewModel>(

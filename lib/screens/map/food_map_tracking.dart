@@ -17,13 +17,15 @@ class FoodDeliveryTracking extends StatefulWidget {
   final double destiLat;
   final double destiLong;
   final String orderId;
+  final String userContactNo;
+
 
   const FoodDeliveryTracking({Key? key,
     required this.sourceLat,
     required this.sourceLong,
     required this.destiLat,
     required this.destiLong,
-    required this.orderId})
+    required this.orderId, required this.userContactNo})
       : super(key: key);
 
   @override
@@ -286,7 +288,7 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
             ),
             ElevatedButton(
               onPressed: () {
-                _startCall();
+                _makePhoneCall(widget.userContactNo);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -303,7 +305,7 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    'Contact to Delivery boy',
+                    'Contact to User',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
@@ -318,23 +320,18 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
     );
   }
 
-  void _startCall() async {
-    // Phone number to call
-    const phoneNumber = '9024232511';
-
-    // Create a uri to represent the phone number
-    final Uri url = Uri.parse('tel:$phoneNumber');
-
-    // Check if the device can handle phone calls
-    if (await canLaunch(url.toString())) {
-      // If yes, launch the call intent
-      await launch(url.toString());
-    } else {
-      // If no, throw an error
-      throw 'Could not launch call: $url';
+  void _makePhoneCall(String contactNo) async {
+    final Uri phoneCallUri = Uri(
+      scheme: 'tel',
+      path: contactNo,
+    );
+    try {
+      await launchUrl(phoneCallUri);
+    } catch (e) {
+      // Handle the exception here
+      print('Could not launch $phoneCallUri: $e');
     }
   }
-
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
     mapController = controller;

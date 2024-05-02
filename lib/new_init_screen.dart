@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grocery_delivery_side/constants.dart';
 import 'package:grocery_delivery_side/screens/Orders/orders_list_tab_screen.dart';
-import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/walletSummaryHomescreen.dart';
+import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/grocery/grocerySummaryScreen.dart';
 import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
 
 class NewInitScrren extends StatefulWidget {
@@ -41,7 +41,9 @@ class _MyHomePageState extends State<NewInitScrren> {
   final List<Widget> bottomBarPages = [
     OrderScreenNew(),
     HomeScreen(),
-    WalletSummaryHomeScreen(),
+    // GrocerySummaryScreen(),
+
+    GrocerySummaryHomeScreen()
   ];
 
   @override
