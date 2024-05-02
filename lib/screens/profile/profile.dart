@@ -304,10 +304,17 @@ class _ProfileState extends State<Profile> {
                                       await prefs.clear();
 
                                       // Navigate to login screen
-                                      Navigator.pushReplacement(
+                                      // Navigator.pushReplacement(
+                                      //     context,
+                                      //     MaterialPageRoute(builder: (context) => const LoginUser(),
+                                      //     ));
+
+                                          Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(builder: (context) => const LoginUser(),
-                                          ));
+                                          ),
+                                            (Route<dynamic> route) => false, // Remove all routes until this route
+                                          );
                                     },
                                   ),
                                   const Text(

@@ -303,7 +303,7 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    'Contact to Delivery boy',
+                    'Contact Customer',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),

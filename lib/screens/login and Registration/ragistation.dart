@@ -85,7 +85,7 @@ class _SignUpState extends State<SignUp> {
        AppToast.showToast("Please enter valid email");
        return false;
     }
-        else if (pinCodeController.text.toString().isEmpty) {
+        else if (pinCodeController.text.toString().length!=6) {
        AppToast.showToast("Please enter PinCode");
        return false;
     }
