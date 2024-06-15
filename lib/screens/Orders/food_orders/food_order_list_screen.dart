@@ -30,34 +30,32 @@ class _FoodOrderListScreenState extends State<FoodOrderListScreen> {
     orderListViewModel.fetchOrderListData(data, context);
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return
-      ChangeNotifierProvider<OrderListFoodViewModel>(
-        create: (BuildContext context) => orderListViewModel,
-        child: Consumer<OrderListFoodViewModel>(
-          builder: (context, value, _) {
-            switch (value.orderqListData.status ?? "") {
-              case Status.LOADING:
-                return Expanded(child: Center(child: buildShimmerProductDetails()));
-              case Status.ERROR:
-                return Expanded(child: Center(child: emptyAnimationWidget()));
-              case Status.COMPLETED:
-                return Container(
-                  padding: const EdgeInsets.all(12),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        FoodOrderItem(orderqListData: value.orderqListData,type: widget.type,),
-                      ],
-                    ),
+    return ChangeNotifierProvider<OrderListFoodViewModel>(
+      create: (BuildContext context) => orderListViewModel,
+      child: Consumer<OrderListFoodViewModel>(
+        builder: (context, value, _) {
+          switch (value.orderqListData.status ?? "") {
+            case Status.LOADING:
+              return Center(child: buildShimmerProductDetails());
+            case Status.ERROR:
+              return Center(child: emptyAnimationWidget());
+            case Status.COMPLETED:
+              return Container(
+                padding: const EdgeInsets.all(12),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      FoodOrderItem(orderqListData: value.orderqListData, type: widget.type),
+                    ],
                   ),
-                );
-            }
-            return Container();
-          },
-        ),
-      );
+                ),
+              );
+          }
+          return Container();
+        },
+      ),
+    );
   }
 }

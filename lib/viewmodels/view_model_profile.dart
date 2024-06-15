@@ -4,12 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:grocery_delivery_side/data/constants/app_url.dart';
 import 'package:grocery_delivery_side/data/models/request/ProfileUpdateRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/indextPageCountRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/ProfileUpdateResponseModel.dart';
 import 'package:grocery_delivery_side/data/models/response/getProfileResponseModel.dart';
 import 'package:grocery_delivery_side/repositories/repo_profile.dart';
 import '../data/processResponse/api_process_response.dart';
+import 'package:http/http.dart' as http;
+
 
 class ProfileViewModel with ChangeNotifier {
   final _profileRepo = ProfileRepository();
@@ -100,7 +103,30 @@ class ProfileViewModel with ChangeNotifier {
     }
   }
 
+  Future<void> uploadProfileImage(String imagePath, String userId) async {
+    try {
+      var request = http.MultipartRequest(
+          'POST', Uri.parse(AppUrl.profileImageUpdateUrl));
+      request.files.add(await http.MultipartFile.fromPath('image', imagePath));
+      request.fields['user_id'] = userId;
+      print('Image $imagePath===========user id $userId');
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      if (response.statusCode == 200) {
+        // Handle success
+        print('Image uploaded successfully');
+        showToast('Image uploaded successfully');
+      } else {
+        // Handle error
+        print('Failed to upload image: ${response.body}');
+        showToast('Failed to upload image');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      showToast('Error uploading image');
 
+    }
+  }
 
 
   void showToast(String message) {

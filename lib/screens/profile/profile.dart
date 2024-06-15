@@ -1,3 +1,4 @@
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,17 +33,20 @@ class _ProfileState extends State<Profile> {
   void initState() {
     super.initState();
     profileViewModel = ProfileViewModel();
+    // This is your existing code to fetch profile data
     final data = IndextPageCountRequestModel(userId: Constants.userIdForUse);
-        profileViewModel.fetchProfileData(data, context);
+    profileViewModel.fetchProfileData(data, context);
   }
 
-  Future selectImage(BuildContext context) {
-    return showDialog(
+  Future<void> selectImage(BuildContext context) async {
+    try {
+      showDialog(
         context: context,
         builder: (BuildContext context) {
           return Dialog(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)), //this right here
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             child: Container(
               height: 180,
               child: Padding(
@@ -51,8 +55,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     const Text(
                       'Select Profile Image',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 16,
@@ -63,19 +66,13 @@ class _ProfileState extends State<Profile> {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              selectedImagePath =
-                                  await selectImageFromGallery();
-                              final SharedPreferences sp =
-                                  await SharedPreferences.getInstance();
-                              sp.setString("profileImg", selectedImagePath);
-                              print('Image_Path:-');
-                              print(selectedImagePath);
+                              selectedImagePath = await selectImageFromGallery();
+                              Navigator.pop(context);
                               if (selectedImagePath != '') {
-                                Navigator.pop(context);
+                                await profileViewModel.uploadProfileImage(selectedImagePath, Constants.userIdForUse);
                                 setState(() {});
                               } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                   content: Text("No Image Selected !"),
                                 ));
                               }
@@ -97,17 +94,12 @@ class _ProfileState extends State<Profile> {
                           GestureDetector(
                             onTap: () async {
                               selectedImagePath = await selectImageFromCamera();
-                              print('Image_Path:-');
-                              print(selectedImagePath);
-                              final SharedPreferences sp =
-                                  await SharedPreferences.getInstance();
-                              sp.setString("profileImg", selectedImagePath);
+                              Navigator.pop(context);
                               if (selectedImagePath != '') {
-                                Navigator.pop(context);
+                                await profileViewModel.uploadProfileImage(selectedImagePath, Constants.userIdForUse);
                                 setState(() {});
                               } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                   content: Text("No Image Captured !"),
                                 ));
                               }
@@ -134,29 +126,29 @@ class _ProfileState extends State<Profile> {
               ),
             ),
           );
-        });
-  }
-
-  selectImageFromGallery() async {
-    XFile? file = await ImagePicker()
-        .pickImage(source: ImageSource.gallery, imageQuality: 10);
-    if (file != null) {
-      return file.path;
-    } else {
-      return '';
+        },
+      );
+    } catch (e) {
+      print('Error selecting image: $e');
     }
   }
 
-  //
-  selectImageFromCamera() async {
-    XFile? file = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 10);
-    if (file != null) {
-      return file.path;
-    } else {
-      return '';
-    }
+  Future<String> selectImageFromGallery() async {
+    final XFile? file = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 10,
+    );
+    return file?.path ?? '';
   }
+
+  Future<String> selectImageFromCamera() async {
+    final XFile? file = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      imageQuality: 10,
+    );
+    return file?.path ?? '';
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -168,9 +160,9 @@ class _ProfileState extends State<Profile> {
           builder: (context, value, _) {
             switch (value.getProfileData.status ?? "") {
               case Status.LOADING:
-                return Expanded(child: Center(child: buildShimmerProductDetails()));
+                return Center(child: buildShimmerProductDetails());
               case Status.ERROR:
-                return Expanded(child: Center(child: emptyAnimationWidget()));
+                return Center(child: emptyAnimationWidget());
               case Status.COMPLETED:
                 return SingleChildScrollView(
                   child: Column(
@@ -188,29 +180,32 @@ class _ProfileState extends State<Profile> {
                           children: [
                             const SizedBox(height: 80,),
                             Transform.translate(
-                              offset: const Offset(0, -35), // Adjust the values as needed
+                              offset: const Offset(0, -35),
                               child: GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   selectImage(context);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: Colors.white, // Set the border color
-                                      width: 5.0, // Set the border width
+                                      color: Colors.white,
+                                      width: 5.0,
                                     ),
                                   ),
                                   child: CircleAvatar(
                                     backgroundImage: selectedImagePath.isNotEmpty
-                                        ? AssetImage(selectedImagePath)
-                                        : const AssetImage("assets/images/Profile Image.png"),
+                                        ? FileImage(File(selectedImagePath))
+                                        : value.getProfileData.data!.profileImage!.isNotEmpty
+                                        ? NetworkImage(value.getProfileData.data!.profileImage!)
+                                        : AssetImage("assets/images/Profile Image.png") as ImageProvider<Object>,
                                     radius: 50,
                                   ),
                                 ),
                               ),
                             ),
-                             Text(
+
+                            Text(
                               value.getProfileData.data!.name.toString(),
                               style: TextStyle(
                                 fontFamily: "Muli",
@@ -219,7 +214,7 @@ class _ProfileState extends State<Profile> {
                                 color: Colors.black,
                               ),
                             ),
-                             Text(
+                            Text(
                               value.getProfileData.data!.emailId.toString(),
                               style: TextStyle(
                                 fontFamily: 'Muli',
@@ -231,7 +226,7 @@ class _ProfileState extends State<Profile> {
                             const SizedBox(
                               height: 12,
                             ),
-                             ProfileContainer(getProfileData: value.getProfileData!.data,),
+                            ProfileContainer(getProfileData: value.getProfileData!.data,),
                             Container(
                               margin:
                               const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -277,9 +272,9 @@ class _ProfileState extends State<Profile> {
                                 ],
                               ),
                             ),
-                             CardWidget_R(
+                            CardWidget_R(
                               title: 'Update Your Profile',
-                               getProfileResponseModel: value.getProfileData!.data,
+                              getProfileResponseModel: value.getProfileData!.data,
                             ),
                             Container(
                               margin: const EdgeInsets.all(8),
@@ -301,22 +296,22 @@ class _ProfileState extends State<Profile> {
                                     onPressed: () async {
                                       // Clear shared preferences
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      await prefs.clear();
-
-                                      // Navigate to login screen
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const LoginUser(),
-                                          ));
+                                      prefs.clear();
+                                      // Navigate to the login screen
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const LoginUser()),
+                                            (Route<dynamic> route) => false,
+                                      );
                                     },
                                   ),
                                   const Text(
-                                    'LogOut',
+                                    "LogOut",
                                     style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black,
                                       fontFamily: "Muli",
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.red,
                                     ),
                                   ),
                                 ],
@@ -324,23 +319,19 @@ class _ProfileState extends State<Profile> {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 );
+              default:
+                return Container();
             }
-            return Container();
           },
         ),
       ),
     );
-
-
-
-
-
-
   }
+
 }
 
 class ProfileContainer extends StatefulWidget {
@@ -376,7 +367,7 @@ class _ProfileContainerState extends State<ProfileContainer> {
                 Container(
 
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white38,

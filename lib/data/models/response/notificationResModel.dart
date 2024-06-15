@@ -33,7 +33,7 @@ class NotificationResModel {
 
 class Notification {
   String? createdBy;
-  int? orderId;
+  String? orderId;
   String? actionPage;
   String? createdDate;
 

@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -44,38 +41,52 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAVxZ108LCEqAJTp4OYRct1uc7IylGeUtQ',
-    appId: '1:857244758227:web:0271e56c14f3ba25d66426',
-    messagingSenderId: '857244758227',
-    projectId: 'grocery-a4d87',
-    authDomain: 'grocery-a4d87.firebaseapp.com',
-    storageBucket: 'grocery-a4d87.appspot.com',
-    measurementId: 'G-JF6GRK7YY7',
+    apiKey: 'AIzaSyDCujgUVu3pinxOeKzN0JtRulPbnJxHIgc',
+    appId: '1:1050359172710:web:5b40d0f3737f0f4c6467a7',
+    messagingSenderId: '1050359172710',
+    projectId: 'bitsmultiservice',
+    authDomain: 'bitsmultiservice.firebaseapp.com',
+    databaseURL: 'https://bitsmultiservice-default-rtdb.firebaseio.com',
+    storageBucket: 'bitsmultiservice.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go',
-    appId: '1:857244758227:android:cc84525ffa683d93d66426',
-    messagingSenderId: '857244758227',
-    projectId: 'grocery-a4d87',
-    storageBucket: 'grocery-a4d87.appspot.com',
+    apiKey: 'AIzaSyC5IEigZmraXbiSlJ7_3CcCDRAAdT9_AJA',
+    appId: '1:1050359172710:android:1d4027ccdd46dea46467a7',
+    messagingSenderId: '1050359172710',
+    projectId: 'bitsmultiservice',
+    databaseURL: 'https://bitsmultiservice-default-rtdb.firebaseio.com',
+    storageBucket: 'bitsmultiservice.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC8XII2nzzc2suh_bzZf0G6tTEOTTf1_Ds',
-    appId: '1:857244758227:ios:64a7ad1693f630cbd66426',
-    messagingSenderId: '857244758227',
-    projectId: 'grocery-a4d87',
-    storageBucket: 'grocery-a4d87.appspot.com',
+    apiKey: 'AIzaSyAhJnU70UOuDfMH8AmycDPsm-r4MaaTjkM',
+    appId: '1:1050359172710:ios:e7113139e808b5236467a7',
+    messagingSenderId: '1050359172710',
+    projectId: 'bitsmultiservice',
+    databaseURL: 'https://bitsmultiservice-default-rtdb.firebaseio.com',
+    storageBucket: 'bitsmultiservice.appspot.com',
     iosBundleId: 'com.example.groceryDeliverySide',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyC8XII2nzzc2suh_bzZf0G6tTEOTTf1_Ds',
-    appId: '1:857244758227:ios:49458ae7c6b064e3d66426',
-    messagingSenderId: '857244758227',
-    projectId: 'grocery-a4d87',
-    storageBucket: 'grocery-a4d87.appspot.com',
-    iosBundleId: 'com.example.groceryDeliverySide.RunnerTests',
+    apiKey: 'AIzaSyAhJnU70UOuDfMH8AmycDPsm-r4MaaTjkM',
+    appId: '1:1050359172710:ios:e7113139e808b5236467a7',
+    messagingSenderId: '1050359172710',
+    projectId: 'bitsmultiservice',
+    databaseURL: 'https://bitsmultiservice-default-rtdb.firebaseio.com',
+    storageBucket: 'bitsmultiservice.appspot.com',
+    iosBundleId: 'com.example.groceryDeliverySide',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDCujgUVu3pinxOeKzN0JtRulPbnJxHIgc',
+    appId: '1:1050359172710:web:2c671d79810a453f6467a7',
+    messagingSenderId: '1050359172710',
+    projectId: 'bitsmultiservice',
+    authDomain: 'bitsmultiservice.firebaseapp.com',
+    databaseURL: 'https://bitsmultiservice-default-rtdb.firebaseio.com',
+    storageBucket: 'bitsmultiservice.appspot.com',
+  );
+
 }

@@ -49,7 +49,7 @@ class SummaryViewModel with ChangeNotifier{
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Daya");
+        print("=============================$error");
       }
     }
   }
@@ -90,7 +90,7 @@ class SummaryViewModel with ChangeNotifier{
       }
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Daya");
+        print("=============================$error");
       }
     }
   }

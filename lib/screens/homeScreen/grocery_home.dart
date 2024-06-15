@@ -13,8 +13,6 @@ import '../Orders/Componenets/All/simmer_order_list.dart';
 import 'components/payments_card.dart';
 import 'package:location/location.dart' as loc;
 
-
-
 class GroceryHome extends StatefulWidget {
   const GroceryHome({super.key});
 
@@ -28,13 +26,13 @@ class _GroceryHomeState extends State<GroceryHome> {
   List<Placemark>? placemark;
   bool _isLoading = false;
 
-
   @override
   void initState() {
     super.initState();
     indextPageCountViewModel = IndextPageCountViewModel();
     askLocationPermission();
     getHomePageData();
+    getLocation();
   }
 
   void askLocationPermission() async {
@@ -69,7 +67,6 @@ class _GroceryHomeState extends State<GroceryHome> {
     );
   }
 
-
   void getLocation() async {
     setState(() {
       _isLoading = true;
@@ -81,6 +78,8 @@ class _GroceryHomeState extends State<GroceryHome> {
   }
 
   void getAddressUpdateLocation() async {
+    if (!mounted) return; // Check if the widget is still mounted
+
     placemark = await placemarkFromCoordinates(
       locationData!.latitude!,
       locationData!.longitude!,
@@ -88,10 +87,9 @@ class _GroceryHomeState extends State<GroceryHome> {
 
     if (placemark != null && placemark!.isNotEmpty) {
       final updateLocationReqModel = UpdateLocationReqModel(
-          userId: Constants.userIdForUse,
-          latitude: locationData!.latitude!.toString(),
-          longitude: locationData!.longitude!.toString(),
-
+        userId: Constants.userIdForUse,
+        latitude: locationData!.latitude!.toString(),
+        longitude: locationData!.longitude!.toString(),
       );
 
       indextPageCountViewModel.fetchUpdatedLocationData(
@@ -104,8 +102,7 @@ class _GroceryHomeState extends State<GroceryHome> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child:
-      ChangeNotifierProvider<IndextPageCountViewModel>(
+      child: ChangeNotifierProvider<IndextPageCountViewModel>(
         create: (BuildContext context) => indextPageCountViewModel,
         child: Consumer<IndextPageCountViewModel>(
           builder: (context, value, _) {
@@ -116,74 +113,138 @@ class _GroceryHomeState extends State<GroceryHome> {
                 return Center(child: emptyAnimationWidget());
               case Status.COMPLETED:
                 return SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
+                    child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
                     children: [
-
-            Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              HomeCardView(cardTitle: "Total\nOrders", cardCount: value.indextPageCountData.data?.totalOrders.toString() ??"", cardImage: "assets/images/m.png"),
-              const SizedBox(width: 10),
-              HomeCardView(cardTitle: "Complete\nOrders", cardCount: value.indextPageCountData.data?.completeOrders.toString() ??"", cardImage: "assets/images/m1.png")
-            
-            ],
-          ),
-          const SizedBox(height: 16),
                       Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              HomeCardView(cardTitle: "Packed\nOrders", cardCount: value.indextPageCountData.data?.packedOrders.toString() ??"", cardImage: "assets/images/cc.png"),
-              const SizedBox(width: 10),
-              HomeCardView(cardTitle: "Total COD\nOrders", cardCount: value.indextPageCountData.data?.totalCODOrders.toString() ??"", cardImage: "assets/images/p.png")
-            
-            ],
-          ),
-                    const SizedBox(height: 16),
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          HomeCardView(
+                              cardTitle: "Total\nOrders",
+                              cardCount: value
+                                      .indextPageCountData.data?.totalOrders
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/m.png"),
+                          const SizedBox(width: 10),
+                          HomeCardView(
+                              cardTitle: "Complete\nOrders",
+                              cardCount: value
+                                      .indextPageCountData.data?.completeOrders
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/m1.png")
+                        ],
+                      ),
+                      const SizedBox(height: 16),
                       Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              HomeCardView(cardTitle: "Total\nshipping\nOrderss", cardCount: value.indextPageCountData.data?.totalShippingOrders.toString() ??"", cardImage: "assets/images/k.png"),
-              const SizedBox(width: 10),
-              HomeCardView(cardTitle: "Total\nReturn\nOrders", cardCount: value.indextPageCountData.data?.totalReturnOrders.toString() ??"", cardImage: "assets/images/c.png")
-            
-            ],
-          ),
-                              const SizedBox(height: 16),
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          HomeCardView(
+                              cardTitle: "Packed\nOrders",
+                              cardCount: value
+                                      .indextPageCountData.data?.packedOrders
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/cc.png"),
+                          const SizedBox(width: 10),
+                          HomeCardView(
+                              cardTitle: "Total COD\nOrders",
+                              cardCount: value
+                                      .indextPageCountData.data?.totalCODOrders
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/p.png")
+                        ],
+                      ),
+                      const SizedBox(height: 16),
                       Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              HomeCardView(cardTitle: "Reject\nOrders", cardCount: value.indextPageCountData.data?.totalRejectOrders.toString() ??"", cardImage: "assets/images/k.png"),
-              const SizedBox(width: 10),
-              HomeCardView(cardTitle: "Delivery\ncancel\norder", cardCount: value.indextPageCountData.data?.deliveryCancelOrder.toString() ??"", cardImage: "assets/images/c.png")
-            
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              HomeCardView(cardTitle: "Online\nOrders", cardCount: value.indextPageCountData.data?.totalOnlineOrders.toString() ??"", cardImage: "assets/images/c.png"),
-              const SizedBox(width: 10),
-              HomeCardView(cardTitle: "Online\nPayment\ncollection", cardCount: value.indextPageCountData.data?.totalOnlinePaymentCollection.toString() ??"", cardImage: "assets/images/k.png")
-            
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              HomeCardView(cardTitle: "COD\nPayment\ncollection", cardCount: value.indextPageCountData.data?.totalCODPaymentCollection.toString() ??"", cardImage: "assets/images/c.png"),
-              const SizedBox(width: 10),
-              HomeCardView(cardTitle: "Pending\nCOD\nPayments", cardCount: value.indextPageCountData.data?.totalPendingCODPayments.toString() ??"", cardImage: "assets/images/k.png")
-            
-            ],
-          ),
-                      ],
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          HomeCardView(
+                              cardTitle: "Total\nshipping\nOrderss",
+                              cardCount: value.indextPageCountData.data
+                                      ?.totalShippingOrders
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/k.png"),
+                          const SizedBox(width: 10),
+                          HomeCardView(
+                              cardTitle: "Total\nReturn\nOrders",
+                              cardCount: value.indextPageCountData.data
+                                      ?.totalReturnOrders
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/c.png")
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          HomeCardView(
+                              cardTitle: "Reject\nOrders",
+                              cardCount: value.indextPageCountData.data
+                                      ?.totalRejectOrders
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/k.png"),
+                          const SizedBox(width: 10),
+                          HomeCardView(
+                              cardTitle: "Delivery\ncancel\norder",
+                              cardCount: value.indextPageCountData.data
+                                      ?.deliveryCancelOrder
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/c.png")
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          HomeCardView(
+                              cardTitle: "Online\nOrders",
+                              cardCount: value.indextPageCountData.data
+                                      ?.totalOnlineOrders
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/c.png"),
+                          const SizedBox(width: 10),
+                          HomeCardView(
+                              cardTitle: "Online\nPayment\ncollection",
+                              cardCount: value.indextPageCountData.data
+                                      ?.totalOnlinePaymentCollection
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/k.png")
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          HomeCardView(
+                              cardTitle: "COD\nPayment\ncollection",
+                              cardCount: value.indextPageCountData.data
+                                      ?.totalCODPaymentCollection
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/c.png"),
+                          const SizedBox(width: 10),
+                          HomeCardView(
+                              cardTitle: "Pending\nCOD\nPayments",
+                              cardCount: value.indextPageCountData.data
+                                      ?.totalPendingCODPayments
+                                      .toString() ??
+                                  "",
+                              cardImage: "assets/images/k.png")
+                        ],
+                      ),
+                    ],
                   ),
-                  )
-                );
+                ));
             }
 
             return const SizedBox(); // Return an empty SizedBox if status is not loading or completed.

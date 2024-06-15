@@ -31,7 +31,7 @@ class WalletSummaryResponseModel {
 }
 
 class WalletListModel {
-  int? id;
+  dynamic id;
   String? entryDate;
   String? orderId;
   String? status;

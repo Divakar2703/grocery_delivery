@@ -11,7 +11,8 @@ class OtpScreen extends StatefulWidget {
   final String? mobile;
   final String? fromScreen;
 
-  OtpScreen({super.key, required this.userId, required this.mobile, this.fromScreen});
+  OtpScreen(
+      {super.key, required this.userId, required this.mobile, this.fromScreen});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -91,8 +92,7 @@ class _OtpScreenState extends State<OtpScreen> {
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: SafeArea(
-            child: Expanded(
-                child: Container(
+            child: Container(
           decoration: const BoxDecoration(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -262,7 +262,7 @@ class _OtpScreenState extends State<OtpScreen> {
               // )
             ],
           ),
-        ))),
+        )),
       ),
     );
   }

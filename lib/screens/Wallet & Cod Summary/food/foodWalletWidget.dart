@@ -30,6 +30,7 @@ class _FoodWalletWidgetsState extends State<FoodWalletWidgets> {
     foodSummaryViewModel.fetchFoodWalletSummaryListData(data, context);
   }
 
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -66,7 +67,8 @@ class _FoodWalletWidgetsState extends State<FoodWalletWidgets> {
                             children: value.walletSummaryListData.data!.list!
                                 .map((item) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4.0,horizontal: 8.0),                                  child: Material(
+                                padding: const EdgeInsets.symmetric(vertical: 4.0,horizontal: 8.0),
+                                child: Material(
                                 shadowColor: AppColors.lightGreyGreen,
                                 elevation: 3, // Set elevation value as desired
                                 borderRadius: BorderRadius.circular(8),

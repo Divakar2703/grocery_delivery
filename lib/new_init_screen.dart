@@ -6,6 +6,7 @@ import 'package:grocery_delivery_side/constants.dart';
 import 'package:grocery_delivery_side/screens/Orders/orders_list_tab_screen.dart';
 import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/grocery/grocerySummaryScreen.dart';
 import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
+import 'package:grocery_delivery_side/screens/tesitngSocekt.dart';
 
 class NewInitScrren extends StatefulWidget {
   const NewInitScrren({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _MyHomePageState extends State<NewInitScrren> {
   /// Controller to handle bottom nav bar and also handles initial page
   final _controller = NotchBottomBarController(index: 1);
 
-  int maxCount = 3;
+  int maxCount = 4;
 
   @override
   void initState() {
@@ -43,7 +44,8 @@ class _MyHomePageState extends State<NewInitScrren> {
     HomeScreen(),
     // GrocerySummaryScreen(),
 
-    GrocerySummaryHomeScreen()
+    GrocerySummaryHomeScreen(),
+    // TestingSocketIO()
   ];
 
   @override
@@ -114,6 +116,7 @@ class _MyHomePageState extends State<NewInitScrren> {
                   ),
                   itemLabel: 'Page 3',
                 ),
+
               ],
               onTap: (index) {
                 /// perform action on tab change and to update pages you can update pages without pages

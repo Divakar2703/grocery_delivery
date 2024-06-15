@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_segment/flutter_advanced_segment.dart';
+import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/food/foodCodWidget.dart';
+import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/food/foodWalletWidget.dart';
 import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/grocery/walletWidget.dart';
 
 import '../../../constants.dart';
+import '../../../new_init_screen.dart';
 import '../grocery/codWidget.dart';
 import '../grocery/grocerySummaryScreen.dart';
 
@@ -42,19 +45,29 @@ class _FoodSummaryScreenState extends State<FoodSummaryScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar:  AppBar(
-        automaticallyImplyLeading: false,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => NewInitScrren()),
+                  (Route<dynamic> route) => false,
+            );
+          },
+        ),
         title: Text(
           'COD & Wallet Summary',
-          style: TextStyle(color: Colors.white,
-              fontFamily: 'Muli',
-              fontSize: 18,
-              fontWeight: FontWeight.w500
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Muli',
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
           ),
         ),
         backgroundColor: kPrimaryColor,
-
       ),
+
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -131,6 +144,7 @@ class _FoodSummaryScreenState extends State<FoodSummaryScreen> {
                 ),
 
               ),
+              SizedBox(height: 10,),
               Container(
                 height: 38,
                 width: double.maxFinite,
@@ -153,11 +167,11 @@ class _FoodSummaryScreenState extends State<FoodSummaryScreen> {
                 builder: (_, key, __) {
                   switch (key) {
                     case 'wallet':
-                      return WalletWidget();
+                      return FoodWalletWidgets();
                     case 'cod': // Corrected the case label
-                      return CODWidget(); // or replace with the appropriate widget for starred data
+                      return FoodCodWidget(); // or replace with the appropriate widget for starred data
                     default:
-                      return CODWidget();
+                      return FoodCodWidget();
                   }
                 },
               ),

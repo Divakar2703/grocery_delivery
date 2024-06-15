@@ -31,7 +31,7 @@ class CodSummaryResponseModel {
 }
 
 class ListModel {
-  int? id;
+  dynamic id;
   String? dlDate;
   String? orderId;
   String? orderDate;

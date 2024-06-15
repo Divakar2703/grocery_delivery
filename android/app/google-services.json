@@ -1,32 +1,14 @@
 {
   "project_info": {
-    "project_number": "857244758227",
-    "project_id": "grocery-a4d87",
-    "storage_bucket": "grocery-a4d87.appspot.com"
+    "project_number": "1050359172710",
+    "firebase_url": "https://bitsmultiservice-default-rtdb.firebaseio.com",
+    "project_id": "bitsmultiservice",
+    "storage_bucket": "bitsmultiservice.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:857244758227:android:c7bdfceadb141a8fd66426",
-        "android_client_info": {
-          "package_name": "com.bitspan.app_grocery"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:857244758227:android:cc84525ffa683d93d66426",
+        "mobilesdk_app_id": "1:1050359172710:android:1d4027ccdd46dea46467a7",
         "android_client_info": {
           "package_name": "com.bitspan.app_grocery_delivery"
         }
@@ -34,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go"
+          "current_key": "AIzaSyC5IEigZmraXbiSlJ7_3CcCDRAAdT9_AJA"
         }
       ],
       "services": {
@@ -45,7 +27,26 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:857244758227:android:723896d77e393691d66426",
+        "mobilesdk_app_id": "1:1050359172710:android:36f73b6a5734cedc6467a7",
+        "android_client_info": {
+          "package_name": "com.bitspan.easyridedriver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5IEigZmraXbiSlJ7_3CcCDRAAdT9_AJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050359172710:android:725358d8b79d081a6467a7",
         "android_client_info": {
           "package_name": "com.bitspanindia.groceryapp"
         }
@@ -53,26 +54,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:857244758227:android:f2250a1ef803d636d66426",
-        "android_client_info": {
-          "package_name": "com.bitspanindia.grocerydeliveryboy"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBm6Mn-nQ3mv7uY4bZ0ABNGaNLTDUJH_Go"
+          "current_key": "AIzaSyC5IEigZmraXbiSlJ7_3CcCDRAAdT9_AJA"
         }
       ],
       "services": {

@@ -27,19 +27,26 @@ import 'package:overlay_support/overlay_support.dart';
 
 @pragma('vm: entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Initialize Firebase even in background for data access if needed
   await Firebase.initializeApp();
-  print("Handling background Message: ${message.messageId}");
-  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-  if (initialMessage != null) {
-    // Handle initial message here if needed
-  }
+  print("Handling background message: ${message.messageId}");
+
+  // Extract notification data
+  String title = message.notification?.title ?? '';
+  String body = message.notification?.body ?? '';
+  String dataTitle = message.data['title'] ?? '';
+  String dataBody = message.data['body'] ?? '';
+
+  // Create PushNotification object
   PushNotification notification = PushNotification(
-    title: initialMessage?.notification?.title ?? '',
-    body: initialMessage?.notification?.body ?? '',
-    dataTitle: initialMessage?.data['title'] ?? '',
-    dataBody: initialMessage?.data['body'] ?? '',
+    title: title,
+    body: body,
+    dataTitle: dataTitle,
+    dataBody: dataBody,
   );
-  // Further processing of the push notification
+
+  // Handle the notification in the background (e.g., save data)
+  // ... (your custom background notification processing logic)
 }
 
 
@@ -48,11 +55,24 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Request notification permissions
+  await requestNotificationPermission();
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
 
   runApp(const MyApp());
 }
+
+Future<void> requestNotificationPermission() async {
+  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission();
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted notification permission');
+  } else {
+    print('User declined notification permission');
+  }
+}
+
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key});
@@ -77,8 +97,9 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // Handle incoming messages
       print("Received Message: ${message.notification?.body}");
-                showSimpleNotification(Text(message.notification?.title??'',style: TextStyle(color: Colors.black,fontSize: 12)),
-          subtitle: Text(message.notification?.body ??'',style: TextStyle(color: Colors.black,fontSize: 10),),
+      showSimpleNotification(
+          Text(message.notification?.title ?? '', style: TextStyle(color: Colors.black,fontSize: 12)),
+          subtitle: Text(message.notification?.body ?? '',style: TextStyle(color: Colors.black,fontSize: 10),),
           leading: SvgPicture.asset('assets/icons/Bell.svg'),
           background: Colors.yellow,
           duration: Duration(seconds: 10));

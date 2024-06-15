@@ -18,7 +18,6 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-
   late NotificationListViewModel notificationListViewModel;
 
   @override
@@ -37,9 +36,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        // backgroundColor:Color(0xFFF2F8FA),
         elevation: 4.0,
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -69,120 +67,80 @@ class _NotificationScreenState extends State<NotificationScreen> {
           builder: (context, value, _) {
             switch (value.notificationListData.status ?? "") {
               case Status.LOADING:
-                return Expanded(child: Center(child: buildShimmerProductDetails()));
+                return Center(child: buildShimmerProductDetails());
               case Status.ERROR:
-                return Expanded(child: Center(child: emptyAnimationWidget()));
+                return Center(child: emptyAnimationWidget());
               case Status.COMPLETED:
-                return Container(
+                return value.notificationListData.data!.notification!.isEmpty
+                    ? Center(child: Text("No notifications available"))
+                    : Container(
                   padding: const EdgeInsets.all(12),
                   child: SingleChildScrollView(
-                    child:
-                    Column(
+                    child: Column(
                       children: value.notificationListData.data!.notification!.map((item) {
-                        return
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 0.0),
-                            child: Material(
-                              shadowColor: AppColors.white,
-                              elevation: 0, // Set elevation value as desired
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                              child: Container(
-                                padding: const EdgeInsets.fromLTRB(8.0, 12.0, 0.0, 12.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  shape:
-                                  BoxShape.rectangle, // Ensure rectangular shape for the border
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Container(
-                                    //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                    //   decoration: BoxDecoration(
-                                    //     borderRadius: BorderRadius.circular(5),
-                                    //     color: AppColors.white,
-                                    //   ),
-                                    //   width: 60, // Width of the image container
-                                    //   height: 60, // Responsive height
-                                    //   child: Image.network(
-                                    //     "${item.product![0].image}", // Replace with your image path
-                                    //     // Adjust the fit as needed
-                                    //   ),
-                                    // ),
-                                    // const SizedBox(
-                                    //     width: 16), // Add some space between the image and text
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "${item.createdBy} ",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey.shade800),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            "Order ID: ${item.orderId}",
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey.shade700),
-                                          ),
-                                          Text(
-                                            "Date: ${item.createdDate}",
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.primaryColor),
-                                          ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-
-                                        ],
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 0.0),
+                          child: Material(
+                            shadowColor: AppColors.white,
+                            elevation: 0, // Set elevation value as desired
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(8.0, 12.0, 0.0, 12.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.white,
+                                shape: BoxShape.rectangle, // Ensure rectangular shape for the border
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "${item.createdBy} ",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey.shade800),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                        width: 16), // Add some space between the text and status
-                                    // Column(
-                                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    //   children: [
-                                    //     Text(
-                                    //       "\u20B9${item.orderAmount}",
-                                    //       style: const TextStyle(
-                                    //           fontSize: 14,
-                                    //           fontWeight: FontWeight.w600,
-                                    //           color: Colors.blue),
-                                    //     ),
-                                    //
-                                    //
-                                    //   ],
-                                    // ),
-
-                                    const SizedBox(
-                                        width: 8), // Add some space between the status and the edge
-                                  ],
-                                ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        "Order ID: ${item.orderId}",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey.shade700),
+                                      ),
+                                      Text(
+                                        "Date: ${item.createdDate}",
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.primaryColor),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 16), // Add some space between the text and status
+                                ],
                               ),
                             ),
-                          );
-
+                          ),
+                        );
                       }).toList(),
-                    )
+                    ),
                   ),
                 );
             }
             return Container();
           },
         ),
-      )
-
+      ),
     );
-
   }
 }

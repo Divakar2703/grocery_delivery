@@ -21,8 +21,7 @@ class AllWidget extends StatefulWidget {
   State<AllWidget> createState() => _AllWidgetState();
 }
 
-class _AllWidgetState extends State<AllWidget> with
-  WidgetsBindingObserver  {
+class _AllWidgetState extends State<AllWidget> with WidgetsBindingObserver {
   late OrderListViewModel orderListViewModel;
   late OrderListRequestModel data;
 
@@ -49,34 +48,39 @@ class _AllWidgetState extends State<AllWidget> with
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return
-      ChangeNotifierProvider<OrderListViewModel>(
+    return ChangeNotifierProvider<OrderListViewModel>(
       create: (BuildContext context) => orderListViewModel,
       child: Consumer<OrderListViewModel>(
         builder: (context, value, _) {
+          Widget content;
           switch (value.orderqListData.status ?? "") {
             case Status.LOADING:
-              return Expanded(child: Center(child: buildShimmerProductDetails()));
+              content = Center(child: buildShimmerProductDetails());
+              break;
             case Status.ERROR:
-              return Expanded(child: Center(child: emptyAnimationWidget()));
+              content = Center(child: emptyAnimationWidget());
+              break;
             case Status.COMPLETED:
-              return Container(
+              content = Container(
                 padding: const EdgeInsets.all(12),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       // const SelectDateAndSearchDate(),
                       // const SizedBox(height: 10),
-                      OrdersItem(orderqListData: value.orderqListData,type: widget.type,),
+                      OrdersItem(orderqListData: value.orderqListData, type: widget.type),
                     ],
                   ),
                 ),
               );
+              break;
+            default:
+              content = Container();
+              break;
           }
-          return Container();
+          return content;
         },
       ),
     );

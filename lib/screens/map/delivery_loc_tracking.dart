@@ -50,10 +50,11 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
   late StreamSubscription<GyroscopeEvent> _gyroscopeSubscription;
   List<LatLng> polylineCoordinates =
       []; // Declare polylineCoordinates as a member variable
-
-  double _currentRotation = 0.0; // Current device rotation
   double _distance = 0.0;
   double _estimatedTime = 0.0;
+  double rotationAngle = 0.0;
+  double _heading = 0.0;
+  StreamSubscription<MagnetometerEvent>? _magnetometerSubscription;
 
   @override
   void initState() {
@@ -61,27 +62,19 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     print("delivery boy location ====================================================${widget.destiLat},,,,, ${widget.destiLong}");
     searchAddressController = TextEditingController();
     setCustommarkerIcon();
-    _startGyroscopeUpdates();
     _getCurrentLocation();
     _startLocationUpdates();
+    _listenToDeviceOrientation();
   }
 
   @override
   void dispose() {
     _positionStreamSubscription.cancel();
     _gyroscopeSubscription.cancel();
+    _magnetometerSubscription?.cancel();
     super.dispose();
   }
 
-  void _startGyroscopeUpdates() {
-    _gyroscopeSubscription =
-        gyroscopeEventStream().listen((GyroscopeEvent event) {
-      setState(() {
-        _currentRotation = event
-            .z; // You might need to adjust which sensor event to use based on your device's orientation
-      });
-    });
-  }
 
   void setCustommarkerIcon() {
     ImageConfiguration configuration = const ImageConfiguration(size: Size(24, 24));
@@ -129,7 +122,6 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
 
       });
 
-
       // Update Firestore with initial location
       updateFirestoreLocation(position.latitude, position.longitude);
     } catch (e) {
@@ -143,7 +135,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
       position: position,
       infoWindow: InfoWindow(title: markerId),
       icon: locationIcon,
-      rotation: _currentRotation,
+      rotation: _heading,
     );
   }
 
@@ -163,7 +155,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
       _getPolyline(); // Update polyline on location change if navigation started
 
       if (!polylineCoordinates.isEmpty) {
-        rotateMap();
+        // rotateMap();
       }
     });
   }
@@ -195,7 +187,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
           children: [
             GoogleMap(
                 initialCameraPosition: _sourceLocation != null
-                    ? CameraPosition(target: _sourceLocation!, zoom: 17)
+                    ? CameraPosition(target: _sourceLocation!, zoom: 18)
                     : const CameraPosition(
                         target: LatLng(0, 0),
                         zoom: 2,
@@ -308,7 +300,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    'Contact to User',
+                    'Contact Customer',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
@@ -337,36 +329,20 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
   }
 
 
-
-  // void _makePhoneCall() async {
-  //   const phoneNumber = '8306614863'; // Replace with the actual phone number
-  //   final Uri phoneCallUri = Uri(
-  //     scheme: 'tel',
-  //     path: phoneNumber,
-  //   );
-  //   try {
-  //     await launchUrl(phoneCallUri);
-  //   } catch (e) {
-  //     // Handle the exception here
-  //     print('Could not launch $phoneCallUri: $e');
-  //   }
-  // }
-
-
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
     mapController = controller;
     // Rotate the map to align with the polyline
-    rotateMap();
+    // rotateMap();
   }
 
   void rotateMap() {
-    double rotationAngle = calculateBearingAngle();
+    rotationAngle = calculateBearingAngle();
     mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: polylineCoordinates.first,
-          zoom: 17,
+          zoom: 18,
           bearing: rotationAngle,
         ),
       ),
@@ -395,7 +371,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     });
     _getPolyline().then((_) {
       _moveCameraToBounds();
-      rotateMap();
+      // rotateMap();
     });
   }
 
@@ -439,7 +415,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
       });
     }
   }
-
+  // AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y
   Marker _buildMarkerDestination(String markerId, LatLng position) {
     return Marker(
       markerId: MarkerId(markerId),
@@ -471,28 +447,84 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
           polylines.clear();
           updateFirestoreLocation(
               _sourceLocation!.latitude, _sourceLocation!.longitude);
-          rotateMap();
+          // rotateMap();
           polylines.add(Polyline(
               polylineId: const PolylineId('route'),
-              color: Colors.black,
+              color: Colors.blueAccent,
               points: polylineCoordinates,
-              width: 2));
-          _calculateDistanceAndTime();
+              width: 5));
+          _calculateDistanceAndTime(polylineCoordinates);
         });
       }
     }
   }
 
-  void _calculateDistanceAndTime() {
-    _distance = Geolocator.distanceBetween(
-            _sourceLocation!.latitude,
-            _sourceLocation!.longitude,
-            _destinationLocation!.latitude,
-            _destinationLocation!.longitude) /
-        1000; // in km
+  // Function to calculate distance between two points
+  double calculateDistance(LatLng point1, LatLng point2) {
+    return Geolocator.distanceBetween(
+      point1.latitude,
+      point1.longitude,
+      point2.latitude,
+      point2.longitude,
+    );
+  }
 
-    // Assuming average speed of 30 km/hr
-    _estimatedTime = (_distance / 30) * 60; // in minutes
+// Function to calculate total distance along a polyline
+  double calculateDistanceAlongPolyline(List<LatLng> polylinePoints) {
+    double distance = 0.0;
+    for (int i = 0; i < polylinePoints.length - 1; i++) {
+      distance += calculateDistance(polylinePoints[i], polylinePoints[i + 1]);
+    }
+    return distance;
+  }
+
+// Function to calculate reach time in a readable format
+  String calculateReachTime(double durationInMinutes) {
+    int hours = durationInMinutes ~/ 60;
+    double minutes = durationInMinutes % 60;
+    int seconds = ((durationInMinutes - minutes) * 60).toInt();
+
+    if (hours > 0) {
+      return "$hours hours ${minutes.toStringAsFixed(0)} mins";
+    } else if (minutes >= 1) {
+      return "${minutes.toStringAsFixed(0)} mins";
+    } else {
+      return "$seconds sec";
+    }
+  }
+
+// The function to calculate the distance and estimated time
+  void _calculateDistanceAndTime(List<LatLng> polylinePoints) {
+    if (polylinePoints.isEmpty) {
+      print("Polyline points list is empty");
+      return;
+    }
+
+    // Calculate total distance along the polyline
+    double totalDistance = calculateDistanceAlongPolyline(polylinePoints);
+
+    // Convert distance to kilometers
+    double distanceInKm = totalDistance / 1000;
+
+    // Calculate estimated time (assuming average speed of 30 km/hr)
+    double estimatedTimeInMinutes = (distanceInKm / 30) * 60;
+
+    // Use the calculated values as needed
+    String distanceDisplay;
+    if (distanceInKm >= 1) {
+      distanceDisplay = "${distanceInKm.toStringAsFixed(1)} km";
+    } else {
+      distanceDisplay = "${totalDistance.toStringAsFixed(1)} meters";
+    }
+
+    print("Total Distance: $distanceDisplay");
+    print("Estimated Time: ${calculateReachTime(estimatedTimeInMinutes)}");
+
+    // If you need to update the state
+    setState(() {
+      _distance = distanceInKm;
+      _estimatedTime = estimatedTimeInMinutes;
+    });
   }
 
   void updateFirestoreLocation(double latitude, double longitude) {
@@ -505,7 +537,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     FirebaseFirestore.instance.collection('Grocery').doc(orderId).set({
       'geolocation': GeoPoint(latitude, longitude),
       'date': currentDate,
-      'rotation': _currentRotation,
+      'rotation': _heading,
       'destination': GeoPoint(
           _destinationLocation!.latitude, _destinationLocation!.longitude)
     }).then((value) {
@@ -514,4 +546,19 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
       print("Failed to update location: $error");
     });
   }
+
+  void _listenToDeviceOrientation() {
+    _magnetometerSubscription = magnetometerEvents.listen((MagnetometerEvent event) {
+      if (mounted) {
+        setState(() {
+          _heading = _calculateHeading(event.x, event.y);
+        });
+      }
+    });
+  }
+
+  double _calculateHeading(double x, double y) {
+    return (360 - (atan2(x, y) * (180 / pi))) % 360;
+  }
+
 }
