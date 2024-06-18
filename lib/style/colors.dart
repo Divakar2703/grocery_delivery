@@ -10,11 +10,11 @@ class AppColors {
   AppColors._();
 
   static const primaryColor = Colors.green;
-  static const primaryColor2 = Color(0xff53B175);
-  static const statusBarColor =  Color(0xff81c784);
-  static const primaryColorLightColor = Color(0xffbdfad3);
+  static const primaryColor2 = Color(0xFF448AFF);
+  static const statusBarColor =  Color(0xFF82B1FF);
+  static const primaryColorLightColor = Color(0xFF64B5F6);
   static const darkGrey = Color(0xff7C7C7C);
-  static const lightGreen = Color(0xFFA2E0C9);
+  static const lightGreen = Color(0xFF82B1FF);
   static const lightGreenDeliveryStatus = Color(0xFFC8E5C9FF);
   static const lightGreyGreen = Color(0xFFCDECE0);
   static const categoryCardColor = Color(0xFFe5f3f3);

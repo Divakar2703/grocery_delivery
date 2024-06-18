@@ -21,7 +21,7 @@
     </queries>
 
     <application
-        android:label="Easy Partner"
+        android:label="Easy Delivery Boy"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">

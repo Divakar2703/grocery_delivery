@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:grocery_delivery_side/data/models/request/indextPageCountRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/getProfileResponseModel.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
+import 'package:grocery_delivery_side/style/colors.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_profile.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -234,7 +235,7 @@ class _ProfileState extends State<Profile> {
                               decoration: BoxDecoration(
                                   boxShadow: [
                                     const BoxShadow(
-                                      color: Color(0xff81bab4),
+                                      color: AppColors.lightGreen,
                                       spreadRadius: 2,
                                       blurRadius: 03,
                                       offset: Offset(1, 1), // changes position of shadow
@@ -278,10 +279,10 @@ class _ProfileState extends State<Profile> {
                             ),
                             Container(
                               margin: const EdgeInsets.all(8),
-                              width: 120,
+                              width: 150,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                color: const Color(0xff81bab4),
+                                color:  AppColors.primaryColor2,
                               ),
                               child: Row(
                                 children: [
@@ -291,7 +292,7 @@ class _ProfileState extends State<Profile> {
                                       // Replace with your SVG path
                                       height: 18,
                                       width: 16,
-                                      color: Colors.red,
+                                      color: Colors.white,
                                     ),
                                     onPressed: () async {
                                       // Clear shared preferences
@@ -311,7 +312,7 @@ class _ProfileState extends State<Profile> {
                                       fontFamily: "Muli",
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      color: Colors.red,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -350,7 +351,7 @@ class _ProfileContainerState extends State<ProfileContainer> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(boxShadow: [
         const BoxShadow(
-          color: Color(0xff81bab4),
+          color: AppColors.lightGreen,
           spreadRadius: 2,
           blurRadius: 03,
           offset: Offset(1, 1), // changes position of shadow
@@ -385,7 +386,7 @@ class _ProfileContainerState extends State<ProfileContainer> {
                       Icon(
                         CupertinoIcons.arrow_turn_right_up,
                         size: 18,
-                        color: Colors.green,
+                        color: AppColors.primaryColor2,
                       ),
                       SizedBox(
                         width: 10,
@@ -407,7 +408,7 @@ class _ProfileContainerState extends State<ProfileContainer> {
                               fontFamily: 'Muli',
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
-                              color: Colors.green,
+                              color: AppColors.primaryColor2,
                             ),
                           )
                         ],
@@ -659,7 +660,7 @@ class _CardWidget_RState extends State<CardWidget_R> {
           );
         },
         child: Card(
-          shadowColor: const Color(0xff81bab4),
+          shadowColor: AppColors.primaryColor2,
           elevation: 2,
           child: Padding(
             padding: const EdgeInsets.only(

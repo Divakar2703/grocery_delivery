@@ -109,7 +109,7 @@ class _OtpScreenState extends State<OtpScreen> {
           color: Color.fromRGBO(30, 60, 87, 1),
           fontWeight: FontWeight.w600),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color.fromRGBO(8, 155, 155, 1.0)),
+        border: Border.all(color: const Color.fromRGBO(50, 142, 246, 1.0)),
         borderRadius: BorderRadius.circular(20),
       ),
     );

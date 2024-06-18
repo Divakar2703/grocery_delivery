@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grocery_delivery_side/new_init_screen.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
+import 'package:grocery_delivery_side/style/colors.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/constants/app_constants_value.dart';
@@ -23,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Colors.greenAccent.shade100, // Set status bar color here
+      statusBarColor: AppColors.statusBarColor, // Set status bar color here
     ));
     const delay = const Duration(seconds: 3);
     Future.delayed(delay, () => onTimerFinished());

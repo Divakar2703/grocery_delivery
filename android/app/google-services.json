@@ -8,6 +8,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1050359172710:android:a085fd5dddd4afb66467a7",
+        "android_client_info": {
+          "package_name": "com.bitspan.app_grocery_boy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5IEigZmraXbiSlJ7_3CcCDRAAdT9_AJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1050359172710:android:1d4027ccdd46dea46467a7",
         "android_client_info": {
           "package_name": "com.bitspan.app_grocery_delivery"

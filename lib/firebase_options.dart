@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyC5IEigZmraXbiSlJ7_3CcCDRAAdT9_AJA',
-    appId: '1:1050359172710:android:1d4027ccdd46dea46467a7',
+    appId: '1:1050359172710:android:a085fd5dddd4afb66467a7',
     messagingSenderId: '1050359172710',
     projectId: 'bitsmultiservice',
     databaseURL: 'https://bitsmultiservice-default-rtdb.firebaseio.com',
