@@ -67,7 +67,7 @@ class OrderListFoodViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -113,7 +113,8 @@ class OrderListFoodViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
+
       }
     }
   }
@@ -163,7 +164,7 @@ class OrderListFoodViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -213,7 +214,7 @@ class OrderListFoodViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -260,7 +261,7 @@ class OrderListFoodViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -308,7 +309,7 @@ class OrderListFoodViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -356,7 +357,7 @@ class OrderListFoodViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -403,7 +404,7 @@ class OrderListFoodViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }

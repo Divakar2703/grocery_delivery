@@ -68,7 +68,8 @@ class OrderListViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
+
       }
     }
   }
@@ -112,7 +113,7 @@ class OrderListViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -160,7 +161,7 @@ class OrderListViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -209,7 +210,7 @@ class OrderListViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -257,7 +258,7 @@ class OrderListViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -305,7 +306,7 @@ class OrderListViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -353,7 +354,7 @@ class OrderListViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }
@@ -366,6 +367,7 @@ class OrderListViewModel with ChangeNotifier {
     notifyListeners();
   }
   Future<void> fetchDeliverOrderVerifyOtpData(DeliverOrderVerifyOtpRequestModel data, BuildContext context) async {
+
     setDeliverOrderVerifyOtpData(ApiProcessResponse.loading());
     try {
 
@@ -401,7 +403,7 @@ class OrderListViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Catch Error=======$error");
       }
     }
   }

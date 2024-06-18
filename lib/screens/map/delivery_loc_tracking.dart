@@ -195,7 +195,7 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
                 mapType: MapType.normal,
                 markers: markers,
                 polylines: polylines,
-                onTap: _onMapTapped,
+                // onTap: _onMapTapped,
                 onMapCreated: _onMapCreated),
             if (_loading)
               const Center(
@@ -365,15 +365,15 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
     return bearing;
   }
 
-  void _startNavigation() {
-    setState(() {
-      _isNavigationStarted = true;
-    });
-    _getPolyline().then((_) {
-      _moveCameraToBounds();
-      // rotateMap();
-    });
-  }
+  // void _startNavigation() {
+  //   setState(() {
+  //     _isNavigationStarted = true;
+  //   });
+  //   _getPolyline().then((_) {
+  //     _moveCameraToBounds();
+  //     // rotateMap();
+  //   });
+  // }
 
   void _moveCameraToBounds() async {
     if (_sourceLocation != null && _destinationLocation != null) {
@@ -389,6 +389,22 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
         ),
       );
       controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 100));
+    }
+  }
+
+  void _startNavigation() async {
+    if (_sourceLocation == null) {
+      print("Source location is null");
+      return;
+    }
+
+    final GoogleMapController controller = await _controller.future;
+
+    final url = 'google.navigation:q=${_destinationLocation!.latitude},${_destinationLocation!.longitude}';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 
