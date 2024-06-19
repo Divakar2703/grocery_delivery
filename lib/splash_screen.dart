@@ -7,6 +7,7 @@ import 'package:grocery_delivery_side/style/colors.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/constants/app_constants_value.dart';
+import 'constants.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: AppColors.statusBarColor, // Set status bar color here
+      statusBarColor: kPrimaryColor, // Set status bar color here
     ));
     const delay = const Duration(seconds: 3);
     Future.delayed(delay, () => onTimerFinished());
@@ -55,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:Colors.greenAccent.shade100,
+      backgroundColor:kPrimaryColor,
       body: Center(
         child: _isLoading ? lottieLoadingAnimation() : const SizedBox(),
       ),

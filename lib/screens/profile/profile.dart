@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:grocery_delivery_side/constants.dart';
 import 'package:grocery_delivery_side/data/models/request/indextPageCountRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/getProfileResponseModel.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
@@ -56,7 +57,8 @@ class _ProfileState extends State<Profile> {
                   children: [
                     const Text(
                       'Select Profile Image',
-                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 16,
@@ -67,13 +69,16 @@ class _ProfileState extends State<Profile> {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              selectedImagePath = await selectImageFromGallery();
+                              selectedImagePath =
+                                  await selectImageFromGallery();
                               Navigator.pop(context);
                               if (selectedImagePath != '') {
-                                await profileViewModel.uploadProfileImage(selectedImagePath, Constants.userIdForUse);
+                                await profileViewModel.uploadProfileImage(
+                                    selectedImagePath, Constants.userIdForUse);
                                 setState(() {});
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
                                   content: Text("No Image Selected !"),
                                 ));
                               }
@@ -97,10 +102,12 @@ class _ProfileState extends State<Profile> {
                               selectedImagePath = await selectImageFromCamera();
                               Navigator.pop(context);
                               if (selectedImagePath != '') {
-                                await profileViewModel.uploadProfileImage(selectedImagePath, Constants.userIdForUse);
+                                await profileViewModel.uploadProfileImage(
+                                    selectedImagePath, Constants.userIdForUse);
                                 setState(() {});
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
                                   content: Text("No Image Captured !"),
                                 ));
                               }
@@ -150,7 +157,6 @@ class _ProfileState extends State<Profile> {
     return file?.path ?? '';
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,7 +185,9 @@ class _ProfileState extends State<Profile> {
                         width: double.infinity,
                         child: Column(
                           children: [
-                            const SizedBox(height: 80,),
+                            const SizedBox(
+                              height: 80,
+                            ),
                             Transform.translate(
                               offset: const Offset(0, -35),
                               child: GestureDetector(
@@ -195,17 +203,21 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   child: CircleAvatar(
-                                    backgroundImage: selectedImagePath.isNotEmpty
+                                    backgroundImage: selectedImagePath
+                                            .isNotEmpty
                                         ? FileImage(File(selectedImagePath))
-                                        : value.getProfileData.data!.profileImage!.isNotEmpty
-                                        ? NetworkImage(value.getProfileData.data!.profileImage!)
-                                        : AssetImage("assets/images/Profile Image.png") as ImageProvider<Object>,
+                                        : value.getProfileData.data!
+                                                .profileImage!.isNotEmpty
+                                            ? NetworkImage(value.getProfileData
+                                                .data!.profileImage!)
+                                            : AssetImage(
+                                                    "assets/images/Profile Image.png")
+                                                as ImageProvider<Object>,
                                     radius: 50,
                                   ),
                                 ),
                               ),
                             ),
-
                             Text(
                               value.getProfileData.data!.name.toString(),
                               style: TextStyle(
@@ -227,10 +239,12 @@ class _ProfileState extends State<Profile> {
                             const SizedBox(
                               height: 12,
                             ),
-                            ProfileContainer(getProfileData: value.getProfileData!.data,),
+                            ProfileContainer(
+                              getProfileData: value.getProfileData!.data,
+                            ),
                             Container(
-                              margin:
-                              const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                   boxShadow: [
@@ -238,7 +252,8 @@ class _ProfileState extends State<Profile> {
                                       color: AppColors.lightGreen,
                                       spreadRadius: 2,
                                       blurRadius: 03,
-                                      offset: Offset(1, 1), // changes position of shadow
+                                      offset: Offset(
+                                          1, 1), // changes position of shadow
                                     ),
                                   ],
                                   borderRadius: BorderRadius.circular(10),
@@ -259,7 +274,8 @@ class _ProfileState extends State<Profile> {
                                   const SizedBox(width: 30),
                                   Expanded(
                                     child: Text(
-                                      value.getProfileData.data!.address.toString(),
+                                      value.getProfileData.data!.address
+                                          .toString(),
                                       style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.grey.shade700,
@@ -275,47 +291,68 @@ class _ProfileState extends State<Profile> {
                             ),
                             CardWidget_R(
                               title: 'Update Your Profile',
-                              getProfileResponseModel: value.getProfileData!.data,
+                              getProfileResponseModel:
+                                  value.getProfileData!.data,
                             ),
-                            Container(
-                              margin: const EdgeInsets.all(8),
-                              width: 150,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color:  AppColors.primaryColor2,
-                              ),
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    icon: SvgPicture.asset(
-                                      "assets/icons/logout-svgrepo-com-2.svg",
-                                      // Replace with your SVG path
-                                      height: 18,
-                                      width: 16,
-                                      color: Colors.white,
+                            GestureDetector(
+                              onTap: () async {
+                                // Clear shared preferences
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.clear();
+                                // Navigate to the login screen
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginUser()),
+                                  (Route<dynamic> route) => false,
+                                );
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(8),
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: kPrimaryColor,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: SvgPicture.asset(
+                                        "assets/icons/logout-svgrepo-com-2.svg",
+                                        // Replace with your SVG path
+                                        height: 18,
+                                        width: 16,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () async {
+                                        // Clear shared preferences
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        prefs.clear();
+                                        // Navigate to the login screen
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const LoginUser()),
+                                          (Route<dynamic> route) => false,
+                                        );
+                                      },
                                     ),
-                                    onPressed: () async {
-                                      // Clear shared preferences
-                                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      prefs.clear();
-                                      // Navigate to the login screen
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const LoginUser()),
-                                            (Route<dynamic> route) => false,
-                                      );
-                                    },
-                                  ),
-                                  const Text(
-                                    "LogOut",
-                                    style: TextStyle(
-                                      fontFamily: "Muli",
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.white,
+                                    const Text(
+                                      "LogOut",
+                                      style: TextStyle(
+                                        fontFamily: "Muli",
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -332,11 +369,11 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
 }
 
 class ProfileContainer extends StatefulWidget {
   final GetProfileResponseModel? getProfileData;
+
   const ProfileContainer({super.key, required this.getProfileData});
 
   @override
@@ -366,9 +403,8 @@ class _ProfileContainerState extends State<ProfileContainer> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white38,
@@ -377,7 +413,8 @@ class _ProfileContainerState extends State<ProfileContainer> {
                         color: Colors.grey.withOpacity(0.4),
                         spreadRadius: 2,
                         blurRadius: 04,
-                        offset: const Offset(2, 2), // changes position of shadow
+                        offset:
+                            const Offset(2, 2), // changes position of shadow
                       ),
                     ],
                   ),
@@ -591,7 +628,6 @@ class _ProfileContainerState extends State<ProfileContainer> {
                       ),
                       Text(
                         widget.getProfileData!.mobileNo.toString(),
-
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
@@ -603,7 +639,6 @@ class _ProfileContainerState extends State<ProfileContainer> {
                       ),
                       Text(
                         widget.getProfileData!.leaveStartDate.toString(),
-
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
@@ -615,7 +650,6 @@ class _ProfileContainerState extends State<ProfileContainer> {
                       ),
                       Text(
                         widget.getProfileData!.levEndDate.toString(),
-
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey.shade700,
@@ -640,7 +674,8 @@ class CardWidget_R extends StatefulWidget {
 
   const CardWidget_R({
     Key? key,
-    required this.title, required this.getProfileResponseModel,
+    required this.title,
+    required this.getProfileResponseModel,
   }) : super(key: key);
 
   @override
@@ -656,7 +691,10 @@ class _CardWidget_RState extends State<CardWidget_R> {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) =>  EditProfile(getProfileData: widget.getProfileResponseModel,)),
+            MaterialPageRoute(
+                builder: (context) => EditProfile(
+                      getProfileData: widget.getProfileResponseModel,
+                    )),
           );
         },
         child: Card(
@@ -680,7 +718,8 @@ class _CardWidget_RState extends State<CardWidget_R> {
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.arrow_right), // Wrap icon with Icon widget
+                  icon: const Icon(
+                      Icons.arrow_right), // Wrap icon with Icon widget
                 ),
               ],
             ),

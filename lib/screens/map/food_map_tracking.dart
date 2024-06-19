@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
-
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,7 +10,6 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math';
 import '../../constants.dart';
-import 'location_service.dart';
 
 class FoodDeliveryTracking extends StatefulWidget {
   final double sourceLat;
@@ -21,15 +19,15 @@ class FoodDeliveryTracking extends StatefulWidget {
   final String orderId;
   final String userContactNo;
 
-  const FoodDeliveryTracking({
-    Key? key,
-    required this.sourceLat,
-    required this.sourceLong,
-    required this.destiLat,
-    required this.destiLong,
-    required this.orderId,
-    required this.userContactNo,
-  }) : super(key: key);
+  const FoodDeliveryTracking(
+      {Key? key,
+        required this.sourceLat,
+        required this.sourceLong,
+        required this.destiLat,
+        required this.destiLong,
+        required this.orderId,
+        required this.userContactNo})
+      : super(key: key);
 
   @override
   State<FoodDeliveryTracking> createState() => _FoodDeliveryTrackingState();
@@ -47,27 +45,23 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
   late StreamSubscription<Position> _positionStreamSubscription;
   double _lastBearing = 0.0;
   bool _isNavigationStarted = false;
+  BitmapDescriptor locationIcon = BitmapDescriptor.defaultMarker;
   late StreamSubscription<GyroscopeEvent> _gyroscopeSubscription;
   List<LatLng> polylineCoordinates = [];
   double _distance = 0.0;
   double _estimatedTime = 0.0;
   double _heading = 0.0;
   StreamSubscription<MagnetometerEvent>? _magnetometerSubscription;
-  late LocationService _locationService;
 
   @override
   void initState() {
     super.initState();
-    print(
-        "delivery boy location ====================================================${widget.destiLat},,,,, ${widget.destiLong}");
+    print("delivery boy location ====================================================${widget.destiLat},,,,, ${widget.destiLong}");
     searchAddressController = TextEditingController();
+    setCustommarkerIcon();
     _getCurrentLocation();
     _startLocationUpdates();
     _listenToDeviceOrientation();
-
-    // Initialize location service with orderId
-    _locationService = LocationService(widget.orderId);
-    _locationService.start();
   }
 
   @override
@@ -75,11 +69,14 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
     _positionStreamSubscription.cancel();
     _gyroscopeSubscription.cancel();
     _magnetometerSubscription?.cancel();
-
-    // Stop location service
-    _locationService.stop();
-
     super.dispose();
+  }
+  void setCustommarkerIcon() {
+    ImageConfiguration configuration = const ImageConfiguration(size: Size(24, 24));
+    BitmapDescriptor.fromAssetImage(configuration, 'assets/dman.png')
+        .then((icon) {
+      locationIcon = icon;
+    });
   }
 
   void _getCurrentLocation() async {
@@ -108,8 +105,8 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
         if (_sourceLocation != null) {
           markers.removeWhere(
                   (marker) => marker.markerId.value == 'Destination Location');
-          markers.add(_buildMarkerDestination(
-              'Destination Location', _destinationLocation!));
+          markers.add(
+              _buildMarkerDestination('Destination Location', _destinationLocation!));
           markers.add(_buildMarker('Current Location', _sourceLocation!));
           _getPolyline();
         }
@@ -128,7 +125,7 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
       markerId: MarkerId(markerId),
       position: position,
       infoWindow: InfoWindow(title: markerId),
-      icon: BitmapDescriptor.defaultMarker,
+      icon: locationIcon,
       rotation: _heading,
     );
   }
@@ -136,11 +133,8 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
   void _startLocationUpdates() {
     _positionStreamSubscription =
         Geolocator.getPositionStream().listen((Position position) {
-          double bearing = _calculateBearing(
-              _sourceLocation!.latitude,
-              _sourceLocation!.longitude,
-              position.latitude,
-              position.longitude);
+          double bearing = _calculateBearing(_sourceLocation!.latitude,
+              _sourceLocation!.longitude, position.latitude, position.longitude);
           setState(() {
             updateFirestoreLocation(position.latitude, position.longitude);
             _sourceLocation = LatLng(position.latitude, position.longitude);
@@ -158,8 +152,8 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
 
   double _calculateBearing(double startLatitude, double startLongitude,
       double endLatitude, double endLongitude) {
-    double theta = math.atan2(
-        endLongitude - startLongitude, endLatitude - startLatitude);
+    double theta =
+    math.atan2(endLongitude - startLongitude, endLatitude - startLatitude);
     double bearing = (theta * (180 / math.pi) + 360) % 360;
     return bearing;
   }
@@ -332,8 +326,7 @@ class _FoodDeliveryTrackingState extends State<FoodDeliveryTracking> {
     if (_destinationLocation != null) {
       setState(() {
         _destinationLocation = location;
-        markers.add(
-            _buildMarkerDestination('Destination Location', location));
+        markers.add(_buildMarkerDestination('Destination Location', location));
       });
 
       _getPolyline(); // Recalculate the polyline

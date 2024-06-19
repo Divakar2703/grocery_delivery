@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 // const kPrimaryColor = Color(0xff81bab4);
-// const kPrimaryColor = Color(0xff81bab4);
-const kPrimaryColor = Color(0xFF42A5F5);
+const kPrimaryColor = Color(0xff81bab4);
 const kPrimaryLightColor = Color(0xFFF5F5F5);
 const Color primaryColor = Color(0xFFF38D6E);
 const Color bgColor = Color(0xFFFBFBFD);
@@ -11,7 +10,6 @@ const double defaultPadding = 16.0;
 const double defaultBorderRadius = 12.0;
 
 //0xFF72B0F6
-
 // const double defaultPadding = 16.0;
 // const double defaultBorderRadius = 12.0;
 

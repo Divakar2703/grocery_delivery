@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_segment/flutter_advanced_segment.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 import '../../constants.dart';
 import '../../viewmodels/view_model_indext_page_count.dart';
@@ -19,6 +20,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late IndextPageCountViewModel indextPageCountViewModel;
   final _selectedSegment = ValueNotifier('grocery'); // 'grocery' is selected initially
+  AppUpdateInfo? _updateInfo;
+  bool _flexibleUpdateAvailable = false;
 
   Future<bool> _onWillPop() async {
     return await showDialog(
@@ -45,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     indextPageCountViewModel = IndextPageCountViewModel();
     askLocationPermission();
+    checkForUpdate();
   }
 
   void askLocationPermission() async {
@@ -53,6 +57,33 @@ class _HomeScreenState extends State<HomeScreen> {
       // Permission granted
     } else {
       // Handle denied permission
+    }
+  }
+
+  Future<void> checkForUpdate() async {
+    try {
+      _updateInfo = await InAppUpdate.checkForUpdate();
+      if (_updateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
+        if (_updateInfo?.immediateUpdateAllowed == true) {
+          InAppUpdate.performImmediateUpdate().catchError((e) {
+            // Handle error
+          });
+        } else if (_updateInfo?.flexibleUpdateAllowed == true) {
+          setState(() {
+            _flexibleUpdateAvailable = true;
+          });
+        }
+      }
+    } catch (e) {
+      // Handle error
+    }
+  }
+
+  Future<void> startFlexibleUpdate() async {
+    if (_flexibleUpdateAvailable) {
+      InAppUpdate.startFlexibleUpdate().catchError((e) {
+        // Handle error
+      });
     }
   }
 
@@ -90,8 +121,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     SizedBox(height: 20),
                     HomeHeader(),
-                    // SizedBox(height: 8),
-                    // SearchField(),
                   ],
                 ),
               ),
@@ -104,9 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       height: 38,
                       width: double.maxFinite,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: AdvancedSegment(
                         segments: {
                           'grocery': 'Grocery',
@@ -130,51 +157,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                       },
                     ),
-                    // DefaultTabController(
-                    //   length: 2,
-                    //   child: Column(
-                    //     children: <Widget>[
-                    //       const SizedBox(height: 20),
-                    //       ButtonsTabBar(
-                    //         height: 35,
-                    //         buttonMargin: const EdgeInsets.symmetric(horizontal: 16),
-                    //         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                    //         backgroundColor: kPrimaryColor,
-                    //         unselectedBackgroundColor: Colors.grey[300],
-                    //         unselectedLabelStyle: const TextStyle(
-                    //           color: Colors.black,
-                    //           fontFamily: "Muli",
-                    //         ),
-                    //         labelStyle: const TextStyle(
-                    //           color: Colors.white,
-                    //           fontWeight: FontWeight.bold,
-                    //           fontFamily: "Muli",
-                    //         ),
-                    //         tabs: const [
-                    //           Tab(
-                    //             text: "      Grocery      ",
-                    //           ),
-                    //           Tab(
-                    //             text: "       Food          ",
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       Expanded(
-                    //         child: TabBarView(
-                    //           children: <Widget>[
-                    //             GroceryHome(),
-                    //             FoodHome(),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
+                    if (_flexibleUpdateAvailable)
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                          onPressed: startFlexibleUpdate,
+                          child: const Text('Update App'),
+                        ),
+                      ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 100.0,)
+            const SizedBox(height: 100.0),
           ],
         ),
       ),

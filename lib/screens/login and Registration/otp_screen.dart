@@ -109,13 +109,13 @@ class _OtpScreenState extends State<OtpScreen> {
           color: Color.fromRGBO(30, 60, 87, 1),
           fontWeight: FontWeight.w600),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color.fromRGBO(50, 142, 246, 1.0)),
+        border: Border.all(color: const Color.fromRGBO(8, 155, 155, 1.0)),
         borderRadius: BorderRadius.circular(20),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: const Color.fromRGBO(114, 178, 238, 1)),
+      border: Border.all(color: const Color.fromRGBO(114, 238, 186, 1.0)),
       borderRadius: BorderRadius.circular(8),
     );
 
