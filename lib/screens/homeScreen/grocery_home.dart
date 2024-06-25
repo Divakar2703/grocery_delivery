@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:grocery_delivery_side/data/models/request/updateLocationResModel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../data/constants/app_constants_value.dart';

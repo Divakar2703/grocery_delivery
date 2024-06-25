@@ -660,7 +660,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              deliverOrder(payId);
+                              // deliverOrder(payId);
                               // Dismiss the progress dialog when the action is completed
                               showDeliverOtpVerifyBottomSheet(context);
                             },

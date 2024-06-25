@@ -66,12 +66,29 @@ class _FoodOrderItemState extends State<FoodOrderItem> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+
                             Text(
                               "${item.orderID}",
                               style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey.shade800),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Ordered By: ${item.customerName}",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.purple),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Address: ${item.customerAddress}",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.yellow.shade800),
                             ),
                             const SizedBox(height: 4),
                             Text(

@@ -11,6 +11,7 @@ class GetProfileResponseModel {
   String? pinCode;
   String? latitude;
   String? longitude;
+  String? onlineStauts;
   String? profileImage;
   String? leaveStartDate;
   String? levEndDate;
@@ -31,6 +32,7 @@ class GetProfileResponseModel {
         this.pinCode,
         this.latitude,
         this.longitude,
+        this.onlineStauts,
         this.profileImage,
         this.leaveStartDate,
         this.levEndDate,
@@ -51,6 +53,7 @@ class GetProfileResponseModel {
     pinCode = json['pin_code'];
     latitude = json['latitude'];
     longitude = json['longitude'];
+    onlineStauts = json['online_stauts'];
     profileImage = json['profile_image'];
     leaveStartDate = json['leave_start_date'];
     levEndDate = json['lev_end_date'];
@@ -73,6 +76,7 @@ class GetProfileResponseModel {
     data['pin_code'] = this.pinCode;
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
+    data['online_stauts'] = this.onlineStauts;
     data['profile_image'] = this.profileImage;
     data['leave_start_date'] = this.leaveStartDate;
     data['lev_end_date'] = this.levEndDate;

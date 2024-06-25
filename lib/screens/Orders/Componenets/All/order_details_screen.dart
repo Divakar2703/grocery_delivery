@@ -115,6 +115,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   //when delivery boy will return the order to the seller and verify otp , otp will get on the seller side and fill on delivery boy side
   deliveryOrderVerifyOtp(String payId, String otp) {
+
     final data = DeliverOrderVerifyOtpRequestModel(
       userId: Constants.userIdForUse,
       otp: otp,
@@ -657,7 +658,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           child: GestureDetector(
                             onTap: () {
 
-                              deliverOrder(payId);
+                              // deliverOrder(payId);
                                 // Dismiss the progress dialog when the action is completed
                                showDeliverOtpVerifyBottomSheet(context);
 

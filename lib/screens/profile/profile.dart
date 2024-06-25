@@ -210,7 +210,7 @@ class _ProfileState extends State<Profile> {
                                                 .profileImage!.isNotEmpty
                                             ? NetworkImage(value.getProfileData
                                                 .data!.profileImage!)
-                                            : AssetImage(
+                                            : const AssetImage(
                                                     "assets/images/Profile Image.png")
                                                 as ImageProvider<Object>,
                                     radius: 50,
@@ -220,7 +220,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             Text(
                               value.getProfileData.data!.name.toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: "Muli",
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
@@ -229,7 +229,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             Text(
                               value.getProfileData.data!.emailId.toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: 'Muli',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
@@ -418,19 +418,19 @@ class _ProfileContainerState extends State<ProfileContainer> {
                       ),
                     ],
                   ),
-                  child: const Row(
+                  child:  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         CupertinoIcons.arrow_turn_right_up,
                         size: 18,
                         color: AppColors.primaryColor2,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Column(
                         children: [
-                          Text(
+                          const Text(
                             'Status',
                             style: TextStyle(
                               fontFamily: 'Muli',
@@ -440,14 +440,17 @@ class _ProfileContainerState extends State<ProfileContainer> {
                             ),
                           ),
                           Text(
-                            'Active',
+                            widget.getProfileData!.onlineStauts.toString(),
                             style: TextStyle(
                               fontFamily: 'Muli',
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
-                              color: AppColors.primaryColor2,
+                              color: widget.getProfileData!.onlineStauts.toString() == 'online'
+                                  ? Colors.green
+                                  : Colors.red,
                             ),
                           )
+
                         ],
                       ),
                     ],

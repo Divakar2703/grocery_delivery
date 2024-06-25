@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_delivery_side/data/models/request/updateLocationResModel.dart';
-import 'package:grocery_delivery_side/screens/login%20and%20Registration/otp_screen.dart';
 import '../data/models/request/indextPageCountRequestModel.dart';
 import '../data/models/request/updateLocationReqModel.dart';
 import '../data/models/response/indextPageCountResponseModel.dart';
+import '../data/models/response/onlineOfflineResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
 import '../repositories/repo_indext_page_count.dart';
 
@@ -54,7 +54,7 @@ class IndextPageCountViewModel with ChangeNotifier {
       setIndextPageCountData(ApiProcessResponse.completed(indextPageCountResponseModel));
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Kuchh to gadabad h Dya  $error");
       }
     }
   }
@@ -97,9 +97,50 @@ class IndextPageCountViewModel with ChangeNotifier {
 
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Kuchh to gadabad h Dya $error");
       }
     }
   }
 
+  ApiProcessResponse<OnlineOfflineResponseModel> onlineOfflineData = ApiProcessResponse.loading();
+
+  setOnlineOfflineData(ApiProcessResponse<OnlineOfflineResponseModel> response) {
+    onlineOfflineData = response;
+    notifyListeners();
+  }
+
+  Future<void> fetchOnlineOfflineData(IndextPageCountRequestModel data, BuildContext context) async {
+    setOnlineOfflineData(ApiProcessResponse.loading());
+    try {
+      final OnlineOfflineResponseModel offlineResponseModel = await _indextPageCountRepo.fetchOnlineOfflineData(data);
+
+
+      if (offlineResponseModel.status == 'error') {
+        setOnlineOfflineData(
+            ApiProcessResponse.error(offlineResponseModel.message));
+      } else {
+        setOnlineOfflineData(ApiProcessResponse.completed(offlineResponseModel));
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${offlineResponseModel.status}");
+      }
+    } catch (error) {
+      if (error is SocketException) {
+        setOnlineOfflineData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setOnlineOfflineData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setOnlineOfflineData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setOnlineOfflineData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya $error");
+      }
+    }
+  }
 }

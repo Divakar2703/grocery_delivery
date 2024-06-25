@@ -74,6 +74,22 @@ class _PCardState extends State<OrdersItem> {
                         ),
                         const SizedBox(height: 4),
                         Text(
+                          "Ordered By: ${item.customerName}",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.pinkAccent),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Address: ${item.customerAddress}",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.yellow.shade800),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
                           "Mode: ${item.paymentMode}",
                           style: TextStyle(
                               fontSize: 12,

@@ -8,6 +8,7 @@ class AppUrl{
   static var verifyOtpUrl="${baseUrl}Verifyotp";
   static var registerUrl="${baseUrl}register";
   static var updatedLocationUrl="${baseUrl}Update_location";
+  static var onlineOfflineUrl="${baseUrl}delivery_online_offline";
   static var indextPageCountUrl="${baseUrl}indextpage-count";
   static var orderListUrl= "${baseUrl}orderlist";
   static var profileUpdateUrl= "${baseUrl}profiledata_update";

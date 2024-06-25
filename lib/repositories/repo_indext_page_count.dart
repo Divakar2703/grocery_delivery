@@ -1,4 +1,5 @@
 import 'package:grocery_delivery_side/data/models/request/updateLocationResModel.dart';
+import 'package:grocery_delivery_side/data/models/response/onlineOfflineResponseModel.dart';
 
 import '../data/constants/app_url.dart';
 import '../data/models/response/indextPageCountResponseModel.dart';
@@ -29,6 +30,20 @@ class IndextPageCountRepository {
       print('==============2222222================${UpdateLocationResModel
           .fromJson(response)}');
       return response = UpdateLocationResModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+
+  Future<OnlineOfflineResponseModel> fetchOnlineOfflineData(dynamic data) async {
+    try {
+      dynamic response = await _apiServices.getPostApiResponse(
+          AppUrl.onlineOfflineUrl, data);
+      print('================11111111==============$response');
+      print('==============2222222================${OnlineOfflineResponseModel
+          .fromJson(response)}');
+      return response = OnlineOfflineResponseModel.fromJson(response);
     } catch (e) {
       throw e;
     }
