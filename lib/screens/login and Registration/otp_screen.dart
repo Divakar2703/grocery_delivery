@@ -3,6 +3,7 @@ import 'package:grocery_delivery_side/data/models/request/verifyOtpRequestModel.
 import 'package:grocery_delivery_side/viewmodels/view_model_verify_otp.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:android_sms_retriever/android_sms_retriever.dart';
 import '../../constants.dart';
 import '../../data/constants/app_constants_value.dart';
 import '../../data/models/request/PhoneLoginRequestModel.dart';
@@ -16,8 +17,7 @@ class OtpScreen extends StatefulWidget {
   final String? mobile;
   final String? fromScreen;
 
-  OtpScreen(
-      {super.key, required this.userId, required this.mobile, this.fromScreen});
+  OtpScreen({super.key, required this.userId, required this.mobile, this.fromScreen});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -26,60 +26,53 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   TextEditingController pinputController = TextEditingController();
   VerifyOtpViewModel verifyOtpViewModel = VerifyOtpViewModel();
-
   PhoneLoginViewModel phoneLoginViewModel = PhoneLoginViewModel();
   bool _isLoading = false;
 
   @override
   void initState() {
+    super.initState();
     verifyOtpViewModel.userId = widget.userId.toString();
     verifyOtpViewModel.mobile = widget.mobile.toString();
     verifyOtpViewModel.fromScreen = widget.fromScreen.toString();
-    super.initState();
+    startListeningForSms();
   }
 
   void verifyOtp() {
     String enteredOtp = pinputController.text.toString();
     if (enteredOtp.length == 6) {
-      if(enteredOtp == "123654" && widget.mobile == "9012399001"){
+      if (enteredOtp == "123654" && widget.mobile == "9012399001") {
         navigateToHome(context);
-      }else{
-        final verifyOtpReqModel =
-        VerifyOtpRequestModel(userId: widget.userId, otp: enteredOtp);
+      } else {
+        final verifyOtpReqModel = VerifyOtpRequestModel(userId: widget.userId, otp: enteredOtp);
         verifyOtpViewModel.fetchVerifyOtpData(
           verifyOtpReqModel,
           context,
         );
       }
-
     }
   }
 
-  void navigateToHome(BuildContext context) async{
-    final SharedPreferences sp =  await SharedPreferences.getInstance();
+  void navigateToHome(BuildContext context) async {
+    final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setString(Constants.userId, "Delivery100");
     sp.setString(Constants.mobile, widget.mobile!);
     sp.setBool(Constants.isLogin, true);
     Constants.userIdForUse = sp.getString(Constants.userId) ?? '';
-    if(widget.fromScreen=='register'){
+    if (widget.fromScreen == 'register') {
       AppToast.showToast("Registered successfully! Please login after admin verification.");
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (BuildContext context) => LoginUser()),
-            (Route<dynamic> route) => false, // This predicate will always return false, which clears the entire stack
+            (Route<dynamic> route) => false,
       );
-
-
-    }else{
-
+    } else {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (BuildContext context) => NewInitScrren()),
-            (Route<dynamic> route) => false, // This predicate will always return false, which clears the entire stack
+            (Route<dynamic> route) => false,
       );
-
     }
-
   }
 
   Future<void> getUserId() async {
@@ -99,15 +92,45 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
+  Future<void> startListeningForSms() async {
+    try {
+      final appSignatureId = await AndroidSmsRetriever.getAppSignature();
+      await AndroidSmsRetriever.listenForSms().then((String? message) {
+        if (message != null) {
+          String otpCode = extractOtpFromMessage(message);
+          setState(() {
+            pinputController.text = otpCode;
+            verifyOtp(); // Automatically verify OTP after filling
+          });
+        }
+      });
+    } catch (e) {
+      print("Failed to start SMS retriever: $e");
+    }
+  }
+
+  String extractOtpFromMessage(String message) {
+    final otpRegex = RegExp(r'\d{6}');
+    final match = otpRegex.firstMatch(message);
+    return match?.group(0) ?? '';
+  }
+
+  @override
+  void dispose() {
+    AndroidSmsRetriever.stopSmsListener();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
       textStyle: const TextStyle(
-          fontSize: 20,
-          color: Color.fromRGBO(30, 60, 87, 1),
-          fontWeight: FontWeight.w600),
+        fontSize: 20,
+        color: Color.fromRGBO(30, 60, 87, 1),
+        fontWeight: FontWeight.w600,
+      ),
       decoration: BoxDecoration(
         border: Border.all(color: const Color.fromRGBO(8, 155, 155, 1.0)),
         borderRadius: BorderRadius.circular(20),
@@ -129,177 +152,129 @@ class _OtpScreenState extends State<OtpScreen> {
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: SafeArea(
-            child: Container(
-          decoration: const BoxDecoration(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Image(image: AssetImage("assets/images/v1.png")),
-
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Verify OTP',
-                      style: TextStyle(
-                        color: Color(0xFF262626),
-                        fontSize: 26,
-                        fontFamily: 'Muli',
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'We have send Otp to your Mobile No. ${widget.mobile}',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
-                    child: Text(
-                      'Enter OTP',
-                      style: TextStyle(
-                          color: Colors.black87,
+          child: Container(
+            decoration: const BoxDecoration(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Image(image: AssetImage("assets/images/v1.png")),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Verify OTP',
+                        style: TextStyle(
+                          color: Color(0xFF262626),
+                          fontSize: 26,
                           fontFamily: 'Muli',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16),
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'We have sent an OTP to your Mobile No. ${widget.mobile}',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                      child: Text(
+                        'Enter OTP',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontFamily: 'Muli',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Pinput(
+                    defaultPinTheme: defaultPinTheme,
+                    controller: pinputController,
+                    length: 6,
+                    validator: (s) {
+                      return s == '2222' ? null : '';
+                    },
+                    pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                    showCursor: true,
+                    onCompleted: (pin) => print(pin),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                  child: InkWell(
+                    onTap: () {
+                      verifyOtp();
+                    },
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: kPrimaryColor,
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "VERIFY",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Muli',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Pinput(
-                  defaultPinTheme: defaultPinTheme,
-                  controller: pinputController,
-                  length: 6,
-                  validator: (s) {
-                    return s == '2222' ? null : '';
-                  },
-                  pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                  showCursor: true,
-                  onCompleted: (pin) => print(pin),
                 ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                child: InkWell(
-                  onTap: () {
-                    verifyOtp();
+                const SizedBox(height: 8),
+                Text(
+                  "Didn't receive the verification OTP?",
+                  style: TextStyle(
+                    color: Colors.grey.shade700,
+                    fontFamily: 'Muli',
+                  ),
+                ),
+                _isLoading
+                    ? CircularProgressIndicator()
+                    : TextButton(
+                  onPressed: () {
+                    getUserId();
                   },
-                  child: Container(
-                    height: 50,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
+                  child: const Text(
+                    "Resend OTP",
+                    style: TextStyle(
                       color: kPrimaryColor,
-                      borderRadius: BorderRadius.circular(32),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "VERIFY",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontFamily: 'Muli',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Muli',
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                "Did'nt receve the verification OTP?",
-                style: TextStyle(
-                  color: Colors.grey.shade700,
-                  fontFamily: 'Muli',
-                ),
-              ),
-              _isLoading
-                  ? CircularProgressIndicator() // Don't show Resend OTP button while loading
-                  : TextButton(
-                      onPressed: () {
-                        getUserId();
-                      },
-                      child: const Text(
-                        "Resend OTP",
-                        style: TextStyle(
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Muli',
-                        ),
-                      ),
-                    ),
-              // Padding(
-              //   padding: const EdgeInsets.all(8),
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: [
-              //       Row(
-              //         children: [
-              //           Text(
-              //             "Did'nt receve the verification OTP?",
-              //             style: TextStyle(
-              //               color: Colors.grey.shade700,
-              //               fontFamily: 'Muli',
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //       Row(
-              //         children: [
-              //           TextButton(
-              //             onPressed: () {
-              //               // Navigator.of(context).push(
-              //               //   MaterialPageRoute(
-              //               //     builder: (context) => HomeScreen(),
-              //               //   ),
-              //               //    );
-              //             },
-              //             child: const Text(
-              //               "\nResend OTP",
-              //               style: TextStyle(
-              //                 color: kPrimaryColor,
-              //                 fontWeight: FontWeight.bold,
-              //                 fontFamily: 'Muli',
-              //               ),
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // )
-            ],
+              ],
+            ),
           ),
-        )),
+        ),
       ),
     );
   }

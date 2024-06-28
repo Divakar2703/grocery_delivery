@@ -7,6 +7,7 @@ import 'package:grocery_delivery_side/screens/login%20and%20Registration/ragista
 import 'package:grocery_delivery_side/viewmodels/view_model_phone_login.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:android_sms_retriever/android_sms_retriever.dart';
 import '../../constants.dart';
 import '../../data/constants/app_constants_value.dart';
 import '../../data/models/push_notification_model.dart';
@@ -55,9 +56,9 @@ class _LoginUserState extends State<LoginUser> {
 
         if(_notificationInfo != null){
           showSimpleNotification(Text(_notificationInfo.title),
-          subtitle: Text(_notificationInfo.body??''),
-          background: kPrimaryColor,
-          duration: Duration(seconds: 2));
+              subtitle: Text(_notificationInfo.body??''),
+              background: kPrimaryColor,
+              duration: Duration(seconds: 2));
         }
       });
     }else{
@@ -100,6 +101,17 @@ class _LoginUserState extends State<LoginUser> {
     }
   }
 
+  Future<void> requestPhoneNumber() async {
+    try {
+      String? phoneNumber = await AndroidSmsRetriever.requestPhoneNumber();
+      if (phoneNumber != null) {
+        mobileController.text = phoneNumber.replaceAll('+91', '').trim();
+      }
+    } catch (e) {
+      print("Failed to retrieve phone number: $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -107,6 +119,7 @@ class _LoginUserState extends State<LoginUser> {
     askLocationPermission();
     registerNotification();
     checkForInitialMessage();
+    requestPhoneNumber();
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // Extract notification data
@@ -126,8 +139,8 @@ class _LoginUserState extends State<LoginUser> {
         _totalNotifications++;
       });
     });
-
   }
+
   void checkValidation() {
     if (mobileController.text.toString().length >= 10) {
       if(mobileController.text.toString()== "9012399001"){
@@ -147,8 +160,8 @@ class _LoginUserState extends State<LoginUser> {
     });
 
     final phoneLoginRequestmodel = PhoneLoginRequestModel(
-      phone: mobileController.text.toString(),
-      fTokan: Constants.fToken
+        phone: mobileController.text.toString(),
+        fTokan: Constants.fToken
     );
 
     await phoneLoginViewModel.fetchPhoneLoginData(
@@ -240,28 +253,28 @@ class _LoginUserState extends State<LoginUser> {
                 _isLoading
                     ? const CircularProgressIndicator() // Show progress indicator when loading
                     : InkWell(
-                        onTap: () {
-                          checkValidation();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              border: Border.all(color: Colors.white38),
-                              borderRadius: BorderRadius.circular(12)),
-                          height: 50,
-                          child: const Center(
-                            child: Text(
-                              'Get OTP',
-                              style: TextStyle(
-                                fontFamily: 'Muli',
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                  onTap: () {
+                    checkValidation();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: kPrimaryColor,
+                        border: Border.all(color: Colors.white38),
+                        borderRadius: BorderRadius.circular(12)),
+                    height: 50,
+                    child: const Center(
+                      child: Text(
+                        'Get OTP',
+                        style: TextStyle(
+                          fontFamily: 'Muli',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
                         ),
                       ),
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),

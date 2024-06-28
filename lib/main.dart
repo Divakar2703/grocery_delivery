@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import SystemChrome
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/splash_screen.dart';
@@ -44,9 +45,30 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     dataTitle: dataTitle,
     dataBody: dataBody,
   );
+  
 
   // Handle the notification in the background (e.g., save data)
   // ... (your custom background notification processing logic)
+
+  const NotificationDetails platformChannelSpecifics = NotificationDetails(
+    android: AndroidNotificationDetails(
+      'your_channel_id',
+      'Your Channel Name',
+      channelDescription: 'Your channel description',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+      sound: RawResourceAndroidNotificationSound('assets/sound.noti.mp3'), // Replace with your sound file name (in raw folder)
+    ),
+  );
+
+  // **New:** Schedule notification for foreground display (if app is not running)
+  await FlutterLocalNotificationsPlugin().show(
+    0, // Notification ID (unique)
+    title,
+    body,
+    platformChannelSpecifics,
+  );
 }
 
 
