@@ -58,7 +58,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
-      sound: RawResourceAndroidNotificationSound('assets/sound.noti.mp3'), // Replace with your sound file name (in raw folder)
+      sound: RawResourceAndroidNotificationSound('sound_noti'), // Replace with your sound file name (in raw folder)
     ),
   );
 
