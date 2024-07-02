@@ -24,6 +24,7 @@ class AppUrl{
   static var codSummaryListUrl= "${baseUrl}delivery_cod_summary";
   static var walletSummaryListUrl= "${baseUrl}delivery_wallet_summary";
   static var notificationListUrl= "${baseUrl}deliveryboy_notification";
+  static var clearAllNotificationUrl= "${baseUrl}clearall_notification";
 
   //food Api
   static var orderListFoodUrl= "${baseUrl}foodorderlist";

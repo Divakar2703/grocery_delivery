@@ -32,15 +32,21 @@ class NotificationResModel {
 }
 
 class Notification {
+  String? id;
   String? createdBy;
   String? orderId;
   String? actionPage;
   String? createdDate;
 
   Notification(
-      {this.createdBy, this.orderId, this.actionPage, this.createdDate});
+      {this.id,
+        this.createdBy,
+        this.orderId,
+        this.actionPage,
+        this.createdDate});
 
   Notification.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     createdBy = json['created_by'];
     orderId = json['order_id'];
     actionPage = json['action_page'];
@@ -49,6 +55,7 @@ class Notification {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['created_by'] = this.createdBy;
     data['order_id'] = this.orderId;
     data['action_page'] = this.actionPage;

@@ -10,7 +10,7 @@ class FoodSummaryRepository{
   //cod summary list
   Future<CodSummaryResponseModel> fetchFoodCodSummaryListData(dynamic data) async {
     try {
-      dynamic response = await _apiServices.getPostApiResponse(
+      dynamic response = await _apiServices.getPostApiFoodResponse(
           AppUrl.codFoodSummaryListUrl, data);
       print('================ food CodSummaryResponseModel 11111111==============$response');
       print('================url data======${AppUrl.codFoodSummaryListUrl}========$data');
@@ -25,7 +25,7 @@ class FoodSummaryRepository{
   //wallet summary list
   Future<WalletSummaryResponseModel> fetchFoodWalletSummaryListData(dynamic data) async {
     try {
-      dynamic response = await _apiServices.getPostApiResponse(
+      dynamic response = await _apiServices.getPostApiFoodResponse(
           AppUrl.walletFoodSummaryListUrl, data);
       print('================food WalletSummaryResponseModel 11111111==============$response');
       print('================url data======${AppUrl.walletFoodSummaryListUrl}========$data');

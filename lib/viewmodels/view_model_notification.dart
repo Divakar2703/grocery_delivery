@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:grocery_delivery_side/data/models/request/clearAllNotificationRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/indextPageCountRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/response/notificationResModel.dart';
 import 'package:grocery_delivery_side/repositories/repo_notification.dart';
 
+import '../data/models/response/acceptOrderResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
 
 class NotificationListViewModel with ChangeNotifier{
@@ -45,6 +47,49 @@ class NotificationListViewModel with ChangeNotifier{
         setNotificationListData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
       } else {
         setNotificationListData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+      if (kDebugMode) {
+        print("Kuchh to gadabad h Dya");
+      }
+    }
+  }
+
+
+  ApiProcessResponse<AcceptOrderResponseModel> clearAllNotificationData = ApiProcessResponse.loading();
+  setClearAllNotificationData(ApiProcessResponse<AcceptOrderResponseModel> response) {
+    clearAllNotificationData = response;
+    notifyListeners();
+  }
+
+
+  Future<void> fetchClearAllNotificationData(ClearAllNotificationRequestModel data, BuildContext context) async {
+    setClearAllNotificationData(ApiProcessResponse.loading());
+    try {
+
+      final AcceptOrderResponseModel acceptOrderResponseModel = await _notificationRepo.fetchClearAllNotificationData(data);
+
+      if (acceptOrderResponseModel.status == 'error') {
+        setClearAllNotificationData(
+            ApiProcessResponse.error(acceptOrderResponseModel.message));
+      } else {
+        setClearAllNotificationData(ApiProcessResponse.completed(acceptOrderResponseModel));
+
+      }
+
+      if (kDebugMode) {
+        print("Data aa ha hai${acceptOrderResponseModel.status}");
+      }
+
+    } catch (error) {
+      if (error is SocketException) {
+        setClearAllNotificationData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setClearAllNotificationData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setClearAllNotificationData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setClearAllNotificationData(ApiProcessResponse.error('An unexpected error occurred: $error'));
       }
 
       if (kDebugMode) {

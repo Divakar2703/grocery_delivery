@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:grocery_delivery_side/style/colors.dart';
 import '../../../constants.dart';
 import '../../../data/constants/app_constants_value.dart';
@@ -24,14 +23,14 @@ class HomeHeader extends StatefulWidget {
 }
 
 class _HomeHeaderState extends State<HomeHeader> {
-  IndextPageCountViewModel indextPageCountViewModel = IndextPageCountViewModel();
+  IndextPageCountViewModel indexPageCountViewModel = IndextPageCountViewModel();
 
   void getOnlineOfflineData() {
     final indexCountRequestmodel = IndextPageCountRequestModel(
       userId: Constants.userIdForUse,
     );
 
-    indextPageCountViewModel.fetchOnlineOfflineData(
+    indexPageCountViewModel.fetchOnlineOfflineData(
       indexCountRequestmodel,
       context,
     );
@@ -48,7 +47,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Profile()),
+                  MaterialPageRoute(builder: (context) => const Profile()),
                 );
               },
               child: CircleAvatar(
@@ -118,7 +117,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                   fontSize: 16,
                 ),
               ),
-              Expanded(child: const SizedBox(width: 32)),
+              const Expanded(child: SizedBox(width: 32)),
               // Text(
               //   '${widget.isOnline}',
               //   style: TextStyle(

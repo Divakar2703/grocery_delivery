@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_segment/flutter_advanced_segment.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_profile.dart';
@@ -68,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
         _isOnline = (onlineStatus == 'online');
       });
     } catch (e) {
-      print('Error fetching profile data: $e');
+      if (kDebugMode) {
+        print('Error fetching profile data: $e');
+      }
     }
   }
 
@@ -204,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.maxFinite,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: AdvancedSegment(
-                        segments: {
+                        segments: const {
                           'grocery': 'Grocery',
                           'food': 'Food',
                         },
