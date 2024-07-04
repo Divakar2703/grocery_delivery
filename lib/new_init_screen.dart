@@ -6,7 +6,6 @@ import 'package:grocery_delivery_side/constants.dart';
 import 'package:grocery_delivery_side/screens/Orders/orders_list_tab_screen.dart';
 import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/grocery/grocerySummaryScreen.dart';
 import 'package:grocery_delivery_side/screens/homeScreen/home_screens.dart';
-import 'package:grocery_delivery_side/screens/tesitngSocekt.dart';
 
 class NewInitScrren extends StatefulWidget {
   const NewInitScrren({Key? key}) : super(key: key);
