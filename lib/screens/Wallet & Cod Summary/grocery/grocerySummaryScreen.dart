@@ -40,18 +40,8 @@ class _GrocerySummaryHomeScreenState extends State<GrocerySummaryHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => NewInitScrren()),
-                  (Route<dynamic> route) => false,
-            );
-          },
-        ),
-        title: Text(
-          'COD & Wallet Summary',
+        title: const Text(
+          'Gorocery COD & Wallet Summary',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Muli',
@@ -60,79 +50,81 @@ class _GrocerySummaryHomeScreenState extends State<GrocerySummaryHomeScreen> {
           ),
         ),
         backgroundColor: kPrimaryColor,
+        automaticallyImplyLeading: false,
+
       ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Material(
-                        borderRadius: BorderRadius.circular(12),
-                        elevation: 3,
-                        color: kPrimaryColor,
-                        child: InkWell(
-                          onTap: () {
-                            // Add functionality for Grocery button
-                          },
-                          child: const SizedBox(
-                            height: 40,
-                            child: Center(
-                              child: Text(
-                                'Grocery',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Material(
-                        borderRadius: BorderRadius.circular(12),
-                        elevation: 3,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) => const FoodSummaryScreen(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  const begin = Offset(1.0, 0.0);
-                                  const end = Offset.zero;
-                                  const curve = Curves.ease;
-
-                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                          child: const SizedBox(
-                            height: 40,
-                            child: Center(
-                              child: Text(
-                                'Food',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10,),
+              // SizedBox(height: 10,),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              //   child: Row(
+              //     children: [
+              //       Expanded(
+              //         child: Material(
+              //           borderRadius: BorderRadius.circular(12),
+              //           elevation: 3,
+              //           color: kPrimaryColor,
+              //           child: InkWell(
+              //             onTap: () {
+              //               // Add functionality for Grocery button
+              //             },
+              //             child: const SizedBox(
+              //               height: 40,
+              //               child: Center(
+              //                 child: Text(
+              //                   'Grocery',
+              //                   style: TextStyle(color: Colors.white),
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //       const SizedBox(width: 16),
+              //       Expanded(
+              //         child: Material(
+              //           borderRadius: BorderRadius.circular(12),
+              //           elevation: 3,
+              //           child: InkWell(
+              //             onTap: () {
+              //               Navigator.pushReplacement(
+              //                 context,
+              //                 PageRouteBuilder(
+              //                   pageBuilder: (context, animation, secondaryAnimation) => const FoodSummaryScreen(),
+              //                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              //                     const begin = Offset(1.0, 0.0);
+              //                     const end = Offset.zero;
+              //                     const curve = Curves.ease;
+              //
+              //                     var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              //
+              //                     return SlideTransition(
+              //                       position: animation.drive(tween),
+              //                       child: child,
+              //                     );
+              //                   },
+              //                 ),
+              //               );
+              //             },
+              //             child: const SizedBox(
+              //               height: 40,
+              //               child: Center(
+              //                 child: Text(
+              //                   'Food',
+              //                   style: TextStyle(color: Colors.black),
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              const SizedBox(height: 10,),
               Container(
                 height: 38,
                 width: double.maxFinite,
@@ -142,7 +134,7 @@ class _GrocerySummaryHomeScreenState extends State<GrocerySummaryHomeScreen> {
                     'cod': 'COD Summary',
                     'wallet': 'Wallet Summary',
                   },
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   controller: _selectedSegment,
                   backgroundColor: kPrimaryColor,
                 ),
@@ -152,11 +144,11 @@ class _GrocerySummaryHomeScreenState extends State<GrocerySummaryHomeScreen> {
                 builder: (_, key, __) {
                   switch (key) {
                     case 'wallet':
-                      return WalletWidget();
+                      return const WalletWidget();
                     case 'cod':
-                      return CODWidget();
+                      return const CODWidget();
                     default:
-                      return CODWidget();
+                      return const CODWidget();
                   }
                 },
               ),

@@ -22,3 +22,14 @@ Widget loadingAnimationWidget() {
     ),
   );
 }
+
+Widget noFoodAnimationWidget() {
+  return Center(
+    child: Lottie.asset(
+      'assets/animations/food_no_data.json', // Replace with your animation file path
+      width: double.infinity,
+      height: 200,
+      fit: BoxFit.cover,
+    ),
+  );
+}

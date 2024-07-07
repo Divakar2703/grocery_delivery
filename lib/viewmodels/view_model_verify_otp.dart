@@ -5,6 +5,7 @@ import 'package:grocery_delivery_side/data/models/request/verifyOtpRequestModel.
 import 'package:grocery_delivery_side/data/models/response/verifyOtpResponseModel.dart';
 import 'package:grocery_delivery_side/new_init_screen.dart';
 import 'package:grocery_delivery_side/repositories/repo_verify_otp.dart';
+import 'package:grocery_delivery_side/screens/dashboard/Dashboard.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,7 +46,7 @@ class VerifyOtpViewModel with ChangeNotifier {
 
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (BuildContext context) => NewInitScrren()),
+        MaterialPageRoute(builder: (BuildContext context) => Dashboard()),
             (Route<dynamic> route) => false, // This predicate will always return false, which clears the entire stack
       );
 

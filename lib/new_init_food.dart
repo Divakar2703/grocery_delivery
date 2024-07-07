@@ -1,0 +1,131 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:grocery_delivery_side/constants.dart';
+import 'package:grocery_delivery_side/screens/Orders/food_orders/food_order_list_tab_screen.dart';
+import 'package:grocery_delivery_side/screens/Orders/orders_list_tab_screen.dart';
+import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/food/foodSummaryScreen.dart';
+import 'package:grocery_delivery_side/screens/Wallet%20&%20Cod%20Summary/grocery/grocerySummaryScreen.dart';
+import 'package:grocery_delivery_side/screens/homeScreen/home_screen_food.dart';
+import 'package:grocery_delivery_side/screens/homeScreen/home_screens_grocery.dart';
+
+class NewInitScrrenFood extends StatefulWidget {
+  const NewInitScrrenFood({Key? key}) : super(key: key);
+
+  @override
+  State<NewInitScrrenFood> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<NewInitScrrenFood> {
+  /// Controller to handle PageView and also handles initial page
+  final _pageController = PageController(initialPage: 1);
+
+  /// Controller to handle bottom nav bar and also handles initial page
+  final _controller = NotchBottomBarController(index: 1);
+
+  int maxCount = 4;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: kPrimaryColorFood, // Set status bar color here
+    ));
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  /// widget list
+  final List<Widget> bottomBarPages = [
+    OrderScreenNewFood(),
+    HomeScreenFood(),
+
+    FoodSummaryScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: List.generate(
+            bottomBarPages.length, (index) => bottomBarPages[index]),
+      ),
+      extendBody: true,
+      bottomNavigationBar: (bottomBarPages.length <= maxCount)
+          ? AnimatedNotchBottomBar(
+        /// Provide NotchBottomBarController
+        notchBottomBarController: _controller,
+        color: Colors.white,
+        showLabel: false,
+        shadowElevation: 5,
+        kBottomRadius: 28.0,
+        // notchShader: const SweepGradient(
+        //   startAngle: 0,
+        //   endAngle: pi / 2,
+        //   colors: [Colors.red, Colors.green, Colors.orange],
+        //   tileMode: TileMode.mirror,
+        // ).createShader(Rect.fromCircle(center: Offset.zero, radius: 8.0)),
+        notchColor: kPrimaryColorFood,
+
+        /// restart app if you change removeMargins
+        removeMargins: false,
+        bottomBarWidth: 500,
+        durationInMilliSeconds: 300,
+        bottomBarItems: [
+          BottomBarItem(
+            inActiveItem: SvgPicture.asset(
+              "assets/icons/order-1-svgrepo-com.svg",
+              color: kPrimaryColorFood,
+            ),
+            activeItem: SvgPicture.asset(
+              "assets/icons/order-1-svgrepo-com.svg",
+              color: Colors.white,
+            ),
+            itemLabel: 'Page 3',
+          ),
+
+          ///svg example
+          BottomBarItem(
+            inActiveItem: SvgPicture.asset(
+              "assets/icons/icon_home.svg",
+              color: kPrimaryColorFood,
+            ),
+            activeItem: SvgPicture.asset(
+              "assets/icons/icon_home.svg",
+              color: Colors.white,
+            ),
+            itemLabel: 'Page 3',
+          ),
+
+          ///svg example
+          BottomBarItem(
+            inActiveItem: SvgPicture.asset(
+              "assets/icons/payment-methods-svgrepo-com.svg",
+              color: kPrimaryColorFood,
+            ),
+            activeItem: SvgPicture.asset(
+              "assets/icons/payment-methods-svgrepo-com.svg",
+              color: Colors.white,
+            ),
+            itemLabel: 'Page 3',
+          ),
+
+        ],
+        onTap: (index) {
+          /// perform action on tab change and to update pages you can update pages without pages
+          // log('current selected index $index');
+          _pageController.jumpToPage(index);
+        },
+        kIconSize: 24.0,
+      )
+          : null,
+    );
+  }
+}

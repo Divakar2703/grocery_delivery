@@ -50,7 +50,7 @@ class NotificationListViewModel with ChangeNotifier{
       }
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Kuchh to gadabad h Dev ======$error");
       }
     }
   }
@@ -93,7 +93,7 @@ class NotificationListViewModel with ChangeNotifier{
       }
 
       if (kDebugMode) {
-        print("Kuchh to gadabad h Dya");
+        print("Kuchh to gadabad h Dev ======$error");
       }
     }
   }

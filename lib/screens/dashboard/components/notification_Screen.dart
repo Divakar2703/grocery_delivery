@@ -42,12 +42,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
       status: '1',
     );
 
-   await notificationListViewModel.fetchClearAllNotificationData(
-      indexCountRequestmodel,
-      context,
-    );
+    await notificationListViewModel
+        .fetchClearAllNotificationData(indexCountRequestmodel, context)
+        .then((response) {
+      if (notificationListViewModel.clearAllNotificationData.data!.status == "success") {
+        getAllNotifications();
+      }
+    });
 
-   getAllNotifications();
   }
 
   void showClearAllDialog() {
@@ -189,18 +191,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(
-                                      width: 16),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.amber,
-                                      size: 20,
-                                    ),
-                                    onPressed: () {
-                                      showClearAllDialog();
-                                    },
-                                  ),// Add some space between the text and status
+                                  // const SizedBox(
+                                  //     width: 16),
+                                  // IconButton(
+                                  //   icon: const Icon(
+                                  //     Icons.delete,
+                                  //     color: Colors.amber,
+                                  //     size: 20,
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     showClearAllDialog();
+                                  //   },
+                                  // ),// Add some space between the text and status
                                 ],
 
                               ),

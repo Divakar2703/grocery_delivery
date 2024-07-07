@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grocery_delivery_side/new_init_screen.dart';
+import 'package:grocery_delivery_side/screens/dashboard/Dashboard.dart';
 import 'package:grocery_delivery_side/screens/login%20and%20Registration/login_page.dart';
 import 'package:grocery_delivery_side/style/colors.dart';
 import 'package:lottie/lottie.dart';
@@ -22,7 +23,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: kPrimaryColor, // Set status bar color here
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if(_isLogin){
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const NewInitScrren(),
+          builder: (context) => const Dashboard(),
         ),
       );
     }else{

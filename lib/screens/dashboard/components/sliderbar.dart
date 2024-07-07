@@ -1,8 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
-
 class SliderBar extends StatelessWidget {
   const SliderBar({Key? key}) : super(key: key);
 
@@ -15,7 +13,7 @@ class SliderBar extends StatelessWidget {
       padding: EdgeInsets.all(8.0), // Adjust padding as needed
       child: SizedBox(
         width: double.infinity,
-        height: 158,
+        height: 188,
         child: CarouselSlider(
           options: CarouselOptions(
             initialPage: 0, // Start from the first card
@@ -25,9 +23,10 @@ class SliderBar extends StatelessWidget {
             autoPlayInterval: const Duration(seconds: 3),
           ),
           items: [
-            Constants.card1,
-            Constants.card2,
-            Constants.card3,
+            'assets/images/card4.jpg',
+            'assets/images/card7.jpeg',
+            'assets/images/card5.jpg',
+
           ].map((item) {
             return Builder(
               builder: (BuildContext context) {
@@ -37,7 +36,7 @@ class SliderBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16.0), // Match the container's border radius
                     child: Image.asset(
                       item,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                     ),
                   ),
                 );

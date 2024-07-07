@@ -40,7 +40,9 @@ class _FoodOrderListScreenState extends State<FoodOrderListScreen> {
             case Status.LOADING:
               return Center(child: buildShimmerProductDetails());
             case Status.ERROR:
-              return Center(child: emptyAnimationWidget());
+              return Container(
+                color: Colors.white,
+                  child: Center(child: noFoodAnimationWidget()));
             case Status.COMPLETED:
               return Container(
                 padding: const EdgeInsets.all(12),

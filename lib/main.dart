@@ -14,12 +14,10 @@ import 'package:grocery_delivery_side/viewmodels/view_model_register.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_send_otp.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_summary.dart';
 import 'package:provider/provider.dart';
-
 import 'constants.dart';
 import 'data/constants/app_constants_value.dart';
 import 'data/models/push_notification_model.dart';
 import 'firebase_options.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

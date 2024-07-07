@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
+import '../../Orders/food_orders/food_order_list_tab_screen.dart';
+import '../../Orders/orders_list_tab_screen.dart';
+import '../../Wallet & Cod Summary/food/foodSummaryScreen.dart';
+import '../../Wallet & Cod Summary/grocery/grocerySummaryScreen.dart';
 
 class Categories extends StatefulWidget {
   const Categories({Key? key,}) : super(key: key);
@@ -24,100 +28,121 @@ class _CategoriesState extends State<Categories> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Column(
-                children: [
-                  CircleAvatar(
-                    radius: 37,
-                    backgroundColor: Color(0xfff4f5f7),
-                    child: SvgPicture.asset(Constants.apple),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Rona",
-                    style: TextStyle(
-                      fontSize: 15, // Adjust font size as needed
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87
+              const SizedBox(width: 6,),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OrderScreenNew()),
+                  );
+                },
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 34,
+                      backgroundColor: kPrimaryLightColor,
+                      child: SvgPicture.asset('assets/vectors/apple.svg'),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 10,),
-              Column(
-                children: [
-                  CircleAvatar(
-                    radius: 37,
-                    backgroundColor: Color(0xfff4f5f7),
-                    child: SvgPicture.asset(Constants.broccoli),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Vegetables",
-                    style: TextStyle(
-                        fontSize: 15, // Adjust font size as needed
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Grocery\norders",
+                      style: TextStyle(
+                        fontSize: 12, // Adjust font size as needed
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              SizedBox(width: 10,),
-              Column(
-                children: [
-                  CircleAvatar(
-                    radius: 37,
-                    backgroundColor: Color(0xfff4f5f7),
-                    child: SvgPicture.asset(Constants.cheese),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Cheeses",
-                    style: TextStyle(
-                        fontSize: 15, // Adjust font size as needed
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87
+              const SizedBox(width: 14,),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OrderScreenNewFood()),
+                  );
+                },
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 34,
+                      backgroundColor: kPrimaryLightColor,
+                      child: SvgPicture.asset('assets/vectors/broccoli.svg'),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 10),
-              Column(
-                children: [
-                  CircleAvatar(
-                    radius: 37,
-                    backgroundColor: Color(0xfff4f5f7),
-                    child: SvgPicture.asset(Constants.meat),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Meat",
-                    style: TextStyle(
-                        fontSize: 15, // Adjust font size as needed
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Food\norders",
+                      style: TextStyle(
+                          fontSize: 12, // Adjust font size as needed
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              SizedBox(width: 10,),
-              Column(
-                children: [
-                  CircleAvatar(
-                    radius: 37,
-                    backgroundColor: Color(0xfff4f5f7),
-                    child: SvgPicture.asset(Constants.apple),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Rona",
-                    style: TextStyle(
-                        fontSize: 15, // Adjust font size as needed
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87
+              const SizedBox(width: 14,),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GrocerySummaryHomeScreen()),
+                  );
+                },
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 34,
+                      backgroundColor: kPrimaryLightColor,
+                      child: SvgPicture.asset('assets/vectors/cheese.svg'),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Gorcery\nsummary",
+                      style: TextStyle(
+                          fontSize: 12, // Adjust font size as needed
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(width: 14),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FoodSummaryScreen()),
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 34,
+                      backgroundColor: kPrimaryLightColor,
+                      child: SvgPicture.asset('assets/vectors/meat.svg'),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Food\nsummary",
+                      style: TextStyle(
+                          fontSize: 12, // Adjust font size as needed
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12,),
+
             ],
           ),
         ),
