@@ -40,6 +40,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final indexCountRequestmodel = ClearAllNotificationRequestModel(
       userId: Constants.userIdForUse,
       status: '1',
+      service: 'food'
     );
 
     await notificationListViewModel
