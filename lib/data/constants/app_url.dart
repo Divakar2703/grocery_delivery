@@ -1,6 +1,6 @@
 class AppUrl{
-  static var baseUrl ="https://deliveryboy.56testing.club/" ;
-  // static var baseUrl ="https://delivery.gotejaga.com/" ;
+  // static var baseUrl ="https://deliveryboy.56testing.club/" ;
+  static var baseUrl ="https://delivery.gotejaga.com/" ;
 
   //Grocery Api
   static var phoneNumberUrl ="${baseUrl}Phone-login";
