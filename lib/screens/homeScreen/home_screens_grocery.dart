@@ -23,30 +23,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late IndextPageCountViewModel indextPageCountViewModel;
   late ProfileViewModel profileViewModel;
-  final _selectedSegment = ValueNotifier('grocery'); // 'grocery' is selected initially
+  // final _selectedSegment = ValueNotifier('grocery'); // 'grocery' is selected initially
   AppUpdateInfo? _updateInfo;
   bool _flexibleUpdateAvailable = false;
   bool _isOnline = false;
 
-  Future<bool> _onWillPop() async {
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Exit'),
-        content: const Text('Are you sure you want to exit the app?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
-          ),
-        ],
-      ),
-    ) ?? false;
-  }
+
 
   @override
   void initState() {
@@ -158,92 +140,91 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        body: Column(
-          children: [
-            Material(
-              elevation: 4,
-              borderRadius: const BorderRadius.only(
-                bottomRight: Radius.circular(24),
-                bottomLeft: Radius.circular(24),
-              ),
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 32,16, 24),
-                decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  borderRadius: const BorderRadius.only(
-                    bottomRight: Radius.circular(24),
-                    bottomLeft: Radius.circular(24),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 2,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    HomeHeader(
-                      isOnline: _isOnline,
-                      onStatusChanged: _toggleOnlineStatus,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 38,
-                      width: double.maxFinite,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: AdvancedSegment(
-                        segments: const {
-                          'grocery': 'Grocery',
-                          'food': 'Food',
-                        },
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        controller: _selectedSegment,
-                        backgroundColor: kPrimaryColor,
+    return Scaffold(
+      body: Column(
+        children: [
+          // Material(
+          //   elevation: 4,
+          //   borderRadius: const BorderRadius.only(
+          //     bottomRight: Radius.circular(24),
+          //     bottomLeft: Radius.circular(24),
+          //   ),
+          //   child: Container(
+          //     padding: const EdgeInsets.fromLTRB(16, 32,16, 24),
+          //     decoration: BoxDecoration(
+          //       color: kPrimaryColor,
+          //       borderRadius: const BorderRadius.only(
+          //         bottomRight: Radius.circular(24),
+          //         bottomLeft: Radius.circular(24),
+          //       ),
+          //       boxShadow: [
+          //         BoxShadow(
+          //           color: Colors.grey.withOpacity(0.2),
+          //           spreadRadius: 2,
+          //           blurRadius: 7,
+          //           offset: const Offset(0, 3),
+          //         ),
+          //       ],
+          //     ),
+          //     child: Column(
+          //       children: [
+          //         const SizedBox(height: 20),
+          //         HomeHeader(
+          //           isOnline: _isOnline,
+          //           onStatusChanged: _toggleOnlineStatus,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(height: 15),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Container(
+                  //   height: 38,
+                  //   width: double.maxFinite,
+                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //   child: AdvancedSegment(
+                  //     segments: const {
+                  //       'grocery': 'Grocery',
+                  //       'food': 'Food',
+                  //     },
+                  //     borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  //     controller: _selectedSegment,
+                  //     backgroundColor: kPrimaryColor,
+                  //   ),
+                  // ),
+                  const SizedBox(height: 50.0),
+                  GroceryHome(),
+                  // ValueListenableBuilder<String>(
+                  //   valueListenable: _selectedSegment,
+                  //   builder: (_, key, __) {
+                  //     switch (key) {
+                  //       case 'grocery':
+                  //         return const GroceryHome();
+                  //       case 'food':
+                  //         return const FoodHome();
+                  //       default:
+                  //         return const GroceryHome();
+                  //     }
+                  //   },
+                  // ),
+                  if (_flexibleUpdateAvailable)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                        onPressed: startFlexibleUpdate,
+                        child: const Text('Update App'),
                       ),
                     ),
-                    ValueListenableBuilder<String>(
-                      valueListenable: _selectedSegment,
-                      builder: (_, key, __) {
-                        switch (key) {
-                          case 'grocery':
-                            return const GroceryHome();
-                          case 'food':
-                            return const FoodHome();
-                          default:
-                            return const GroceryHome();
-                        }
-                      },
-                    ),
-                    if (_flexibleUpdateAvailable)
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ElevatedButton(
-                          onPressed: startFlexibleUpdate,
-                          child: const Text('Update App'),
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               ),
             ),
-            const SizedBox(height: 100.0),
-          ],
-        ),
+          ),
+          const SizedBox(height: 100.0),
+        ],
       ),
     );
   }
