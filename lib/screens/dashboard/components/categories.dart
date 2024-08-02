@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:grocery_delivery_side/screens/razorpay_payment/razorpayQrCodeScreen.dart';
+import 'package:grocery_delivery_side/screens/razorpay_payment/razorpay_barcode_popup.dart';
 import '../../../constants.dart';
 import '../../Orders/food_orders/food_order_list_tab_screen.dart';
-import '../../Orders/orders_list_tab_screen.dart';
 import '../../Wallet & Cod Summary/food/foodSummaryScreen.dart';
 import '../../Wallet & Cod Summary/grocery/grocerySummaryScreen.dart';
 
@@ -34,7 +34,7 @@ class _CategoriesState extends State<Categories> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => OrderScreenNew()),
+                        builder: (context) => const GetCustomerIdScreen()),
                   );
                 },
                 child: Column(
@@ -62,7 +62,7 @@ class _CategoriesState extends State<Categories> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => OrderScreenNewFood()),
+                        builder: (context) => const OrderScreenNewFood()),
                   );
                 },
                 child: Column(
@@ -118,7 +118,7 @@ class _CategoriesState extends State<Categories> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => FoodSummaryScreen()),
+                        builder: (context) => const FoodSummaryScreen()),
                   );
                 },
                 child: Column(
@@ -142,6 +142,34 @@ class _CategoriesState extends State<Categories> {
                 ),
               ),
               const SizedBox(width: 12,),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RazorPayQRCodeScreen()),
+                  );
+                },
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 34,
+                      backgroundColor: kPrimaryLightColor,
+                      child: SvgPicture.asset('assets/vectors/broccoli.svg'),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Razor\npay",
+                      style: TextStyle(
+                          fontSize: 12, // Adjust font size as needed
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 14,),
 
             ],
           ),

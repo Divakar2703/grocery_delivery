@@ -8,8 +8,8 @@ import '../../constants.dart';
 import '../../data/constants/app_constants_value.dart';
 import '../../data/models/request/PhoneLoginRequestModel.dart';
 import '../../helper/toast.dart';
-import '../../new_init_screen.dart';
 import '../../viewmodels/view_model_phone_login.dart';
+import '../dashboard/Dashboard.dart';
 import 'login_page.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -63,13 +63,13 @@ class _OtpScreenState extends State<OtpScreen> {
       AppToast.showToast("Registered successfully! Please login after admin verification.");
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (BuildContext context) => LoginUser()),
+        MaterialPageRoute(builder: (BuildContext context) => const LoginUser()),
             (Route<dynamic> route) => false,
       );
     } else {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (BuildContext context) => NewInitScrren()),
+        MaterialPageRoute(builder: (BuildContext context) => const Dashboard()),
             (Route<dynamic> route) => false,
       );
     }
@@ -177,7 +177,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 const SizedBox(height: 20),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -257,7 +257,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                 ),
                 _isLoading
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : TextButton(
                   onPressed: () {
                     getUserId();

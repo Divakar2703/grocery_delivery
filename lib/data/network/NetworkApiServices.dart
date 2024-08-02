@@ -11,7 +11,7 @@ class NetworkApiServices extends BaseApiServices {
     dynamic responseJson;
     try {
       final response =
-      await http.get(Uri.parse(url)).timeout(Duration(seconds: 90));
+      await http.get(Uri.parse(url)).timeout(const Duration(seconds: 90));
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
@@ -33,7 +33,7 @@ class NetworkApiServices extends BaseApiServices {
             "Authorization": "Basic " +
                 base64Encode(utf8.encode("grossry123:grossry123"))
           },
-          body: body).timeout(Duration(seconds: 90));
+          body: body).timeout(const Duration(seconds: 90));
 
       responseJson = returnResponse(response);
       print('Netservice2================$responseJson');
@@ -80,7 +80,33 @@ class NetworkApiServices extends BaseApiServices {
             "Authorization": "Basic " +
                 base64Encode(utf8.encode("food123:food123"))
           },
-          body: body).timeout(Duration(seconds: 90));
+          body: body).timeout(const Duration(seconds: 90));
+
+      responseJson = returnResponse(response);
+      print('Netservice2================$responseJson');
+
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+
+    }
+    return responseJson;
+  }
+
+  @override
+  Future getPostApiRazorPayResponse(String url, data) async {
+    dynamic responseJson;
+    var body = json.encode(data);
+    print('Netservice================$body');
+
+    try {
+      print('Netservice try================$body');
+
+      Response response = await post(Uri.parse(url),
+          headers: {
+            "Authorization": "Basic " +
+                base64Encode(utf8.encode("rzp_test_KyOM9fii555ipc:bunmWbUXdGyLG0q2ahsOlnJ2"))
+          },
+          body: body).timeout(const Duration(seconds: 90));
 
       responseJson = returnResponse(response);
       print('Netservice2================$responseJson');
