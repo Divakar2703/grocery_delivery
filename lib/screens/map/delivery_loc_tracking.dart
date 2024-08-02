@@ -443,36 +443,36 @@ class _DeliveryLocTrackingState extends State<DeliveryLocTracking> {
 
   Future<void> _getPolyline() async {
     _destinationLocation = LatLng(widget.destiLat, widget.destiLong);
-    if (_sourceLocation != null && _destinationLocation != null) {
-      PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
-        'AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y',
-        PointLatLng(_sourceLocation!.latitude, _sourceLocation!.longitude),
-        PointLatLng(
-            _destinationLocation!.latitude, _destinationLocation!.longitude),
-      );
-
-      if (result.points.isNotEmpty) {
-        List<PointLatLng> decodedPoints = result.points;
-
-        // Convert List<PointLatLng> to List<LatLng>
-        polylineCoordinates = decodedPoints
-            .map((point) => LatLng(point.latitude, point.longitude))
-            .toList();
-
-        setState(() {
-          polylines.clear();
-          updateFirestoreLocation(
-              _sourceLocation!.latitude, _sourceLocation!.longitude);
-          // rotateMap();
-          polylines.add(Polyline(
-              polylineId: const PolylineId('route'),
-              color: Colors.blueAccent,
-              points: polylineCoordinates,
-              width: 5));
-          _calculateDistanceAndTime(polylineCoordinates);
-        });
-      }
-    }
+    // if (_sourceLocation != null && _destinationLocation != null) {
+    //   PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
+    //     'AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y',
+    //     PointLatLng(_sourceLocation!.latitude, _sourceLocation!.longitude),
+    //     PointLatLng(
+    //         _destinationLocation!.latitude, _destinationLocation!.longitude),
+    //   );
+    //
+    //   if (result.points.isNotEmpty) {
+    //     List<PointLatLng> decodedPoints = result.points;
+    //
+    //     // Convert List<PointLatLng> to List<LatLng>
+    //     polylineCoordinates = decodedPoints
+    //         .map((point) => LatLng(point.latitude, point.longitude))
+    //         .toList();
+    //
+    //     setState(() {
+    //       polylines.clear();
+    //       updateFirestoreLocation(
+    //           _sourceLocation!.latitude, _sourceLocation!.longitude);
+    //       // rotateMap();
+    //       polylines.add(Polyline(
+    //           polylineId: const PolylineId('route'),
+    //           color: Colors.blueAccent,
+    //           points: polylineCoordinates,
+    //           width: 5));
+    //       _calculateDistanceAndTime(polylineCoordinates);
+    //     });
+    //   }
+    // }
   }
 
   // Function to calculate distance between two points

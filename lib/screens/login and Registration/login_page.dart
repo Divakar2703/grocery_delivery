@@ -58,7 +58,7 @@ class _LoginUserState extends State<LoginUser> {
           showSimpleNotification(Text(_notificationInfo.title),
               subtitle: Text(_notificationInfo.body??''),
               background: kPrimaryColor,
-              duration: Duration(seconds: 2));
+              duration: const Duration(seconds: 2));
         }
       });
     }else{
@@ -226,11 +226,11 @@ class _LoginUserState extends State<LoginUser> {
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.transparent), // Add this line to remove border color
+                        borderSide: const BorderSide(color: Colors.transparent), // Add this line to remove border color
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.transparent), // Add this line to remove border color
+                        borderSide: const BorderSide(color: Colors.transparent), // Add this line to remove border color
                       ),
                       prefixText: "+91 | ",
                       prefixIcon: const Icon(Icons.person),
