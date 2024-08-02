@@ -11,7 +11,7 @@ import '../../helper/empty_animation.dart';
 import '../../viewmodels/view_model_indext_page_count.dart';
 import '../Orders/Componenets/All/simmer_order_list.dart';
 import 'components/payments_card.dart';
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+// import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart' as perm;
 
@@ -84,14 +84,14 @@ class _FoodHomeState extends State<FoodHome> {
   }
 
   Future<void> scheduleLocationUpdates() async {
-    await AndroidAlarmManager.initialize();
-    await AndroidAlarmManager.periodic(
-      const Duration(minutes: 15),
-      0, // unique ID for the task
-      backgroundTask,
-      exact: true,
-      wakeup: true,
-    );
+    // await AndroidAlarmManager.initialize();
+    // await AndroidAlarmManager.periodic(
+    //   const Duration(minutes: 15),
+    //   0, // unique ID for the task
+    //   backgroundTask,
+    //   exact: true,
+    //   wakeup: true,
+    // );
   }
 
   static Future<void> backgroundTask() async {
