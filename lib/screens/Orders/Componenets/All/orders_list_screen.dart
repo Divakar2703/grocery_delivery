@@ -50,7 +50,8 @@ class _AllWidgetState extends State<AllWidget> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<OrderListViewModel>(
+    return
+      ChangeNotifierProvider<OrderListViewModel>(
       create: (BuildContext context) => orderListViewModel,
       child: Consumer<OrderListViewModel>(
         builder: (context, value, _) {
