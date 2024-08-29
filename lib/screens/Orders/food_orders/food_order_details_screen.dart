@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:grocery_delivery_side/phonepeGateway/PhonePeGatewayWebview.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_order_list_food.dart';
 import '../../../constants.dart';
 import '../../../data/constants/app_constants_value.dart';
@@ -9,6 +10,7 @@ import '../../../data/models/request/deliverOrderVerifyOtpRequestModel.dart';
 import '../../../data/models/request/rejectOrderRequestModel.dart';
 import '../../../data/models/request/returnOrderVerifyOtpRequestModel.dart';
 import '../../../data/models/response/OrderListResponseModel.dart';
+import '../../../helper/toast.dart';
 import '../../../style/colors.dart';
 import '../../map/food_map_tracking.dart';
 import '../Componenets/All/deliver_verify_Otp.dart';
@@ -53,6 +55,29 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
     } on FormatException {
       // Handle the case where parsing fails (e.g., show an error message)
       print("Error: Invalid latitude or longitude format");
+    }
+  }
+
+  void initiatePayment() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PhonePeGatewayWebView(
+          orderId: orderId,
+          txnAmount: 100,
+        ),
+      ),
+    );
+
+    print("payResult>> $result");
+
+    if (result != null) {
+      // Handle the result here
+      if (result['success']) {
+        AppToast.showToast("Payment Successful! Transaction ID: ${result['transactionId']}");
+      } else {
+        AppToast.showToast("Payment Failed: ${result['message']}");
+      }
     }
   }
 
@@ -663,8 +688,16 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                               // deliverOrder(payId);
                               // Dismiss the progress dialog when the action is completed
                               // showDeliverOtpVerifyBottomSheet(context);
-                              deliveryOrderVerifyOtp(payId, "");
+                              // deliveryOrderVerifyOtp(payId, "");
                               // goBack(context);
+
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //       builder: (context) => PhonePeGatewayWebView(orderId: orderId, txnAmount: 1)),
+                              // );
+
+                              initiatePayment();
                             },
                             child: Container(
                               height: 35,
