@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_order_list_food.dart';
 import '../../../constants.dart';
 import '../../../data/constants/app_constants_value.dart';
@@ -13,6 +14,7 @@ import '../../map/food_map_tracking.dart';
 import '../Componenets/All/deliver_verify_Otp.dart';
 import '../Componenets/All/item_product.dart';
 import '../Componenets/All/return_order_buttom_sheet.dart';
+import 'food_order_list_tab_screen.dart';
 
 class FoodOrderDetailsScreen extends StatefulWidget {
   final Order item;
@@ -144,7 +146,6 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
       orderId: orderId,
       deliverOrderVerifyOtpCallback: deliveryOrderVerifyOtp,
     );
-
     Navigator.of(context).push(_createRoute(deliverOtpVerification));
   }
 
@@ -661,7 +662,9 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                             onTap: () {
                               // deliverOrder(payId);
                               // Dismiss the progress dialog when the action is completed
-                              showDeliverOtpVerifyBottomSheet(context);
+                              // showDeliverOtpVerifyBottomSheet(context);
+                              deliveryOrderVerifyOtp(payId, "");
+                              // goBack(context);
                             },
                             child: Container(
                               height: 35,

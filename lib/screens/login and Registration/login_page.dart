@@ -7,7 +7,7 @@ import 'package:grocery_delivery_side/screens/login%20and%20Registration/ragista
 import 'package:grocery_delivery_side/viewmodels/view_model_phone_login.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:android_sms_retriever/android_sms_retriever.dart';
+// import 'package:android_sms_retriever/android_sms_retriever.dart';
 import '../../constants.dart';
 import '../../data/constants/app_constants_value.dart';
 import '../../data/models/push_notification_model.dart';
@@ -101,16 +101,16 @@ class _LoginUserState extends State<LoginUser> {
     }
   }
 
-  Future<void> requestPhoneNumber() async {
-    try {
-      String? phoneNumber = await AndroidSmsRetriever.requestPhoneNumber();
-      if (phoneNumber != null) {
-        mobileController.text = phoneNumber.replaceAll('+91', '').trim();
-      }
-    } catch (e) {
-      print("Failed to retrieve phone number: $e");
-    }
-  }
+  // Future<void> requestPhoneNumber() async {
+  //   try {
+  //     String? phoneNumber = await AndroidSmsRetriever.requestPhoneNumber();
+  //     if (phoneNumber != null) {
+  //       mobileController.text = phoneNumber.replaceAll('+91', '').trim();
+  //     }
+  //   } catch (e) {
+  //     print("Failed to retrieve phone number: $e");
+  //   }
+  // }
 
   @override
   void initState() {
@@ -119,7 +119,7 @@ class _LoginUserState extends State<LoginUser> {
     askLocationPermission();
     registerNotification();
     checkForInitialMessage();
-    requestPhoneNumber();
+    // requestPhoneNumber();
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // Extract notification data

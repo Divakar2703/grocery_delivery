@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:grocery_delivery_side/screens/Orders/orders_list_tab_screen.dart';
 import 'package:grocery_delivery_side/screens/razorpay_payment/razorpayQrCodeScreen.dart';
 import 'package:grocery_delivery_side/screens/razorpay_payment/razorpay_barcode_popup.dart';
 import '../../../constants.dart';
@@ -34,7 +35,7 @@ class _CategoriesState extends State<Categories> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const GetCustomerIdScreen()),
+                        builder: (context) => const OrderScreenNew()),
                   );
                 },
                 child: Column(
@@ -56,7 +57,7 @@ class _CategoriesState extends State<Categories> {
                   ],
                 ),
               ),
-              const SizedBox(width: 14,),
+              const SizedBox(width: 16,),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -84,7 +85,7 @@ class _CategoriesState extends State<Categories> {
                   ],
                 ),
               ),
-              const SizedBox(width: 14,),
+              const SizedBox(width: 16,),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -112,7 +113,7 @@ class _CategoriesState extends State<Categories> {
                   ],
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 16),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -142,34 +143,34 @@ class _CategoriesState extends State<Categories> {
                 ),
               ),
               const SizedBox(width: 12,),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RazorPayQRCodeScreen()),
-                  );
-                },
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 34,
-                      backgroundColor: kPrimaryLightColor,
-                      child: SvgPicture.asset('assets/vectors/broccoli.svg'),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      "Razor\npay",
-                      style: TextStyle(
-                          fontSize: 12, // Adjust font size as needed
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 14,),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //           builder: (context) => const RazorPayQRCodeScreen()),
+              //     );
+              //   },
+              //   child: Column(
+              //     children: [
+              //       CircleAvatar(
+              //         radius: 34,
+              //         backgroundColor: kPrimaryLightColor,
+              //         child: SvgPicture.asset('assets/vectors/broccoli.svg'),
+              //       ),
+              //       const SizedBox(height: 4),
+              //       const Text(
+              //         "Razor\npay",
+              //         style: TextStyle(
+              //             fontSize: 12, // Adjust font size as needed
+              //             fontWeight: FontWeight.w500,
+              //             color: Colors.grey
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(width: 14,),
 
             ],
           ),
