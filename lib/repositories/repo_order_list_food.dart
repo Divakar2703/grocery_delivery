@@ -1,4 +1,10 @@
 
+import 'package:grocery_delivery_side/data/models/response/GetPayTypeRes.dart';
+import 'package:grocery_delivery_side/data/models/response/GetPayTypeRes.dart';
+import 'package:grocery_delivery_side/data/models/response/GetPayTypeRes.dart';
+import 'package:grocery_delivery_side/data/models/response/SubmitOrdCollRes.dart';
+import 'package:grocery_delivery_side/data/models/response/SubmitOrdCollRes.dart';
+import 'package:grocery_delivery_side/data/models/response/SubmitOrdCollRes.dart';
 import 'package:grocery_delivery_side/data/models/response/acceptOrderResponseModel.dart';
 
 import '../data/constants/app_url.dart';
@@ -133,4 +139,33 @@ class OrderListFoodRepository {
       throw e;
     }
   }
+
+
+  Future<GetPayTypeRes> getPayTypeData() async {
+    try {
+      dynamic response = await _apiServices.getPostApiWithoutData(
+          AppUrl.getPayTypeUrl);
+      print('================Api Response==============$response');
+      print('==============PayTypeFullResponse================${GetPayTypeRes
+          .fromJson(response)}');
+      return response = GetPayTypeRes.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<SubmitOrdCollRes> submitOrdCollection(dynamic data) async {
+    try {
+      dynamic response = await _apiServices.getPostApiFoodResponse(
+          AppUrl.submitOrderCollUrl,data);
+      print('================Api Response==============$response');
+      print('==============OrdCollFullResponse================${SubmitOrdCollRes
+          .fromJson(response)}');
+      return response = SubmitOrdCollRes.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+
 }

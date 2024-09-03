@@ -1,6 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:grocery_delivery_side/data/models/request/SubmitOrdCollReq.dart';
 import 'package:grocery_delivery_side/phonepeGateway/PhonePeGatewayWebview.dart';
+import 'package:grocery_delivery_side/screens/Orders/Componenets/PaymentModeDialog.dart';
 import 'package:grocery_delivery_side/viewmodels/view_model_order_list_food.dart';
 import '../../../constants.dart';
 import '../../../data/constants/app_constants_value.dart';
@@ -10,6 +14,7 @@ import '../../../data/models/request/deliverOrderVerifyOtpRequestModel.dart';
 import '../../../data/models/request/rejectOrderRequestModel.dart';
 import '../../../data/models/request/returnOrderVerifyOtpRequestModel.dart';
 import '../../../data/models/response/OrderListResponseModel.dart';
+import '../../../data/processResponse/status.dart';
 import '../../../helper/toast.dart';
 import '../../../style/colors.dart';
 import '../../map/food_map_tracking.dart';
@@ -35,6 +40,8 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
   late OrderListFoodViewModel orderListViewModel;
   String payId = '';
   String orderId = '';
+  String selectedPayModeVal = '';
+  late TextEditingController onlinePriceController;
 
   @override
   void initState() {
@@ -42,6 +49,9 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
     orderListViewModel = OrderListFoodViewModel();
     payId = widget.item.payid.toString();
     orderId = widget.item.orderID.toString();
+
+    onlinePriceController = TextEditingController();
+    onlinePriceController.text = widget.item.orderAmount.toString();
 
     try {
       orderListViewModel.sourceLat =
@@ -58,13 +68,137 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
     }
   }
 
-  void initiatePayment() async {
+  void showSplitPayDialog(BuildContext context) {
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      // Prevent user from dismissing the dialog
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+
+                Text(
+                  'Total Payable Amount',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontFamily: "Muli",
+                  ),
+                ),
+
+                SizedBox(height: 16),
+
+                TextField(
+                  controller: onlinePriceController,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 16,
+                    ),
+                    hintText: 'Online Amount',
+                    hintStyle: TextStyle(
+                      color: Colors.grey.shade700,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    // errorText: nameError,
+                  ),
+                ),
+
+                SizedBox(height: 16),
+
+                GestureDetector(
+                  onTap: () {
+
+                    Navigator.of(context).pop();
+
+                    var enterAmount = int.parse(onlinePriceController.text.toString());
+                    var orderAmount = int.parse(widget.item.orderAmount!);
+
+                    setState(() {
+                      if(enterAmount!=0 && enterAmount<=orderAmount){
+                        initiatePayment(enterAmount);
+                      }else{
+                        AppToast.showToast('Amount should be less and equal to order amount');
+                      }
+                    });
+
+                  },
+                  child: Container(
+                    height: 35,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blue.shade200,
+                    ),
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontFamily: "Muli",
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+  }
+
+  Future<void> submitOrdColl(String onlineAmt,String offlineAmt) async {
+
+    var data = SubmitOrdCollReq(
+      ordId: orderId,
+      onlineAmt: onlineAmt,
+      offlineAmt: offlineAmt,
+      collectMode: selectedPayModeVal
+    );
+
+   await orderListViewModel.submitOrdCollType(data, context);
+
+   setState(() {
+     // Check the API response after it's been updated
+     if (orderListViewModel.getOrdCollResData.status == Status.COMPLETED) {
+       print('submitOrdCall Success ${orderListViewModel.getOrdCollResData}');
+       AppToast.showToast(orderListViewModel.getOrdCollResData.data?.message ?? "Order Completed");
+
+       Navigator.of(context).pop();
+
+       // deliveryOrderVerifyOtp(payId, "");
+
+     } else if (orderListViewModel.getOrdCollResData.status == Status.ERROR) {
+       print('submitOrdCall failed ${orderListViewModel.getOrdCollResData}');
+       AppToast.showToast(orderListViewModel.getOrdCollResData.message ?? "Order failed");
+     }
+
+   });
+
+  }
+
+  void initiatePayment(int amount) async {
+    print('init payment :>> $amount');
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PhonePeGatewayWebView(
           orderId: orderId,
-          txnAmount: 100,
+          txnAmount: amount,
         ),
       ),
     );
@@ -73,12 +207,25 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
 
     if (result != null) {
       // Handle the result here
-      if (result['success']) {
-        AppToast.showToast("Payment Successful! Transaction ID: ${result['transactionId']}");
-      } else {
-        AppToast.showToast("Payment Failed: ${result['message']}");
-      }
+      setState(() {
+        if (result['success']) {
+
+          num ordAmt = num.parse(widget.item.orderAmount!);
+          num onlineAmt = result['amount'] / 100;
+          num offlineAmount = ordAmt - onlineAmt;
+
+          print('values of amount:-  $ordAmt  $onlineAmt $offlineAmount');
+
+          submitOrdColl(onlineAmt.toString(),offlineAmount.toString());
+
+          AppToast.showToast("Payment Successful");
+        } else {
+          print("Payment Failed: ${result['message']}");
+          AppToast.showToast("Payment Failed: ${result['message']}");
+        }
+      });
     }
+
   }
 
   acceptOrder(BuildContext context, String payId, Order item) {
@@ -194,152 +341,86 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 650,
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
-        child: Scaffold(
-          backgroundColor: const Color(0xFFFAFBFB),
-          appBar: AppBar(
-            elevation: 4.0,
-            centerTitle: true,
-            automaticallyImplyLeading: false,
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.grey,
-                  size: 20,
+    return MaterialApp(
+      home: Container(
+        height: 650,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+          child: Scaffold(
+            backgroundColor: const Color(0xFFFAFBFB),
+            appBar: AppBar(
+              elevation: 4.0,
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              ],
+              title: const Text(
+                "Orders",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
               ),
-            ],
-            title: const Text(
-              "Orders",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
             ),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              physics: ScrollPhysics(),
-              child: Column(
-                children: [
-                  Text(
-                    "Order ID: ${widget.item.orderID}",
-                    style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryColor2),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${widget.item.orderDate}",
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: widget.item.product!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ItemProduct(
-                        productName:
-                            widget.item.product![index].productName.toString(),
-                        sellerName:
-                            widget.item.product![index].sellerName.toString(),
-                        quantity:
-                            widget.item.product![index].productQty.toString(),
-                        price:
-                            widget.item.product![index].netPrice.toString(),
-                        total: widget.item.product![index].total.toString(),
-                        image: widget.item.product![index].image.toString(),
-                      );
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                  children: [
+                    Text(
+                      "Order ID: ${widget.item.orderID}",
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primaryColor2),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Method of Payment :",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Muli",
-                              ),
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              "Type :",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Muli",
-                              ),
-                            ),
-                          ],
+                        Text(
+                          "${widget.item.orderDate}",
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
                         ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${widget.item.paymentMode}",
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Muli",
-                                color: kPrimaryColor,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              "${widget.item.type}",
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Muli",
-                                color: kPrimaryColor,
-                              ),
-                            ),
-                          ],
-                        )
                       ],
                     ),
-                  ),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
+                    const Divider(
+                      thickness: 1,
+                    ),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: widget.item.product!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ItemProduct(
+                          productName:
+                              widget.item.product![index].productName.toString(),
+                          sellerName:
+                              widget.item.product![index].sellerName.toString(),
+                          quantity:
+                              widget.item.product![index].productQty.toString(),
+                          price:
+                              widget.item.product![index].netPrice.toString(),
+                          total: widget.item.product![index].total.toString(),
+                          image: widget.item.product![index].image.toString(),
+                        );
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -347,7 +428,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Customer Delivery slot :",
+                                "Method of Payment :",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
@@ -358,84 +439,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                                 height: 3,
                               ),
                               Text(
-                                "Order Amount :",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "Seller Name :",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "Seller Phone Number :",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "Store Name :",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "Pickup Address :",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "User Name :",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "User Phone Number :",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "User Address :",
+                                "Type :",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
@@ -452,99 +456,24 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${widget.item.customerDeliverySlot}",
+                                "${widget.item.paymentMode}",
                                 style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                   fontFamily: "Muli",
+                                  color: kPrimaryColor,
                                 ),
                               ),
                               const SizedBox(
                                 height: 3,
                               ),
                               Text(
-                                "${widget.item.orderAmount}",
+                                "${widget.item.type}",
                                 style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                   fontFamily: "Muli",
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "${widget.item.sellerName}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "${widget.item.sellerContactno}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "${widget.item.sellerStorename}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "${widget.item.pickUpAddress}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "${widget.item.customerName}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "${widget.item.customerContactNo}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                "${widget.item.customerAddress}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Muli",
+                                  color: kPrimaryColor,
                                 ),
                               ),
                             ],
@@ -552,218 +481,463 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                         ],
                       ),
                     ),
-                  ),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      if (widget.item.type == "Requested Orders")
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              showReturnOrderBottomSheet(context, "Reject");
-                            },
-                            child: Container(
-                              height: 35,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.purple.shade200,
-                              ),
-                              child: const Text(
-                                'Reject',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontFamily: "Muli",
+                    const Divider(
+                      thickness: 1,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Customer Delivery slot :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "Order Amount :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "Seller Name :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "Seller Phone Number :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "Store Name :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "Pickup Address :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "User Name :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "User Phone Number :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "User Address :",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${widget.item.customerDeliverySlot}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${widget.item.orderAmount}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${widget.item.sellerName}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${widget.item.sellerContactno}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${widget.item.sellerStorename}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${widget.item.pickUpAddress}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${widget.item.customerName}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${widget.item.customerContactNo}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "${widget.item.customerAddress}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Divider(
+                      thickness: 1,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        if (widget.item.type == "Requested Orders")
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showReturnOrderBottomSheet(context, "Reject");
+                              },
+                              child: Container(
+                                height: 35,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.purple.shade200,
+                                ),
+                                child: const Text(
+                                  'Reject',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontFamily: "Muli",
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      if (widget.item.type == "Requested Orders")
-                        const SizedBox(width: 10),
-                      if (widget.item.type == "Requested Orders")
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              // Show progress dialog
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                // Prevent user from dismissing the dialog
-                                builder: (BuildContext context) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              );
+                        if (widget.item.type == "Requested Orders")
+                          const SizedBox(width: 10),
+                        if (widget.item.type == "Requested Orders")
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                // Show progress dialog
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  // Prevent user from dismissing the dialog
+                                  builder: (BuildContext context) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                );
 
-                              // Perform the accept order action
-                              acceptOrder(context, widget.item.payid.toString(),
-                                      widget.item)
-                                  .then((_) {
+                                // Perform the accept order action
+                                acceptOrder(context, widget.item.payid.toString(),
+                                        widget.item)
+                                    .then((_) {
+                                  // Dismiss the progress dialog when the action is completed
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: Container(
+                                height: 35,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: kPrimaryColor,
+                                ),
+                                child: const Text(
+                                  'Accept',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (widget.item.type == "Assign Orders")
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showReturnOrderBottomSheet(context, "Cancel");
+                              },
+                              child: Container(
+                                height: 35,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.red.shade200,
+                                ),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (widget.item.type == "Assign Orders")
+                          const SizedBox(width: 10),
+                        if (widget.item.type == "Assign Orders")
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                showReturnOrderBottomSheet(context, "Return");
+                              },
+                              child: Container(
+                                height: 35,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.blue.shade200,
+                                ),
+                                child: const Text(
+                                  'Return',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontFamily: "Muli",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (widget.item.type == "Assign Orders")
+                          const SizedBox(width: 10),
+                        if (widget.item.type == "Assign Orders")
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                // deliverOrder(payId);
                                 // Dismiss the progress dialog when the action is completed
-                                Navigator.pop(context);
-                              });
-                            },
-                            child: Container(
-                              height: 35,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: kPrimaryColor,
-                              ),
-                              child: const Text(
-                                'Accept',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (widget.item.type == "Assign Orders")
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              showReturnOrderBottomSheet(context, "Cancel");
-                            },
-                            child: Container(
-                              height: 35,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.red.shade200,
-                              ),
-                              child: const Text(
-                                'Cancel',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (widget.item.type == "Assign Orders")
-                        const SizedBox(width: 10),
-                      if (widget.item.type == "Assign Orders")
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              showReturnOrderBottomSheet(context, "Return");
-                            },
-                            child: Container(
-                              height: 35,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.blue.shade200,
-                              ),
-                              child: const Text(
-                                'Return',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontFamily: "Muli",
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (widget.item.type == "Assign Orders")
-                        const SizedBox(width: 10),
-                      if (widget.item.type == "Assign Orders")
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              // deliverOrder(payId);
-                              // Dismiss the progress dialog when the action is completed
-                              // showDeliverOtpVerifyBottomSheet(context);
-                              // deliveryOrderVerifyOtp(payId, "");
-                              // goBack(context);
+                                // showDeliverOtpVerifyBottomSheet(context);
+                                // deliveryOrderVerifyOtp(payId, "");
+                                // goBack(context);
 
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => PhonePeGatewayWebView(orderId: orderId, txnAmount: 1)),
-                              // );
+                                if(widget.item.paymentMode=="COD"){
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => PaymentModeDialog(
+                                        onConfirm: (selectedValue) {
+                                          selectedPayModeVal = selectedValue;
+                                          Future.microtask(() {
+                                            setState(() {
+                                              print('Selected value: $selectedPayModeVal');
+                                              switch (selectedPayModeVal) {
+                                                case "Offline":
+                                                  submitOrdColl('0', widget.item.orderAmount!);
+                                                  break;
+                                                case "Online":
+                                                  initiatePayment(int.parse(widget.item.orderAmount!));
+                                                  break;
+                                                case "Both":
+                                                  showSplitPayDialog(context);
+                                                  break;
+                                                default:
+                                                  break;
+                                              }
+                                            });
+                                          });
+                                        }
 
-                              initiatePayment();
-                            },
-                            child: Container(
-                              height: 35,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.green.shade200,
-                              ),
-                              child: const Text(
-                                'Deliver',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontFamily: "Muli",
+                                    ),
+                                  );
+                                }else{
+                                  deliveryOrderVerifyOtp(payId, "");
+                                }
+
+                              },
+                              child: Container(
+                                height: 35,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.green.shade200,
+                                ),
+                                child: const Text(
+                                  'Deliver',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontFamily: "Muli",
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      if (widget.item.type == "Assign Orders")
-                        const SizedBox(width: 10),
-                      if (widget.item.type == "Assign Orders")
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FoodDeliveryTracking(
-                                          sourceLat:
-                                              orderListViewModel.sourceLat,
-                                          sourceLong:
-                                              orderListViewModel.sourceLong,
-                                          destiLat: orderListViewModel.destiLat,
-                                          destiLong:
-                                              orderListViewModel.destiLong,
-                                          orderId: orderId,
-                                      userContactNo: widget.item!.customerContactNo.toString(),
+                        if (widget.item.type == "Assign Orders")
+                          const SizedBox(width: 10),
+                        if (widget.item.type == "Assign Orders")
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FoodDeliveryTracking(
+                                            sourceLat:
+                                                orderListViewModel.sourceLat,
+                                            sourceLong:
+                                                orderListViewModel.sourceLong,
+                                            destiLat: orderListViewModel.destiLat,
+                                            destiLong:
+                                                orderListViewModel.destiLong,
+                                            orderId: orderId,
+                                        userContactNo: widget.item!.customerContactNo.toString(),
 
-                                    )),
-                              );
-                            },
-                            child: Container(
-                              height: 35,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.orange.shade200,
-                              ),
-                              child: const Text(
-                                'Track',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontFamily: "Muli",
+                                      )),
+                                );
+                              },
+                              child: Container(
+                                height: 35,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.orange.shade200,
+                                ),
+                                child: const Text(
+                                  'Track',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontFamily: "Muli",
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 16.0,
-                  )
-                ],
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    )
+                  ],
+                ),
               ),
             ),
           ),

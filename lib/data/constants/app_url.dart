@@ -42,4 +42,10 @@ class AppUrl{
   static var checkDeliveredFoodOtp= "${baseUrl}foodcheck_otp_for_deliveroredr";
   static var codFoodSummaryListUrl= "${baseUrl}fooddelivery_cod_summary";
   static var walletFoodSummaryListUrl= "${baseUrl}fooddelivery_wallet_summary";
+
+  //payment gateway
+  static var getPayTypeUrl= "${baseUrl}Api/Api_deliveryboy/get_payType";
+  static var submitOrderCollUrl= "${baseUrl}Api/Api_deliveryboy/get_ordCollection";
+
+
 }

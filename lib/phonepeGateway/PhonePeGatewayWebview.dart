@@ -7,6 +7,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'dart:io';
 
+import '../data/constants/app_constants_value.dart';
+
 class PhonePeGatewayWebView extends StatefulWidget {
   final String orderId;
   final int txnAmount;
@@ -21,7 +23,7 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
   late final WebViewController _controller;
   String postData = '';
   String transId = '';
-  String custId = 'Cust24424';
+  String custId = Constants.userIdForUse;
 
   @override
   void initState() {
@@ -113,25 +115,6 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
       final amount = paymentInfo['data']['amount'];
       final state = paymentInfo['data']['state'];
 
-      // Print the extracted data
-      print('Payment Success: $success');
-      print('Code: $code');
-      print('Message: $message');
-      print('Transaction ID: $transactionId');
-      print('Amount: $amount');
-      print('State: $state');
-
-      // // Check if payment was successful
-      // if (success && state == 'COMPLETED') {
-      //   AppToast.showToast("Payment Done Successfully");
-      //   print('Payment was successful!');
-      //   // Perform further actions on successful payment
-      // } else {
-      //   AppToast.showToast("Payment Failed");
-      //   print('Payment failed or not completed.');
-      //   // Handle the failure case
-      // }
-
       // Prepare data to send back to the previous page
       final paymentResult = {
         'success': success,
@@ -159,7 +142,7 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
 
   void _loadPaymentPage() async {
 
-    postData = 'order_id=${widget.orderId}&trans_id=$transId&user_id=$custId&TXN_AMOUNT=${widget.txnAmount*100}&callback=&payment_mode=testing&used_for=app';
+    postData = 'order_id=${widget.orderId}&trans_id=$transId&user_id=$custId&TXN_AMOUNT=${widget.txnAmount}&callback=&payment_mode=testing&used_for=app';
     print("Page>>>> $postData");
     const paymentPageUrl = 'https://gotejaga.com/Phonepe/pay';
 

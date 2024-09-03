@@ -3,11 +3,16 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:grocery_delivery_side/data/models/request/SubmitOrdCollReq.dart';
 import 'package:grocery_delivery_side/data/models/request/acceptOrderRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/cancelOrderRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/deliverOrderVerifyOtpRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/rejectOrderRequestModel.dart';
 import 'package:grocery_delivery_side/data/models/request/returnOrderVerifyOtpRequestModel.dart';
+import 'package:grocery_delivery_side/data/models/response/GetPayTypeRes.dart';
+import 'package:grocery_delivery_side/data/models/response/GetPayTypeRes.dart';
+import 'package:grocery_delivery_side/data/models/response/SubmitOrdCollRes.dart';
+import 'package:grocery_delivery_side/data/models/response/SubmitOrdCollRes.dart';
 import 'package:grocery_delivery_side/data/models/response/acceptOrderResponseModel.dart';
 import 'package:grocery_delivery_side/screens/Orders/Componenets/All/orders_list_screen.dart';
 import 'package:grocery_delivery_side/screens/Orders/food_orders/food_order_list_tab_screen.dart';
@@ -408,6 +413,80 @@ class OrderListFoodViewModel with ChangeNotifier {
       }
     }
   }
+
+
+  ApiProcessResponse<GetPayTypeRes> getPayTypeResData = ApiProcessResponse.loading();
+  setPayTypeResData(ApiProcessResponse<GetPayTypeRes> response) {
+    getPayTypeResData = response;
+    notifyListeners();
+  }
+
+  Future<void> getPayType(BuildContext context) async {
+    setPayTypeResData(ApiProcessResponse.loading());
+    try {
+
+      final GetPayTypeRes getPayTypeRes = await _orderListRepo.getPayTypeData();
+      print("payTypeRes:> $getPayTypeRes");
+      setPayTypeResData(ApiProcessResponse.completed(getPayTypeRes));
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Catch Error=======$error");
+      }
+    }
+  }
+
+  ApiProcessResponse<SubmitOrdCollRes> getOrdCollResData = ApiProcessResponse.loading();
+  setOrdCollResData(ApiProcessResponse<SubmitOrdCollRes> response) {
+    getOrdCollResData = response;
+    notifyListeners();
+  }
+
+
+  Future<void> submitOrdCollType(SubmitOrdCollReq data, BuildContext context) async {
+    setOrdCollResData(ApiProcessResponse.loading());
+    try {
+
+      final SubmitOrdCollRes submitOrdCollRes = await _orderListRepo.submitOrdCollection(data);
+      print("ordCollectionRes:> $submitOrdCollRes");
+
+      if(submitOrdCollRes.status==200){
+        setOrdCollResData(ApiProcessResponse.completed(submitOrdCollRes));
+      }else{
+        setOrdCollResData(ApiProcessResponse.error(submitOrdCollRes.message));
+      }
+
+
+    } catch (error) {
+      if (error is SocketException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('No Internet Connection'));
+      } else if (error is HttpException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('HTTP Error: ${error.message}'));
+      } else if (error is FormatException) {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('Response Format Error: ${error.message}'));
+      } else {
+        setDeliverOrderVerifyOtpData(ApiProcessResponse.error('An unexpected error occurred: $error'));
+      }
+
+
+      if (kDebugMode) {
+        print("Catch Error=======$error");
+      }
+    }
+  }
+  
   Future<void> goBack(BuildContext context) async {
     Navigator.pushAndRemoveUntil(
       context,

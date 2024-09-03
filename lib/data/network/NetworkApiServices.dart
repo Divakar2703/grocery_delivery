@@ -6,6 +6,7 @@ import 'BaseApiServices.dart';
 import 'app_exceptions.dart';
 
 class NetworkApiServices extends BaseApiServices {
+
   @override
   Future getGetApiResponse(String url) async {
     dynamic responseJson;
@@ -46,6 +47,28 @@ class NetworkApiServices extends BaseApiServices {
     return responseJson;
   }
 
+  @override
+  Future getPostApiWithoutData(String url) async {
+    dynamic responseJson;
+
+    try {
+
+      Response response = await post(Uri.parse(url),
+          headers: {
+            "Authorization": "Basic " +
+                base64Encode(utf8.encode("food123:food123"))
+          },
+         ).timeout(const Duration(seconds: 90));
+
+      responseJson = returnResponse(response);
+      print('Netservice2================$responseJson');
+
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }
+    return responseJson;
+  }
+
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
@@ -70,7 +93,12 @@ class NetworkApiServices extends BaseApiServices {
   Future getPostApiFoodResponse(String url, data) async {
     dynamic responseJson;
     var body = json.encode(data);
-    print('Netservice================$body');
+
+
+    // Logging the request
+    print('Request URL: $url');
+    print('Request Headers: {"Authorization": "Basic " + base64Encode(utf8.encode("food123:food123"))}');
+    print('Request Body: $body');
 
     try {
       print('Netservice try================$body');
@@ -83,9 +111,12 @@ class NetworkApiServices extends BaseApiServices {
           body: body).timeout(const Duration(seconds: 90));
 
       responseJson = returnResponse(response);
-      print('Netservice2================$responseJson');
+      // Logging the response
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
     } on SocketException {
+      print('Error: No Internet Connection');
       throw FetchDataException('No Internet Connection');
 
     }

@@ -4,4 +4,5 @@ abstract class BaseApiServices{
   Future<dynamic>  getPostApiResponse(String url ,dynamic data);
   Future<dynamic>  getPostApiFoodResponse(String url ,dynamic data);
   Future<dynamic>  getPostApiRazorPayResponse(String url ,dynamic data);
+  Future<dynamic>  getPostApiWithoutData(String url);
 }
