@@ -98,6 +98,35 @@ class _FoodOrderItemState extends State<FoodOrderItem> {
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey.shade700),
                             ),
+
+                            if(widget.type=="Delivered" && item.paymentMode!="wallet" && item.paymentMode != "phonepe" && item.paymentMode!="online"&&item.paymentMode!="razorpay") Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Collection Mode: ${item.collectionMode}",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700),
+                                ),
+                                Text("Offline Collection: Rs ${item.offlineCollect}",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700),
+                                ),
+                                Text(
+                                  "Online Collection: Rs ${item.onlineCollect}",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade700),
+                                ),
+
+
+                              ],
+                            ),
+
                             Text(
                               "Date: ${item.orderDate}",
                               style: const TextStyle(

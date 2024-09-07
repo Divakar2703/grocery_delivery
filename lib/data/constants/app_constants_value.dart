@@ -3,6 +3,8 @@ class Constants {
 
   //normal values
   static var userIdForUse = 'Delivery524';
+  static var phonePeTesting = 'testing';
+  static var phonePeProd = 'production';
   static var userIdInt = '';
   static var fToken = '';
 
@@ -11,4 +13,6 @@ class Constants {
   static var name ='NAME';
   static var mobile ='MOBILE';
   static var isLogin ='IS_LOGIN';
+
+
 }

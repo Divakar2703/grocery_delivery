@@ -94,11 +94,7 @@ class NetworkApiServices extends BaseApiServices {
     dynamic responseJson;
     var body = json.encode(data);
 
-
-    // Logging the request
-    print('Request URL: $url');
-    print('Request Headers: {"Authorization": "Basic " + base64Encode(utf8.encode("food123:food123"))}');
-    print('Request Body: $body');
+    print('Api Details:-  $url \n $body');
 
     try {
       print('Netservice try================$body');

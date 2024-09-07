@@ -142,7 +142,7 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
 
   void _loadPaymentPage() async {
 
-    postData = 'order_id=${widget.orderId}&trans_id=$transId&user_id=$custId&TXN_AMOUNT=${widget.txnAmount}&callback=&payment_mode=testing&used_for=app';
+    postData = 'order_id=${widget.orderId}&trans_id=$transId&user_id=$custId&TXN_AMOUNT=${widget.txnAmount}&callback=&payment_mode=${Constants.phonePeProd}&used_for=app';
     print("Page>>>> $postData");
     const paymentPageUrl = 'https://gotejaga.com/Phonepe/pay';
 

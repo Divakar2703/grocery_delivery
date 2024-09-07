@@ -395,7 +395,6 @@ class OrderListFoodViewModel with ChangeNotifier {
         print("Data aa ha hai${acceptOrderResponseModel.status}");
       }
 
-
     } catch (error) {
       if (error is SocketException) {
         setDeliverOrderVerifyOtpData(ApiProcessResponse.error('No Internet Connection'));
@@ -464,6 +463,7 @@ class OrderListFoodViewModel with ChangeNotifier {
 
       if(submitOrdCollRes.status==200){
         setOrdCollResData(ApiProcessResponse.completed(submitOrdCollRes));
+        goBack(context);
       }else{
         setOrdCollResData(ApiProcessResponse.error(submitOrdCollRes.message));
       }

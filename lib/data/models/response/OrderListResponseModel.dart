@@ -47,6 +47,9 @@ class Order {
   String? customerContactNo;
   String? customerDeliverySlot;
   String? sellerName;
+  String? onlineCollect;
+  String? offlineCollect;
+  String? collectionMode;
   String? sellerContactno;
   String? pickUpAddress;
   String? sellerLatitude;
@@ -72,6 +75,9 @@ class Order {
         this.customerLongitude,
         this.customerContactNo,
         this.sellerName,
+        this.onlineCollect,
+        this.offlineCollect,
+        this.collectionMode,
         this.sellerContactno,
         this.pickUpAddress,
         this.sellerLatitude,
@@ -98,6 +104,9 @@ class Order {
     customerContactNo = json['Customer Contact no'];
     customerDeliverySlot = json['Customer Delivery slot'];
     sellerName = json['Seller Name'];
+    onlineCollect = json['online_collect'];
+    offlineCollect = json['offline_collect'];
+    collectionMode = json['collect_mode'];
     sellerContactno = json['Seller Contactno'];
     pickUpAddress = json['Pick Up Address'];
     sellerLatitude = json['Seller latitude'];
@@ -131,6 +140,9 @@ class Order {
     data['Customer Contact no'] = this.customerContactNo;
     data['Customer Delivery slot'] = this.customerDeliverySlot;
     data['Seller Name'] = this.sellerName;
+    data['online_collect'] = this.onlineCollect;
+    data['offline_collect'] = this.offlineCollect;
+    data['collect_mode'] = this.collectionMode;
     data['Seller Contactno'] = this.sellerContactno;
     data['Pick Up Address'] = this.pickUpAddress;
     data['Seller latitude'] = this.sellerLatitude;

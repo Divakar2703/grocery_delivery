@@ -11,6 +11,7 @@ import '../../../data/constants/app_constants_value.dart';
 import '../../../data/models/request/acceptOrderRequestModel.dart';
 import '../../../data/models/request/cancelOrderRequestModel.dart';
 import '../../../data/models/request/deliverOrderVerifyOtpRequestModel.dart';
+import '../../../data/models/request/orderListRequestModel.dart';
 import '../../../data/models/request/rejectOrderRequestModel.dart';
 import '../../../data/models/request/returnOrderVerifyOtpRequestModel.dart';
 import '../../../data/models/response/OrderListResponseModel.dart';
@@ -52,6 +53,8 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
 
     onlinePriceController = TextEditingController();
     onlinePriceController.text = widget.item.orderAmount.toString();
+
+    print('tab type: ${widget.item.type}');
 
     try {
       orderListViewModel.sourceLat =
@@ -121,17 +124,27 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                 GestureDetector(
                   onTap: () {
 
-                    Navigator.of(context).pop();
-
-                    var enterAmount = int.parse(onlinePriceController.text.toString());
-                    var orderAmount = int.parse(widget.item.orderAmount!);
+                    var enterAmount = 0;
+                    var orderAmount = 0;
 
                     setState(() {
-                      if(enterAmount!=0 && enterAmount<=orderAmount){
-                        initiatePayment(enterAmount);
+
+                      if(onlinePriceController.text.toString().isNotEmpty){
+                        enterAmount = int.parse(onlinePriceController.text.toString());
+                        orderAmount = int.parse(widget.item.orderAmount!);
+
+                        if(enterAmount!=0 && enterAmount<=orderAmount){
+                          Navigator.of(context).pop();
+                          initiatePayment(enterAmount);
+                        }else{
+                          AppToast.showToast('Amount should be less and equal to order amount');
+                        }
+
                       }else{
-                        AppToast.showToast('Amount should be less and equal to order amount');
+                        AppToast.showToast('Enter amount should not be empty');
                       }
+
+
                     });
 
                   },
@@ -178,10 +191,6 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
        print('submitOrdCall Success ${orderListViewModel.getOrdCollResData}');
        AppToast.showToast(orderListViewModel.getOrdCollResData.data?.message ?? "Order Completed");
 
-       Navigator.of(context).pop();
-
-       // deliveryOrderVerifyOtp(payId, "");
-
      } else if (orderListViewModel.getOrdCollResData.status == Status.ERROR) {
        print('submitOrdCall failed ${orderListViewModel.getOrdCollResData}');
        AppToast.showToast(orderListViewModel.getOrdCollResData.message ?? "Order failed");
@@ -209,6 +218,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
       // Handle the result here
       setState(() {
         if (result['success']) {
+          AppToast.showToast("Payment Successful");
 
           num ordAmt = num.parse(widget.item.orderAmount!);
           num onlineAmt = result['amount'] / 100;
@@ -217,13 +227,13 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
           print('values of amount:-  $ordAmt  $onlineAmt $offlineAmount');
 
           submitOrdColl(onlineAmt.toString(),offlineAmount.toString());
-
-          AppToast.showToast("Payment Successful");
         } else {
           print("Payment Failed: ${result['message']}");
           AppToast.showToast("Payment Failed: ${result['message']}");
         }
       });
+    }else{
+      AppToast.showToast("Error in getting payment result");
     }
 
   }
@@ -262,8 +272,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
 
   //when delivery boy will return the order to the seller
   returnOrder(String payId) {
-    final data =
-        AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
+    final data = AcceptOrderRequestModel(userId: Constants.userIdForUse, payId: payId);
     orderListViewModel.fetchReturnOrderData(data, context);
   }
 
@@ -424,7 +433,7 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -446,6 +455,36 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                                   fontFamily: "Muli",
                                 ),
                               ),
+
+                              if(widget.item.type=="Delivered" && widget.item.paymentMode!="wallet" && widget.item.paymentMode != "phonepe" && widget.item.paymentMode!="online"&&widget.item.paymentMode!="razorpay") Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Collection Mode :",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Muli",
+                                    ),
+                                  ),
+                                  Text(
+                                    "Online Collection :",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Muli",
+                                    ),
+                                  ),
+                                  Text(
+                                    "Offline Collection :",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Muli",
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                           const SizedBox(
@@ -476,6 +515,40 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                                   color: kPrimaryColor,
                                 ),
                               ),
+
+                              if(widget.item.type=="Delivered" && widget.item.paymentMode!="wallet" && widget.item.paymentMode != "phonepe" && widget.item.paymentMode!="online"&&widget.item.paymentMode!="razorpay") Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${widget.item.collectionMode}",
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Muli",
+                                      color: kPrimaryColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Rs. ${widget.item.onlineCollect}",
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Muli",
+                                      color: kPrimaryColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Rs. ${widget.item.offlineCollect}",
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Muli",
+                                      color: kPrimaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
+
                             ],
                           )
                         ],
@@ -611,7 +684,8 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                                   height: 3,
                                 ),
                                 Text(
-                                  "${widget.item.orderAmount}",
+                                  "Rs. "
+                                      "${widget.item.orderAmount}",
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -855,10 +929,11 @@ class _FoodOrderDetailsScreenState extends State<FoodOrderDetailsScreen> {
                                                 case "Online":
                                                   initiatePayment(int.parse(widget.item.orderAmount!));
                                                   break;
-                                                case "Both":
-                                                  showSplitPayDialog(context);
-                                                  break;
+                                                // case "Both":
+                                                //   showSplitPayDialog(context);
+                                                //   break;
                                                 default:
+                                                  showSplitPayDialog(context);
                                                   break;
                                               }
                                             });
