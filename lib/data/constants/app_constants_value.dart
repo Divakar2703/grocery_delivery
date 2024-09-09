@@ -2,7 +2,7 @@ class Constants {
   static var countryCode ='IN';
 
   //normal values
-  static var userIdForUse = 'Delivery524';
+  static var userIdForUse = '';
   static var phonePeTesting = 'testing';
   static var phonePeProd = 'production';
   static var userIdInt = '';

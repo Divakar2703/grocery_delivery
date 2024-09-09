@@ -1,8 +1,8 @@
 class AppUrl{
 
   //{"user_id":"Delivery100","type":"Assign Orders"}
-  static var baseUrl ="https://deliveryboy.56testing.club/" ;
-  // static var baseUrl ="https://delivery.gotejaga.com/" ;
+  // static var baseUrl ="https://deliveryboy.56testing.club/" ;
+  static var baseUrl ="https://delivery.gotejaga.com/" ;
 
   //Grocery Api
   static var phoneNumberUrl ="${baseUrl}Phone-login";

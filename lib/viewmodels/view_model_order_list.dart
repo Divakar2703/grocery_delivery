@@ -14,7 +14,6 @@ import '../data/models/response/OrderListResponseModel.dart';
 import '../data/processResponse/api_process_response.dart';
 import '../repositories/order_list_repository.dart';
 import '../screens/Orders/orders_list_tab_screen.dart';
-import '../screens/map/delivery_loc_tracking.dart';
 
 class OrderListViewModel with ChangeNotifier {
   final _orderListRepo = OrderListRepository();
