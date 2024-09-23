@@ -3,7 +3,6 @@ import 'package:grocery_delivery_side/data/models/request/verifyOtpRequestModel.
 import 'package:grocery_delivery_side/viewmodels/view_model_verify_otp.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:android_sms_retriever/android_sms_retriever.dart';
 import '../../constants.dart';
 import '../../data/constants/app_constants_value.dart';
 import '../../data/models/request/PhoneLoginRequestModel.dart';
