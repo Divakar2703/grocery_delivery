@@ -1,4 +1,4 @@
-package com.example.grocery_delivery_side
+package com.bitspan.app_grocery_boy
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -21,8 +21,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // Handle the notification data here, if applicable.
 }
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -31,8 +30,7 @@ void main() async{
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // Get the token for this device
-  final token = await FirebaseMessaging.instance.getToken();
-  print("Push Notification Token: $token");
+  //await FirebaseMessaging.instance.getToken();
   runApp(const MyApp());
 }
 
@@ -43,7 +41,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Set status bar color here
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor:kPrimaryColor, // Replace with your desired color
+      statusBarColor: kPrimaryColor, // Replace with your desired color
       statusBarBrightness: Brightness.dark, // Change the brightness as needed
     ));
     //
@@ -63,8 +61,6 @@ class MyApp extends StatelessWidget {
         // ChangeNotifierProvider(create: (_) => SubsPlanViewModel()),
         // ChangeNotifierProvider(create: (_) => ReserverClubViewModel()),
         // ChangeNotifierProvider(create: (_) => ProfileViewModel()),
-
-
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -74,6 +70,5 @@ class MyApp extends StatelessWidget {
         home: SplashScreen(),
       ),
     );
-
   }
 }

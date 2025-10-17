@@ -41,8 +41,6 @@ class _CancelledViewState extends State<CancelledView> {
           Divider(
             thickness: 1,
           ),
-
-
           Column(
             children: [
               Row(
@@ -54,7 +52,6 @@ class _CancelledViewState extends State<CancelledView> {
                       fontSize: 15,
                       color: Colors.black54,
                       fontFamily: 'Mabry',
-
                     ),
                   ),
                 ],
@@ -65,13 +62,12 @@ class _CancelledViewState extends State<CancelledView> {
                     height: 120,
                     width: 120,
                     margin: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blueGrey
-                    ),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.blueGrey),
                     child: Image.asset('assets/n.jpg'),
                   ),
-                  SizedBox(width: 20,),
+                  SizedBox(
+                    width: 20,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -104,7 +100,6 @@ class _CancelledViewState extends State<CancelledView> {
                       ),
                     ],
                   ),
-
                   Spacer(),
                   Text(
                     "Qty:2",
@@ -115,10 +110,8 @@ class _CancelledViewState extends State<CancelledView> {
                       fontFamily: 'Mabry',
                     ),
                   ),
-
                 ],
               ),
-
               Row(
                 children: [
                   Text(
@@ -139,7 +132,6 @@ class _CancelledViewState extends State<CancelledView> {
                   ),
                 ],
               ),
-
               Row(
                 children: [
                   Text(
@@ -160,11 +152,9 @@ class _CancelledViewState extends State<CancelledView> {
                   ),
                 ],
               ),
-
               Divider(
                 thickness: 1,
               ),
-
               Row(
                 children: [
                   Expanded(
@@ -181,7 +171,6 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             color: Colors.grey.shade800,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                         SizedBox(
@@ -193,10 +182,8 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             color: Colors.grey.shade800,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
-
                         SizedBox(
                           height: 5,
                         ),
@@ -206,7 +193,6 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             color: Colors.grey.shade800,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                         SizedBox(
@@ -218,7 +204,6 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             color: Colors.grey.shade800,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                         SizedBox(
@@ -230,7 +215,6 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             color: Colors.grey.shade800,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                       ],
@@ -242,16 +226,13 @@ class _CancelledViewState extends State<CancelledView> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                            height: 5
-                        ),
+                        SizedBox(height: 5),
                         Text(
                           "Rs3000",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                         SizedBox(
@@ -263,7 +244,6 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                         SizedBox(
@@ -275,7 +255,6 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                         SizedBox(
@@ -287,7 +266,6 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                         SizedBox(
@@ -299,7 +277,6 @@ class _CancelledViewState extends State<CancelledView> {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'Mabry',
-
                           ),
                         ),
                       ],
@@ -307,17 +284,15 @@ class _CancelledViewState extends State<CancelledView> {
                   ),
                 ],
               ),
-
               Divider(
                 thickness: 1,
               ),
-
-
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-
                   ElevatedButton(
                     onPressed: () {
                       // showModalBottomSheet(
@@ -329,7 +304,7 @@ class _CancelledViewState extends State<CancelledView> {
                       // );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.red, // Change 'Colors.blue' to the color you want
+                      backgroundColor: Colors.red, // Change 'Colors.blue' to the color you want
                     ),
                     child: Text(
                       'Cancel',
@@ -337,11 +312,12 @@ class _CancelledViewState extends State<CancelledView> {
                         fontSize: 16,
                         color: Colors.white,
                         fontFamily: 'Mabry',
-
                       ),
                     ),
                   ),
-                  SizedBox(width: 20,),
+                  SizedBox(
+                    width: 20,
+                  ),
                   ElevatedButton(
                     onPressed: () {
                       // showModalBottomSheet(
@@ -353,7 +329,7 @@ class _CancelledViewState extends State<CancelledView> {
                       // );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green, // Change 'Colors.blue' to the color you want
+                      backgroundColor: Colors.green, // Change 'Colors.blue' to the color you want
                     ),
                     child: Text(
                       'Accept',
@@ -361,11 +337,9 @@ class _CancelledViewState extends State<CancelledView> {
                         fontSize: 16,
                         color: Colors.white,
                         fontFamily: 'Mabry',
-
                       ),
                     ),
                   ),
-
                 ],
               )
             ],
